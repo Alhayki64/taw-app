@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Taw - Discover Opportunities</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-error-container": "#93000a",
+              "outline": "#6f7a74",
+              "on-secondary-fixed-variant": "#5b4300",
+              "on-tertiary-fixed-variant": "#284d45",
+              "on-primary-container": "#9aedcf",
+              "on-tertiary": "#ffffff",
+              "surface-container-highest": "#e7e2da",
+              "secondary-fixed-dim": "#e6c276",
+              "on-secondary-fixed": "#261a00",
+              "on-primary-fixed-variant": "#00513e",
+              "inverse-on-surface": "#f5f0e8",
+              "secondary-fixed": "#ffdf9f",
+              "on-background": "#1d1c17",
+              "surface-container-lowest": "#ffffff",
+              "primary-container": "#0f6e56",
+              "surface-container-high": "#ece8e0",
+              "secondary-container": "#fed88a",
+              "on-primary-fixed": "#002117",
+              "tertiary-fixed-dim": "#a6cfc4",
+              "surface-variant": "#e7e2da",
+              "surface-container-low": "#f8f3eb",
+              "inverse-surface": "#32302b",
+              "secondary": "#765a18",
+              "on-surface": "#1d1c17",
+              "on-secondary-container": "#785d1b",
+              "tertiary": "#2a5048",
+              "outline-variant": "#bec9c3",
+              "on-surface-variant": "#3f4944",
+              "tertiary-container": "#42685f",
+              "surface-dim": "#ded9d2",
+              "inverse-primary": "#84d6b9",
+              "surface": "#fef9f1",
+              "on-secondary": "#ffffff",
+              "tertiary-fixed": "#c2ebe0",
+              "surface-tint": "#086b53",
+              "on-error": "#ffffff",
+              "primary-fixed": "#a0f3d4",
+              "surface-bright": "#fef9f1",
+              "primary": "#005440",
+              "on-tertiary-fixed": "#00201b",
+              "error-container": "#ffdad6",
+              "on-tertiary-container": "#bce5da",
+              "on-primary": "#ffffff",
+              "primary-fixed-dim": "#84d6b9",
+              "background": "#fef9f1",
+              "surface-container": "#f2ede5",
+              "error": "#ba1a1a"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Plus Jakarta Sans"],
+              "label": ["Plus Jakarta Sans"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body {
+        -webkit-tap-highlight-color: transparent;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<!-- TopAppBar Navigation Shell -->
+<header class="bg-[#F5F0E8]/85 dark:bg-zinc-900/85 backdrop-blur-xl fixed top-0 w-full z-50 shadow-sm shadow-[#1d1c17]/5">
+<div class="flex justify-between items-center px-6 h-16 w-full max-w-screen-xl mx-auto">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-fixed-dim flex items-center justify-center overflow-hidden border border-outline-variant/20">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="close-up portrait of a smiling young Bahraini man in a professional setting with soft daylight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJsxNxPIffBAHWo4_BR3OogdJcrhYUKgr52dWsxKOEMaO0CsQ2jWQbyUKuebaPcFegEHkEduQ5goYZMFyIThwjpNBg8ZErdFgCwzADoNdawDgTmkN54Dw8LEW1g4p8eTftlsPMNI_SdV9oTa1nBFFR6XkWYp-LFiAwhktOixyiqiuJUqJWpGihrtt2V97SNj9mTkOgAkTGxhOWssBmU8hmH0XIA2y_bTSanCf8Vlp8kPMp_3vRUJO7iZGCoepbNR2PD38tll1STMNk"/>
+</div>
+<img alt="Taw Logo" class="h-10 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/ADBb0uhCQ9T4aqA7bUc9jMaBvhaWLOcFJlSLnXjsCsom2aucL5nHjfSC5cN-uec2GFDPhKHHPszUGjH1V-EslPwqYBs5u6N1kFDc0FY1f9nD8Z3nFx5O_EEkkM3lVPDdjY4_ZLToJMSzHt9ZJ_qXJVG3yotEDTebAJzAyVA_vibjXuEPxOIb1A9oMs_XIKgtP39dV41TOHBTHxxZCjXZg8hRkLoHq0MheMdWyS2SLgAbxfEn0M4DEGYFzWbUWCmPZC8oWF5KySizTzKawe0"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-[#1d1c17]/60 dark:text-zinc-400 hover:opacity-80 transition-opacity active:scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</div>
+</div>
+</header>
+<main class="pt-20 pb-32 px-4 max-w-screen-md mx-auto">
+<!-- Hero Section: The Civic Tapestry Hero Card -->
+<section class="relative overflow-hidden rounded-[2rem] bg-[#1d4a3e] shadow-xl mb-6">
+<!-- Background Illustration Layer (Top 40%) -->
+<div class="absolute top-0 left-0 w-full h-[45%] opacity-40">
+<img alt="Bahrain Skyline" class="w-full h-full object-cover" data-alt="illustrative landscape of Bahrain traditional architecture and modern towers at dusk with warm glowing lights and deep teal sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaKh4Yu_x1bHbw3cFRO4eOS54DEWK9zqfANWauuUmGoMaxnYCtl8GfAtxvzwSZK-bI_1QHWpNmAN-BYlTpHspXuSNR69Grt-60qzaMusFWyhsyesIeVNVdSNb0ZfY19EBpEUvUrBJZ59SpQfU6E-KiR7fCCgYTZI5PyNVigsPOD5eZWuzaqIB3C8WEvOpfQvFMsuorLeptHyt_VfRPlTbrx6CN3qag1lJis4Uc_K5EgE7dOGaDZNkSieqTtx0FbrJCh_g47mLa9j9W"/>
+<div class="absolute inset-0 bg-gradient-to-b from-transparent to-[#1d4a3e]"></div>
+</div>
+<!-- Content Container -->
+<div class="relative z-10 p-8 pt-32 flex flex-col h-full min-h-[400px]">
+<div class="mb-auto">
+<h1 class="font-headline font-extrabold text-4xl text-white leading-[1.1] mb-3 tracking-tight">
+                        Weave Your Part in <br/>Bahrain’s Story
+                    </h1>
+<p class="text-primary-fixed-dim font-medium text-lg opacity-90 max-w-[280px]">
+                        Join 2,500+ volunteers making a daily difference.
+                    </p>
+</div>
+<div class="mt-12">
+<button class="w-full bg-secondary-container text-on-secondary-container font-bold py-4 px-6 rounded-full text-center hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+                        Explore Now
+                        <span class="material-symbols-outlined text-[20px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Category Filters: Mosaic Pattern -->
+<section class="mb-10">
+<div class="flex items-center justify-between mb-4 px-1">
+<h2 class="font-headline font-bold text-lg text-on-surface tracking-tight">Browse by Impact</h2>
+<button class="text-primary font-bold text-sm hover:underline transition-all">View All</button>
+</div>
+<div class="relative">
+<div class="flex overflow-x-auto no-scrollbar -mx-4 px-4 scroll-smooth gap-3 pb-4"><!-- All (Active) -->
+<!-- Environment -->
+<button class="flex-shrink-0 flex flex-col items-center gap-2 px-6 py-5 bg-surface-container rounded-[1.5rem] border border-outline-variant/10 min-w-[100px] hover:bg-primary-fixed-dim/20 transition-colors">
+<div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[28px]" data-icon="eco">eco</span>
+</div>
+<span class="text-[13px] font-bold text-on-surface-variant">Environment</span>
+</button>
+<!-- Elderly Care -->
+<button class="flex-shrink-0 flex flex-col items-center gap-2 px-6 py-5 bg-surface-container rounded-[1.5rem] border border-outline-variant/10 min-w-[100px] hover:bg-primary-fixed-dim/20 transition-colors">
+<div class="w-12 h-12 rounded-full bg-secondary-container/30 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[28px]" data-icon="elderly">elderly</span>
+</div>
+<span class="text-[13px] font-bold text-on-surface-variant">Elderly Care</span>
+</button>
+<!-- Education -->
+<button class="flex-shrink-0 flex flex-col items-center gap-2 px-6 py-5 bg-surface-container rounded-[1.5rem] border border-outline-variant/10 min-w-[100px] hover:bg-primary-fixed-dim/20 transition-colors">
+<div class="w-12 h-12 rounded-full bg-tertiary-container/20 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[28px]" data-icon="school">school</span>
+</div>
+<span class="text-[13px] font-bold text-on-surface-variant">Education</span>
+</button>
+<!-- Health -->
+<button class="flex-shrink-0 flex flex-col items-center gap-2 px-6 py-5 bg-surface-container rounded-[1.5rem] border border-outline-variant/10 min-w-[100px] hover:bg-primary-fixed-dim/20 transition-colors">
+<div class="w-12 h-12 rounded-full bg-error-container/30 flex items-center justify-center text-error">
+<span class="material-symbols-outlined text-[28px]" data-icon="health_and_safety">health_and_safety</span>
+</div>
+<span class="text-[13px] font-bold text-on-surface-variant">Health</span>
+</button>
+<!-- Community -->
+<button class="flex-shrink-0 flex flex-col items-center gap-2 px-6 py-5 bg-surface-container rounded-[1.5rem] border border-outline-variant/10 min-w-[100px] hover:bg-primary-fixed-dim/20 transition-colors">
+<div class="w-12 h-12 rounded-full bg-primary-fixed-dim/30 flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[28px]" data-icon="groups">groups</span>
+</div>
+<span class="text-[13px] font-bold text-on-surface-variant">Community</span>
+</button></div>
+</div>
+</section>
+<!-- Urgent Needs: Bento Grid Inspired -->
+<section class="mb-10">
+<div class="flex items-center justify-between mb-5 px-1">
+<h2 class="font-headline font-bold text-xl text-on-surface">Urgent Needs</h2>
+<div class="flex items-center gap-1 bg-error-container text-error px-3 py-1 rounded-full animate-pulse">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<span class="text-[11px] font-bold uppercase tracking-wider">High Priority</span>
+</div>
+</div>
+<div class="space-y-4">
+<!-- Large Feature Card -->
+<div class="group bg-surface-container-low rounded-[1.5rem] p-5 flex flex-col gap-4 border border-outline-variant/5 shadow-sm">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-xl bg-white flex items-center justify-center shadow-sm">
+<img alt="Org Logo" class="w-10 h-10 object-contain" data-alt="minimalist logo for a Bahraini marine conservation group featuring a stylized pearl oyster" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBQ_UkzD-NhE2a9jpcr-pSJhOquDM6BdmLBmRWs3bRPosGC14JES5k0hrPxq_P7RrysxflsH-YmJsUlafVGgILJYHs-sCp0H6tE0kLvrszLe3Ghe5ho1FKaKj9j_ndWql3OhdTZXbefLtx1PAl3KvDVrWCoR48gc7D70lnwJwe_SjQB580NEED3eheMVvq_VL-vbh4j_n9H_1H1TUD3315RCKJchdREur-bA981ZAU0HHkdnRe8rQTRO7GZuZ_NUF-DffQDeAz7_AE"/>
+</div>
+<div>
+<h3 class="font-bold text-on-surface leading-tight">Marine Cleanup: Malkiya Beach</h3>
+<p class="text-sm text-on-surface-variant">Bahrain Ocean Society</p>
+</div>
+</div>
+<span class="bg-primary/10 text-primary text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wide">Tomorrow</span>
+</div>
+<div class="relative h-48 rounded-xl overflow-hidden">
+<img alt="Cleaning Beach" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="volunteers cleaning a sunny bahraini beach at sunset, wide angle shot with blue water and white sand" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoXGK4NJKVaXa3tyxKQHvjTJAmN7mOlBKMZJ4mrBd8PmdcmF3BMiUZLkZ3Z5VFfEH_51H4WUQHz60BdasN5V5HmRfUq-PLZ_K9lnoh9qu1_3CITzJyP0syWtGylLMdKehMyDOW2aXdi5mrvjiIYfs8DIlAyYHB2maQpnz7fy699uA-E-Qz37qMuR82wvtQta2GZTsei-M55c8_Y-kWJSmaefRIW3ssSwbjbkDLK7TeVfcJRUCI_qqlxtwHklppN3djBq1NU4r70Lk-"/>
+<div class="absolute bottom-3 left-3 flex gap-2">
+<div class="bg-black/60 backdrop-blur-md text-white px-3 py-1.5 rounded-full text-[11px] font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="person_add">person_add</span>
+                                8 Slots Left
+                            </div>
+<div class="bg-black/60 backdrop-blur-md text-white px-3 py-1.5 rounded-full text-[11px] font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="stars">stars</span>
+                                50 Taw
+                            </div>
+</div>
+</div>
+</div>
+<!-- Secondary Asymmetric Row -->
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-high rounded-[1.5rem] p-4 flex flex-col gap-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]" data-icon="volunteer_activism">volunteer_activism</span>
+<span class="text-[10px] font-bold text-secondary uppercase tracking-widest">Elderly Support</span>
+</div>
+<h4 class="font-bold text-sm text-on-surface">Evening Tea at Muharraq Care Home</h4>
+<div class="mt-auto pt-2 border-t border-outline-variant/10 flex items-center justify-between">
+<span class="text-[11px] text-on-surface-variant font-medium">18:00 Today</span>
+<span class="material-symbols-outlined text-primary text-[18px]" data-icon="arrow_outward">arrow_outward</span>
+</div>
+</div>
+<div class="bg-surface-container-high rounded-[1.5rem] p-4 flex flex-col gap-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary text-[20px]" data-icon="local_library">local_library</span>
+<span class="text-[10px] font-bold text-tertiary uppercase tracking-widest">Tutoring</span>
+</div>
+<h4 class="font-bold text-sm text-on-surface">Math Help for Secondary Students</h4>
+<div class="mt-auto pt-2 border-t border-outline-variant/10 flex items-center justify-between">
+<span class="text-[11px] text-on-surface-variant font-medium">Online • Wed</span>
+<span class="material-symbols-outlined text-primary text-[18px]" data-icon="arrow_outward">arrow_outward</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Impact Highlight -->
+<section class="bg-primary text-on-primary rounded-[2rem] p-6 flex items-center gap-4">
+<div class="flex-1">
+<p class="text-xs font-bold uppercase tracking-widest text-primary-fixed-dim mb-1">Your Community Impact</p>
+<h3 class="font-headline font-bold text-lg mb-1">Weekly Goal: 15 Hours</h3>
+<div class="w-full h-1.5 bg-primary-container rounded-full overflow-hidden mt-3">
+<div class="h-full bg-primary-fixed-dim w-[65%] rounded-full"></div>
+</div>
+</div>
+<div class="text-center bg-primary-container/30 p-3 rounded-2xl border border-white/10">
+<div class="text-2xl font-black text-white leading-tight">10.5</div>
+<div class="text-[10px] uppercase font-bold text-primary-fixed-dim">Hours Done</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar Navigation Shell -->
+<nav class="bg-[#F5F0E8]/85 dark:bg-zinc-900/85 backdrop-blur-xl fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 z-50 rounded-t-[1.5rem] shadow-[0_-4px_20px_0_rgba(29,28,23,0.06)]">
+<a class="flex flex-col items-center justify-center bg-[#0F6E56] text-white rounded-2xl px-4 py-1.5 active:scale-90 duration-200 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="explore">explore</span>
+<span class="font-plus-jakarta text-[10px] font-semibold uppercase tracking-wider mt-1">Discover</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#1d1c17]/70 dark:text-zinc-400 px-4 py-1.5 hover:bg-[#0F6E56]/10 transition-colors active:scale-90 duration-200 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="assignment_turned_in">assignment_turned_in</span>
+<span class="font-plus-jakarta text-[10px] font-semibold uppercase tracking-wider mt-1">My Tasks</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#1d1c17]/70 dark:text-zinc-400 px-4 py-1.5 hover:bg-[#0F6E56]/10 transition-colors active:scale-90 duration-200 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
+<span class="font-plus-jakarta text-[10px] font-semibold uppercase tracking-wider mt-1">Impact</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#1d1c17]/70 dark:text-zinc-400 px-4 py-1.5 hover:bg-[#0F6E56]/10 transition-colors active:scale-90 duration-200 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-plus-jakarta text-[10px] font-semibold uppercase tracking-wider mt-1">Profile</span>
+</a>
+</nav>
+<!-- Hide scrollbar utility -->
+<style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</body></html>

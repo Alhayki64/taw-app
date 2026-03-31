@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@600;700&amp;family=Outfit:wght@300;400;500;600;700;800&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-tertiary-fixed": "#00201b",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-high": "#ece8e0",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed": "#c2ebe0",
+                        "background": "#F5F0E8",
+                        "primary-container": "#0f6e56",
+                        "error-container": "#ffdad6",
+                        "primary-fixed": "#a0f3d4",
+                        "surface-bright": "#fef9f1",
+                        "primary": "#005440",
+                        "on-secondary-fixed": "#261a00",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#84d6b9",
+                        "on-background": "#1d1c17",
+                        "tertiary": "#2a5048",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-container": "#bce5da",
+                        "on-primary-container": "#9aedcf",
+                        "surface-container": "#f2ede5",
+                        "inverse-on-surface": "#f5f0e8",
+                        "surface-container-low": "#f8f3eb",
+                        "on-secondary-fixed-variant": "#5b4300",
+                        "secondary": "#765a18",
+                        "surface": "#fef9f1",
+                        "tertiary-fixed-dim": "#a6cfc4",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-container": "#785d1b",
+                        "surface-dim": "#ded9d2",
+                        "on-tertiary": "#ffffff",
+                        "inverse-surface": "#32302b",
+                        "secondary-fixed": "#ffdf9f",
+                        "outline": "#6f7a74",
+                        "on-primary-fixed": "#002117",
+                        "on-primary-fixed-variant": "#00513e",
+                        "on-tertiary-fixed-variant": "#284d45",
+                        "outline-variant": "#bec9c3",
+                        "secondary-fixed-dim": "#e6c276",
+                        "primary-fixed-dim": "#84d6b9",
+                        "on-surface-variant": "#3f4944",
+                        "on-surface": "#1d1c17",
+                        "tertiary-container": "#42685f",
+                        "surface-variant": "#e7e2da",
+                        "surface-container-highest": "#e7e2da",
+                        "secondary-container": "#fed88a",
+                        "surface-tint": "#086b53",
+                        "on-error": "#ffffff"
+                    },
+                    fontFamily: {
+                        "headline": ["Outfit", "sans-serif"],
+                        "story": ["Outfit", "sans-serif"],
+                        "body": ["Plus Jakarta Sans", "sans-serif"],
+                        "label": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        ::-webkit-scrollbar { display: none; }
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary-fixed selection:text-on-primary-fixed">
+<header class="bg-[#F5F0E8]/85 backdrop-blur-md fixed top-0 w-full z-50">
+<div class="flex justify-between items-center px-6 py-4 w-full">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container-highest flex items-center justify-center">
+<img alt="User profile photo" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAeKSgatyBJ_3xzBBx1Ff4L0BTYr8AZiKWGyIZ1lo8bRPMVe0ZFlZpQbP-bcYO1KN3WLNgFZwCjU9DIVlJ7EudNdHRpqlRo7xLmTNVLcrX3CsCzJldpsrXs1i0vEmgP4TCiIujt01Da4o3D0BRaQqsTLP22ZQYipGo0d-DvH9-nLzCBtIxSUaHpmna6DjlVj0cmS43e8dBrEEEAF9m_bL9SXGewL8EBJ07wvWijhU3w0LQx2kGPUhUNEWzuSArvbxb_B1l4ZAmpd2ml"/>
+</div>
+<h1 class="text-[#0F6E56] font-black tracking-tight font-headline text-xl">Taw</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="hover:bg-stone-200/50 transition-colors active:scale-95 duration-200 p-2 rounded-full">
+<span class="material-symbols-outlined text-[#0F6E56]" data-icon="search">search</span>
+</button>
+</div>
+</div>
+</header>
+<main class="pt-20 pb-32 max-w-2xl mx-auto">
+<section class="mb-10 px-6">
+<div class="relative group rounded-[2.5rem] overflow-hidden shadow-2xl bg-surface-container-highest">
+<div class="aspect-[4/5] relative">
+<img alt="Community kitchen story" class="w-full h-full object-cover scale-105 transition-transform duration-1000 group-hover:scale-100" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmggTIFWnic8nYByACUg9d608v0Suz6nciV7teFbKTGthWDCvg7wN9mlaEPOoYe09lyjSQEZv4Uxwj2CVmCr7OiW_FZLsrfU324AASLFGnAp88ITcNAYRRYRB0vqSLnfN4WRqvzILgs18Yefs2rlZZ97EqJ_00KFpUyQOESBETsx0qBaqq0phX2_eHbuns9GN3g5-rUTBmwqsU7k-AXkOtjf1YRRS-twz-eePUuxKfQvrzq1fQZJuAHo77zCo8klE8M77Vd0oE3z5Z"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+<div class="absolute top-6 left-6">
+<span class="bg-secondary text-white text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span> Urgent Story
+                        </span>
+</div>
+<div class="absolute bottom-0 left-0 right-0 p-8">
+<h2 class="font-story font-bold text-3xl text-white mb-3 leading-[1.15] tracking-tight">The Warmth of a Shared Meal in Manama</h2>
+<p class="text-white/85 text-base mb-6 font-medium leading-relaxed max-w-sm">
+                            Every evening, Zainab and her team of volunteers serve over 200 meals. They are looking for four more hands to help bridge the gap tonight.
+                        </p>
+<button class="w-full bg-primary-container text-white font-bold py-4 rounded-2xl flex items-center justify-center gap-2 hover:bg-primary transition-colors shadow-lg active:scale-95">
+<span>Answer the Call</span>
+<span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<div class="mb-8 px-6 overflow-x-auto whitespace-nowrap flex gap-3 scroll-smooth">
+<button class="bg-primary text-on-primary px-6 py-2.5 rounded-full font-semibold text-sm shadow-md flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="auto_awesome">auto_awesome</span> All
+            </button>
+<button class="bg-white/60 border border-stone-200 text-on-surface-variant px-6 py-2.5 rounded-full font-semibold text-sm hover:bg-white transition-colors">Environment</button>
+<button class="bg-white/60 border border-stone-200 text-on-surface-variant px-6 py-2.5 rounded-full font-semibold text-sm hover:bg-white transition-colors">Elderly Care</button>
+<button class="bg-white/60 border border-stone-200 text-on-surface-variant px-6 py-2.5 rounded-full font-semibold text-sm hover:bg-white transition-colors">Education</button>
+</div>
+<!-- Volunteer Map Section -->
+<section class="mb-12 px-6">
+<div class="flex items-center justify-between mb-4">
+<h2 class="font-headline font-extrabold text-2xl text-primary">Volunteer Map</h2>
+</div>
+<a class="block relative group rounded-[2rem] overflow-hidden shadow-xl aspect-[16/9] border border-stone-200" href="#">
+<img alt="Bahrain Map Preview" class="w-full h-full object-cover grayscale-[20%] brightness-[1.05] contrast-[0.95]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDa4WJOv1RV99n9e3xoEYWWQK-Kiu92dqtc_1j-iaWNIV8DbNK8jb73bDOG8bvbiczQ_uGp32M_uCs6RxITLV-x1AMaRAx5F0Ot2orgeOnqdc9a0NN4UdQgomekobWxdN_jFqg66FPjlR6NC34nvjEDxCWZs6FHrqz69NF2UihUcfqJ9AQ2Vo_DrWsszah82vHT1Ad8YcwPI1mMqMMB0E4pJ3OdNaGlgE0HoGty-WUT5R8ZaZsjXge7W-JYSUeiXYRxNSFE-xYks0pB"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+<!-- Pins -->
+<div class="absolute top-[35%] left-[55%]">
+<div class="bg-primary text-white p-1.5 rounded-full shadow-lg ring-2 ring-white/50">
+<span class="material-symbols-outlined text-xs block" style="font-variation-settings: 'FILL' 1;">volunteer_activism</span>
+</div>
+</div>
+<div class="absolute top-[48%] left-[42%]">
+<div class="bg-primary text-white p-1.5 rounded-full shadow-lg ring-2 ring-white/50">
+<span class="material-symbols-outlined text-xs block" style="font-variation-settings: 'FILL' 1;">eco</span>
+</div>
+</div>
+<div class="absolute top-[28%] left-[48%]">
+<div class="bg-primary text-white p-1.5 rounded-full shadow-lg ring-2 ring-white/50">
+<span class="material-symbols-outlined text-xs block" style="font-variation-settings: 'FILL' 1;">school</span>
+</div>
+</div>
+<!-- Button Label -->
+<div class="absolute bottom-4 left-0 right-0 px-6 flex justify-between items-end">
+<div class="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl shadow-lg border border-white/20">
+<p class="text-xs font-bold text-primary uppercase tracking-wider">12 Active Spots</p>
+</div>
+<div class="bg-primary text-white px-5 py-2.5 rounded-full text-xs font-extrabold tracking-widest uppercase shadow-xl transition-transform group-hover:scale-105 active:scale-95">
+View Map
+</div>
+</div>
+</a>
+</section>
+<section class="mb-12 px-6">
+<div class="flex items-center justify-between mb-6">
+<h2 class="font-headline font-extrabold text-2xl text-primary">Community Impact</h2>
+<button class="text-sm font-bold text-secondary uppercase tracking-wider">See All</button>
+</div>
+<div class="flex flex-col gap-8">
+<div class="flex flex-col group">
+<div class="relative h-[420px] rounded-[2.5rem] overflow-hidden shadow-xl mb-5">
+<img alt="Beach cleanup" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9_rWYVNBS6e6-fcVth_OeG8CnaIuQizT04itVoqR7cws3sATAxfehKk0xfIyDZAt3s6aCA6L_uiHn2Tl8deWDy2HK1bGDJboapG4wKvM9rOzuHc-gW2xb2FLO354ycqzR4kqeoz-Pc4HHewd6RRO9NlqqZd90IlhS2h-v6Avkef_22I-XuNA3Btgqg2hZwXaZv5KUBVgN5xcPvxl5yVnm-xULuvk4Dwt5psNAkv4WKSoATdOWaAlEYMweyuWORV2nzLElNww6D5aH"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+<div class="absolute bottom-6 left-6 flex -space-x-3">
+<div class="w-10 h-10 rounded-full border-2 border-white overflow-hidden"><img alt="avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBX5DfoGAjD67QH6_G4WYtd9W95L5WFjSe_l_T7gm-3K3RhiPbe5kaS1DCM1B4Cwu2shdQdYYDSr09P9AJTfWzTFPwT7lqZV9Xw3-BW3vwVdS8i-SBKCYg2CpIi5bGpI0Tr3X3OjgKRzETl2uSYcUqFTAR1EqyndKf7UeJmvnFNJFGAApxLp0LU2onJQiB3A7Z0-RuliRRo91e9NcNEnHHOmozgtZUa16tKxOFF4_-Mk7ZVNWNvV7CUTv_ahFQIqneH5e7q5vOzYJG"/></div>
+<div class="w-10 h-10 rounded-full border-2 border-white overflow-hidden"><img alt="avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXcdmGAJb1Cusq54TVL3RqlfsB9b83aNracLHyd9zOTwpsoWO1mp7a4CIeOIJsE0jH7WrHmyjpADFG5cM5pbU3J8MowbWBrwiW3IsZP71ZVbIuMqegM8JFe_4bCwbyLHTm61C8DFfxRHuhAn-1fY4zCKD9_wa-gJYaYN7DKYp9nTQY1igxIbfhXK3SY_D59jtdrl_w4aRwFvpTQTKLm_hdKUN0zIuNS0t8AsmrcGmFFpATvmDh0pjgMEU0AhRVTVcxUrBUVDwWCAF4"/></div>
+<div class="w-10 h-10 rounded-full border-2 border-white bg-primary text-xs flex items-center justify-center text-white font-bold">+96</div>
+</div>
+</div>
+<div class="px-2">
+<div class="flex items-center gap-2 mb-2">
+<span class="text-xs font-bold text-primary tracking-widest uppercase">Environment</span>
+<span class="w-1 h-1 bg-outline-variant rounded-full"></span>
+<span class="text-xs font-medium text-outline">Karzakan Coast</span>
+</div>
+<h3 class="font-story font-bold text-2xl text-on-surface mb-2">Preserving our Coastline Together</h3>
+<p class="text-on-surface-variant leading-relaxed text-base font-medium">Join a growing community dedicated to restoring the natural beauty of Bahrain's shores. This weekend, we focus on the north lagoon.</p>
+</div>
+</div>
+<div class="flex flex-col group">
+<div class="relative h-[420px] rounded-[2.5rem] overflow-hidden shadow-xl mb-5">
+<img alt="School mentoring" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJgcHwzlLVxw84iOzeMTJ_zeFQ8wIDi4V7GEvOcH5yPZgBRUwYMX1DsQn-Sa5r09UONqIxtPMSdrw0Q4gjvFTts9n0eudgtH1eQOIfN6lsVKLYuON6mUiCUCEuN2EAQX-oIncPQ9mANkx_R-r3Gs-6N9mI-IAOqbbFEBewRWflJZYNIkeJ8AdW6gKDJvMhucaqBjQGaJ8hyYjPh44-_tlD1kVCvK-thOjLA7j0-UZ0Iv9aCWFbJ9UEdXmy5mO16PnsbfVnDFaPSNf4"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+<div class="absolute bottom-6 left-6 flex -space-x-3">
+<div class="w-10 h-10 rounded-full border-2 border-white overflow-hidden"><img alt="avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlvOXZWqW-5kmfEKhJjlH8pRp0bD_FB--Nda_ENW9FHR5Hhhe5a8Sm7wMbOE8WZnoClbBEj1XGXo37fi4uYUDe6DzbN_NrFVVKncvljLq53aQv659klahObzuXcKokTGznGSp3qSYNZZDlYRNrau2yPr6phVRJvDsOF3sJijlh3_CtQUJwUmZOsQHukOuHY7RgfJ9IpLttCWB-nfuW1WZtyUBjlp5i1Bwf0uC_yqysje--Qti8zoE4kWyaqYicesxSrddUbXG0Tt4K"/></div>
+<div class="w-10 h-10 rounded-full border-2 border-white bg-primary text-xs flex items-center justify-center text-white font-bold">+42</div>
+</div>
+</div>
+<div class="px-2">
+<div class="flex items-center gap-2 mb-2">
+<span class="text-xs font-bold text-primary tracking-widest uppercase">Education</span>
+<span class="w-1 h-1 bg-outline-variant rounded-full"></span>
+<span class="text-xs font-medium text-outline">Al-Hidaya Center</span>
+</div>
+<h3 class="font-story font-bold text-2xl text-on-surface mb-2">Passing Down the Gift of Words</h3>
+<p class="text-on-surface-variant leading-relaxed text-base font-medium">Mentor young students in traditional storytelling and literacy skills. Help us keep our rich oral history alive for the next generation.</p>
+</div>
+</div>
+</div>
+</section>
+<section class="mb-20 px-6">
+<button class="w-full bg-white border-2 border-surface-container-high rounded-3xl p-5 flex items-center justify-between shadow-sm group active:scale-98 transition-all">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 bg-primary-fixed rounded-2xl flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl" data-icon="map">map</span>
+</div>
+<div class="text-left">
+<p class="font-bold text-on-surface text-lg">Explore Nearby</p>
+<p class="text-sm text-outline">12 opportunities near you</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:translate-x-1 transition-transform" data-icon="chevron_right">chevron_right</span>
+</button>
+</section>
+</main>
+<button class="fixed bottom-28 right-6 w-16 h-16 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center active:scale-90 transition-transform z-40">
+<span class="material-symbols-outlined text-3xl" data-icon="add">add</span>
+</button>
+<nav class="bg-[#F5F0E8]/95 backdrop-blur-md fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-8 pt-4 z-50 rounded-t-[2.5rem] shadow-[0_-8px_32px_rgba(0,0,0,0.05)] border-t border-stone-200">
+<a class="flex flex-col items-center justify-center text-primary px-4 transition-all duration-150 active:scale-90" href="#">
+<span class="material-symbols-outlined mb-1 text-2xl" data-icon="explore" style="font-variation-settings: 'FILL' 1;">explore</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[11px] font-extrabold uppercase tracking-tighter">Discover</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 px-4 transition-all hover:text-primary active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined mb-1 text-2xl" data-icon="volunteer_activism">volunteer_activism</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[11px] font-bold uppercase tracking-tighter">Impact</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 px-4 transition-all hover:text-primary active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined mb-1 text-2xl" data-icon="military_tech">military_tech</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[11px] font-bold uppercase tracking-tighter">Rewards</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 px-4 transition-all hover:text-primary active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined mb-1 text-2xl" data-icon="person">person</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[11px] font-bold uppercase tracking-tighter">Profile</span>
+</a>
+</nav>
+</body></html>
