@@ -584,7 +584,7 @@ body {
 .app-shell {
   position: relative;
   width: 100%;
-  max-width: 430px;
+  max-width: 540px;
   height: 100dvh;
   overflow: hidden;
   background: var(--surface);
