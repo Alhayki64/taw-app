@@ -43,7 +43,7 @@ const translations = {
     'cat-food':             'Food Security',
 
     // Home
-    'greeting':                 'Hello, Ali!',
+    'greeting':                 'Hello, Guest!',
     'home-subtitle':            'Ready to make an impact today?',
     'points-label':             'Taw Points',
     'points-total-label':       'Total Balance',
@@ -240,7 +240,7 @@ const translations = {
     'cat-food':             'الأمن الغذائي',
 
     // Home
-    'greeting':                 'أهلاً، علي!',
+    'greeting':                 'أهلاً، ضيف!',
     'home-subtitle':            'مستعد لإحداث أثر اليوم؟',
     'points-label':             'نقاط طوع',
     'points-total-label':       'الرصيد الكلي',

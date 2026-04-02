@@ -316,13 +316,21 @@ if (carousel) {
 // ── Update User Display ──
 function updateUserDisplay() {
   const user = authState.user;
-  if (!user) return;
+  const greetingEl = document.querySelector('.home-welcome-name');
+  const isArabic = typeof currentLang !== 'undefined' && currentLang === 'ar';
+
+  if (!user) {
+    if (greetingEl) {
+      greetingEl.textContent = isArabic ? 'أهلاً، ضيف!' : 'Hello, Guest!';
+      greetingEl.removeAttribute('data-i18n');
+    }
+    return;
+  }
+
   const name = user.user_metadata?.full_name || user.email?.split('@')[0] || 'Volunteer';
   const firstName = name.split(' ')[0];
 
-  const greetingEl = document.querySelector('.home-welcome-name');
   if (greetingEl) {
-    const isArabic = typeof currentLang !== 'undefined' && currentLang === 'ar';
     greetingEl.textContent = isArabic ? `أهلاً، ${firstName}!` : `Hello, ${firstName}!`;
     greetingEl.removeAttribute('data-i18n');
   }
@@ -491,6 +499,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   authState.loading = false;
+  updateUserDisplay();
   // No session — show landing
   const landingPage = document.getElementById('page-landing');
   if (landingPage) landingPage.classList.add('active');
