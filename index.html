@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Taw | طوع — Bahrain Volunteerism</title>
   <meta name="description" content="Taw (طوع) is Bahrain's premier volunteer engagement platform. Discover opportunities, earn points, and redeem rewards for giving back to your community." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -10,7 +10,37 @@
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="index.css" />
+  <style>
+    @keyframes pulseRed {
+      0% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+        background-color: rgba(239, 68, 68, 0.15);
+      }
+      70% {
+        box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+        background-color: rgba(239, 68, 68, 0.05);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+        background-color: rgba(239, 68, 68, 0.15);
+      }
+    }
+
+    /* Override any existing styles on the badge to make it flash read */
+    .section-header .high-priority-badge.pulse-anim {
+      animation: pulseRed 2s infinite;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #dc2626 !important;
+      border-radius: 9999px;
+    }
+
+    .section-header .high-priority-badge.pulse-anim .dot {
+      background-color: #ef4444 !important;
+    }
+  </style>
 </head>
 <body>
 
@@ -25,27 +55,102 @@
 
       <div class="landing-content">
         <div class="landing-hero">
-          <h1 class="landing-headline">Volunteer. Earn. <br/>Impact.</h1>
-          <p class="landing-subtitle">Join the movement transforming lives in Bahrain.</p>
+          <h1 class="landing-headline" data-i18n="landing-headline">Volunteer. Earn. <br/>Impact.</h1>
+          <p class="landing-subtitle" data-i18n="landing-subtitle">Join the movement transforming lives in Bahrain.</p>
         </div>
 
         <div class="landing-actions">
-          <button class="landing-cta" onclick="navigateTo('interests')">
+          <button class="landing-cta" onclick="goToSignUp()" data-i18n="landing-cta">
             Join the Cause
           </button>
-          <button class="landing-signin" onclick="navigateTo('home')">
-            Already making an impact? <span>Sign In</span>
+          <button class="landing-signin" onclick="navigateTo('auth')">
+            <span data-i18n="landing-signin">Already making an impact?</span> <span data-i18n="landing-signin-link">Sign In</span>
+          </button>
+          <button class="landing-explore" onclick="navigateTo('home')" data-i18n="landing-explore">
+            Explore the app →
           </button>
 
           <div class="landing-lang-toggle">
-            <span class="landing-lang-option" style="opacity:0.5;">EN</span>
+            <button class="landing-lang-option active" onclick="switchLandingLang('en')">EN</button>
             <div class="landing-lang-divider"></div>
-            <span class="landing-lang-option" style="font-weight:700;">عربي</span>
+            <button class="landing-lang-option" onclick="switchLandingLang('ar')">عربي</button>
           </div>
         </div>
 
         <div class="landing-logo-wrap">
           <img src="gemini_generated_image_gxr01qgxr01qgxr0_2.png/screen.png" alt="Taw Logo" class="landing-logo" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PAGE: AUTH (Sign In / Sign Up) ===== -->
+    <section id="page-auth" class="page">
+      <div class="landing-bg-image"></div>
+      <div class="landing-overlay"></div>
+      <div class="landing-gradient"></div>
+
+      <div class="auth-content">
+        <div class="onboarding-progress" id="onboarding-progress-auth" style="display:none;">
+          <div class="onboarding-step active"></div>
+          <div class="onboarding-step"></div>
+          <div class="onboarding-step"></div>
+        </div>
+        <div class="auth-header">
+          <button class="back-btn auth-back-btn" onclick="navigateTo('landing')">
+            <span class="material-icons-round">arrow_back</span>
+          </button>
+          <h1 class="auth-title" id="auth-title">Welcome Back</h1>
+          <p class="auth-subtitle" id="auth-subtitle">Sign in to continue your volunteer journey.</p>
+        </div>
+
+        <form class="auth-form" id="auth-form" onsubmit="handleAuthSubmit(event)">
+          <div class="auth-field" id="auth-name-container" style="display:none;">
+            <label for="auth-name">Full Name</label>
+            <div class="auth-input-wrap">
+              <span class="material-icons-round">person</span>
+              <input type="text" id="auth-name" placeholder="Your Name" autocomplete="name" />
+            </div>
+            <span class="field-error" id="name-error"></span>
+          </div>
+          <div class="auth-field">
+            <label for="auth-email">Email</label>
+            <div class="auth-input-wrap" id="email-input-wrap">
+              <span class="material-icons-round">email</span>
+              <input type="email" id="auth-email" placeholder="you@example.com" required autocomplete="email" />
+            </div>
+            <span class="field-error" id="email-error"></span>
+          </div>
+          <div class="auth-field">
+            <label for="auth-password">Password</label>
+            <div class="auth-input-wrap" id="password-input-wrap">
+              <span class="material-icons-round">lock</span>
+              <input type="password" id="auth-password" placeholder="Your password" required minlength="6" autocomplete="current-password" />
+            </div>
+            <span class="field-error" id="password-error"></span>
+            <div class="password-strength" id="password-strength" style="display:none;">
+              <div class="strength-bar"></div>
+              <div class="strength-bar"></div>
+              <div class="strength-bar"></div>
+              <div class="strength-bar"></div>
+            </div>
+          </div>
+
+          <div class="auth-error" id="auth-error" style="display:none;">
+            <span class="material-icons-round">error_outline</span>
+            <span id="auth-error-text"></span>
+          </div>
+
+          <button type="submit" class="btn-primary auth-submit" id="auth-submit-btn">
+            <span id="auth-submit-text">Sign In</span>
+            <span class="auth-spinner" id="auth-spinner" style="display:none;">
+              <span class="material-icons-round spinning">refresh</span>
+            </span>
+          </button>
+        </form>
+
+        <div class="auth-toggle">
+          <span id="auth-toggle-text">Don't have an account?</span>
+          <button class="auth-toggle-btn" id="auth-toggle-btn" onclick="toggleAuthMode()">Sign Up</button>
         </div>
       </div>
     </section>
@@ -58,6 +163,11 @@
         </svg>
       </div>
 
+      <div class="onboarding-progress" id="onboarding-progress-interests">
+        <div class="onboarding-step active"></div>
+        <div class="onboarding-step active"></div>
+        <div class="onboarding-step"></div>
+      </div>
       <div class="onboarding-header-wrap">
         <h2 class="onboarding-title" data-i18n="interests-title">What drives you?</h2>
         <p class="onboarding-subtitle" data-i18n="interests-subtitle">Select the causes you're most passionate about to personalize your volunteer journey.</p>
@@ -126,259 +236,243 @@
           <span class="material-icons-round">close</span>
           <span data-i18n="btn-skip">Skip</span>
         </button>
-        <button class="btn-onboarding-next" onclick="navigateTo('notifications')">
+        <button class="btn-onboarding-next" onclick="submitInterests()">
           <span data-i18n="btn-next">Next</span>
           <span class="material-icons-round">arrow_forward</span>
         </button>
       </div>
     </section>
 
-    <!-- ===== PAGE: NOTIFICATIONS ONBOARDING ===== -->
-    <section id="page-notifications" class="page">
-      <header class="notif-header">
-        <button class="notif-back-btn" onclick="navigateTo('interests')">
+    <!-- ===== PAGE: NOTIFICATIONS (CENTER) ===== -->
+    <!-- ===== PAGE: NOTIFICATION PERMISSION (ONBOARDING) ===== -->
+    <section id="page-notif-permission" class="page sub-page">
+      <header class="sub-header">
+        <button class="back-btn" aria-label="Go back" onclick="goBack()">
           <span class="material-icons-round">arrow_back</span>
         </button>
-        <img alt="Taw Logo" class="notif-logo" src="gemini_generated_image_gxr01qgxr01qgxr0_2.png/screen.png"/>
-        <div style="width: 40px;"></div> <!-- Spacer -->
+        <h1 class="sub-header-title"></h1>
+        <div class="w-6"></div>
       </header>
 
-      <div class="notif-content">
-        <div class="notif-hero-wrap">
-          <div class="notif-glow"></div>
-          <div class="notif-mascot-circle">
-            <img alt="Tawi Mascot" class="notif-mascot-img" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4cUPvlTaEbj1zbQ8ygoF9OaNQlbqqnLYeh02KhwW5klHmEcagNK-QuQpbOeZzdXd-RBjhWdXQOyYKfSCP54kgwzUNwS77YJWOLDcM3MShxNLpFTdvPcFIlrsC2fbA1W6b_WOSQFHtyGmBqW7NFYk-4uO89bp0BzRK2_iiu5lq75jUfDi-kFI10yp19GnKXHs6yHNoJ1U-3tEArRvQ6RUfHYE8Gwd3DIt2U5_EL4rT5rkqVPCT5NVGcKWviWdrMUhwNCVrDnZBYuh3"/>
-          </div>
+      <div class="notif-perm-content">
+        <!-- Illustration -->
+        <div class="notif-perm-hero">
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4cUPvlTaEbj1zbQ8ygoF9OaNQlbqqnLYeh02KhwW5klHmEcagNK-QuQpbOeZzdXd-RBjhWdXQOyYKfSCP54kgwzUNwS77YJWOLDcM3MShxNLpFJlrsC2fbA1W6b_WOSQFHtyGmBqW7NFYk-4uO89bp0BzRK2_iiu5lq75jUfDi-kFI10yp19GnKXHs6yHNoJ1U-3tEArRvQ6RUfHYE8Gwd3DIt2U5_EL4rT5rkqVPCT5NVGcKWviWdrMUhwNCVrDnZBYuh3" alt="Notifications illustration" class="notif-perm-img" />
         </div>
 
-        <div class="notif-text-center">
-          <h2 class="notif-title" data-i18n="notif-title">Stay in the Loop</h2>
-          <p class="notif-subtitle" data-i18n="notif-subtitle">Enable notifications for urgent needs, reward milestones, and community updates.</p>
+        <!-- Headline -->
+        <div class="notif-perm-headline">
+          <h2 class="notif-perm-title">Stay in the Loop</h2>
+          <p class="notif-perm-subtitle">Enable notifications to get real-time alerts for urgent volunteer needs, reward milestones, and community updates.</p>
         </div>
 
-        <div class="notif-benefits">
-          <div class="notif-benefit-card">
-            <div class="notif-benefit-icon-wrap">
+        <!-- Benefits -->
+        <div class="notif-perm-benefits">
+          <div class="notif-perm-benefit">
+            <div class="notif-perm-benefit-icon icon-primary">
               <span class="material-icons-round">emergency</span>
             </div>
-            <div class="notif-benefit-info">
-              <h3 data-i18n="notif-b1-title">Urgent Direct Actions</h3>
-              <p data-i18n="notif-b1-desc">Immediate opportunities to help in your local area.</p>
+            <div>
+              <h3 class="notif-perm-benefit-title">Urgent Direct Actions</h3>
+              <p class="notif-perm-benefit-text">Immediate opportunities to help in your area.</p>
             </div>
           </div>
-
-          <div class="notif-benefit-card">
-            <div class="notif-benefit-icon-wrap">
+          <div class="notif-perm-benefit">
+            <div class="notif-perm-benefit-icon icon-primary">
               <span class="material-icons-round">verified</span>
             </div>
-            <div class="notif-benefit-info">
-              <h3 data-i18n="notif-b2-title">Verification Alerts</h3>
-              <p data-i18n="notif-b2-desc">Get notified the moment your service hours are approved.</p>
+            <div>
+              <h3 class="notif-perm-benefit-title">Verification Alerts</h3>
+              <p class="notif-perm-benefit-text">Get notified the moment your service hours are approved.</p>
             </div>
           </div>
-
-          <div class="notif-benefit-card">
-            <div class="notif-benefit-icon-wrap secondary">
+          <div class="notif-perm-benefit">
+            <div class="notif-perm-benefit-icon icon-secondary">
               <span class="material-icons-round">military_tech</span>
             </div>
-            <div class="notif-benefit-info">
-              <h3 data-i18n="notif-b3-title">Local Rewards</h3>
-              <p data-i18n="notif-b3-desc">Exclusive milestones and gifts from our Bahraini partners.</p>
+            <div>
+              <h3 class="notif-perm-benefit-title">Local Rewards</h3>
+              <p class="notif-perm-benefit-text">Exclusive milestones and gifts from our Bahraini partners.</p>
             </div>
           </div>
         </div>
       </div>
 
-      <footer class="onboarding-footer">
-        <button class="btn-skip" onclick="navigateTo('home')">
-          <span data-i18n="btn-maybe-later">Maybe Later</span>
+      <!-- Footer actions -->
+      <div class="notif-perm-footer">
+        <button class="btn-primary" onclick="
+          if ('Notification' in window) { Notification.requestPermission(); }
+          navigateTo('home');
+        ">Allow Notifications</button>
+        <button class="btn-ghost" onclick="navigateTo('home')" style="color:var(--on-surface-variant);padding:12px;">Maybe Later</button>
+      </div>
+    </section>
+
+    <section id="page-notifications" class="page">
+      <header class="sub-header">
+        <button class="back-btn" aria-label="Go back" onclick="navigateTo('home')">
+          <span class="material-icons-round">arrow_back</span>
         </button>
-        <button class="btn-onboarding-next" onclick="navigateTo('home')">
-          <span data-i18n="btn-allow">Allow</span>
-          <span class="material-icons-round">notifications_active</span>
+        <h1 class="sub-header-title" data-i18n="nav-notifications">Notifications</h1>
+        <button class="icon-btn">
+          <span class="material-icons-round">settings</span>
         </button>
-      </footer>
+      </header>
+
+      <div class="onboarding-progress" id="onboarding-progress-notif" style="display:none;">
+        <div class="onboarding-step active"></div>
+        <div class="onboarding-step active"></div>
+        <div class="onboarding-step active"></div>
+      </div>
+
+      <div class="notif-center-content">
+        <!-- Group: Today -->
+        <div class="notif-group">
+          <div class="notif-group-header">
+            <h2 class="notif-group-title">Today</h2>
+            <span class="notif-group-badge">2 New</span>
+          </div>
+
+          <div class="notif-list" id="notif-today-list">
+            <!-- Urgent Need -->
+            <div class="notif-card" onclick="navigateTo('event-details')">
+              <div class="notif-card-icon-wrap urgent">
+                <span class="material-icons-round">notification_important</span>
+              </div>
+              <div class="notif-card-main">
+                <div class="notif-card-top">
+                  <span class="notif-card-label urgent">Urgent Action</span>
+                  <span class="notif-card-time">2h ago</span>
+                </div>
+                <p class="notif-card-text">
+                  <strong>URGENT:</strong> Beach Cleanup needs 5 more volunteers for tomorrow morning.
+                </p>
+                <button class="notif-card-btn">View Details</button>
+              </div>
+            </div>
+
+            <!-- Reward -->
+            <div class="notif-card">
+              <div class="notif-card-icon-wrap reward">
+                <span class="material-icons-round">workspace_premium</span>
+              </div>
+              <div class="notif-card-main">
+                <div class="notif-card-top">
+                  <span class="notif-card-label reward">Rewards</span>
+                  <span class="notif-card-time">5h ago</span>
+                </div>
+                <p class="notif-card-text">
+                  You just earned <strong>+150 Taw Points</strong> for your contribution at the Food Bank!
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Group: Earlier -->
+        <div class="notif-group earlier">
+          <div class="notif-group-header">
+            <h2 class="notif-group-title">Earlier</h2>
+          </div>
+
+          <div class="notif-list" id="notif-earlier-list">
+            <!-- New Opportunity -->
+            <div class="notif-card" onclick="navigateTo('event-details')">
+              <div class="notif-card-icon-wrap discovery">
+                <span class="material-icons-round">explore</span>
+              </div>
+              <div class="notif-card-main">
+                <div class="notif-card-top">
+                  <span class="notif-card-label discovery">Discovery</span>
+                  <span class="notif-card-time">Yesterday</span>
+                </div>
+                <p class="notif-card-text">
+                  New Environment activities available near <strong>Manama</strong>.
+                </p>
+                <div class="notif-card-media">
+                  <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGHMWWUL-XRdD2b-hB_ASbzojAK9wKaNsf7WttZUTDWOB21QtmadHqFNb5S5QkA61UiDC97eKyGniQKBWMLcer2Ot-jrr1GNfZLkcw_DDTinGcDx_9DmPUBc6txla7ziz0KdjsQh9JCmrc1ktEmDfmfcojMmLSVSA-s9e3l_RVoiT4tTcmGWw3tqUlno9mqXUhBhDz1FCIKdX7HyNYskEh23QDjwhvtdV4R0Hezgq9A_NVXoLiVeOi_h0m5qhReTRTJz680ymrodnj" alt="Mangrove Forest" />
+                  <div class="notif-card-media-overlay"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- System Update -->
+            <div class="notif-card">
+              <div class="notif-card-icon-wrap system">
+                <span class="material-icons-round">task_alt</span>
+              </div>
+              <div class="notif-card-main">
+                <div class="notif-card-top">
+                  <span class="notif-card-label system">System</span>
+                  <span class="notif-card-time">2 days ago</span>
+                </div>
+                <p class="notif-card-text">
+                  Your volunteer hour verification is complete.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- ===== PAGE: HOME FEED ===== -->
     <section id="page-home" class="page">
       <header class="page-header">
         <div class="header-left">
-          <img src="gemini_generated_image_gxr01qgxr01qgxr0_2.png/screen.png" alt="Taw Logo" class="header-logo" />
-        </div>
-        <div class="header-right">
-
-          <button class="dark-mode-toggle" id="dark-toggle-home" onclick="toggleDarkMode()">
-            <span class="material-icons-round">dark_mode</span>
-          </button>
-          <span class="greeting" data-i18n="greeting">Hello, Ali!</span>
           <div class="avatar" id="home-avatar" onclick="navigateTo('profile')">
             <span class="material-icons-round">person</span>
           </div>
         </div>
-      </header>
-
-      <div class="page-content">
-        <!-- Points Balance Card -->
-        <div class="points-card" id="home-points-card">
-          <div class="points-card-inner">
-            <div class="points-icon">
-              <span class="material-icons-round">paid</span>
-            </div>
-            <div class="points-info">
-              <span class="points-label" data-i18n="points-label">Taw Points</span>
-              <span class="points-value">2,500</span>
-            </div>
-            <div class="points-arrow">
-              <span class="material-icons-round">arrow_forward_ios</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Opportunities Section -->
-        <section class="section">
-          <div class="section-header">
-            <h2 class="section-title" data-i18n="opportunities-title">Opportunities Near You</h2>
-            <a href="#" class="see-all" id="home-see-all" data-i18n="see-all">See All</a>
-          </div>
-          <div class="carousel" id="opportunities-carousel">
-            <div class="opportunity-card" id="opp-card-1" data-category="environment" data-capacity="4" data-date="2026-04-10T10:00:00Z" onclick="navigateTo('event-details')">
-              <div class="opp-image opp-image-1">
-                <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=600&q=80" style="width:100%;height:100%;object-fit:cover;" alt="Tree Planting" />
-                <div class="opp-badge">+200 pts</div>
-              </div>
-              <div class="opp-content">
-                <div class="opp-org">
-                  <div class="opp-org-icon red-crescent-icon">🌙</div>
-                  <span class="opp-org-name" data-i18n="org-red-crescent">Bahrain Red Crescent</span>
-                </div>
-                <h3 class="opp-title" data-i18n="opp-tree-planting">Tree Planting at Al Areen</h3>
-                <div class="opp-meta">
-                  <span class="material-icons-round">calendar_today</span>
-                  <span>Dec 12, 2025</span>
-                </div>
-              </div>
-            </div>
-            <div class="opportunity-card" id="opp-card-2" data-category="environment" data-capacity="12" data-date="2026-03-31T20:00:00Z" onclick="navigateTo('event-details')">
-              <div class="opp-image opp-image-2">
-                <img src="" style="width:100%;height:100%;object-fit:cover;" alt="Beach Cleanup" />
-                <div class="opp-badge">+150 pts</div>
-              </div>
-              <div class="opp-content">
-                <div class="opp-org">
-                  <div class="opp-org-icon beach-icon">🏖️</div>
-                  <span class="opp-org-name" data-i18n="org-green-bahrain">Green Bahrain Society</span>
-                </div>
-                <h3 class="opp-title" data-i18n="opp-beach-cleanup">Beach Cleanup — Amwaj</h3>
-                <div class="opp-meta">
-                  <span class="material-icons-round">calendar_today</span>
-                  <span>Dec 18, 2025</span>
-                </div>
-              </div>
-            </div>
-            <div class="opportunity-card" id="opp-card-3" data-category="elderly" data-capacity="20" data-date="2026-04-04T10:00:00Z" onclick="navigateTo('event-details')">
-              <div class="opp-image opp-image-3">
-                <img src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&w=600&q=80" style="width:100%;height:100%;object-fit:cover;" alt="Elderly Care" />
-                <div class="opp-badge">+100 pts</div>
-              </div>
-              <div class="opp-content">
-                <div class="opp-org">
-                  <div class="opp-org-icon elderly-icon">🤝</div>
-                  <span class="opp-org-name" data-i18n="org-muharraq">Muharraq Welfare</span>
-                </div>
-                <h3 class="opp-title" data-i18n="opp-elderly-care">Elderly Care Visit</h3>
-                <div class="opp-meta">
-                  <span class="material-icons-round">calendar_today</span>
-                  <span>Dec 22, 2025</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Recent Activities -->
-        <section class="section">
-          <div class="section-header">
-            <h2 class="section-title" data-i18n="recent-activity">Recent Activity</h2>
-          </div>
-          <div class="activity-list" id="activity-list">
-            <div class="activity-item" id="activity-1">
-              <div class="activity-icon activity-icon-green">
-                <span class="material-icons-round">park</span>
-              </div>
-              <div class="activity-info">
-                <span class="activity-name" data-i18n="act-tree">Tree Planting — Al Areen</span>
-                <span class="activity-date">Nov 28, 2025 · 3 hrs</span>
-              </div>
-              <div class="activity-points">+300</div>
-            </div>
-            <div class="activity-item" id="activity-2">
-              <div class="activity-icon activity-icon-blue">
-                <span class="material-icons-round">water</span>
-              </div>
-              <div class="activity-info">
-                <span class="activity-name" data-i18n="act-beach">Beach Cleanup — Zallaq</span>
-                <span class="activity-date">Nov 15, 2025 · 2 hrs</span>
-              </div>
-              <div class="activity-points">+200</div>
-            </div>
-            <div class="activity-item" id="activity-3">
-              <div class="activity-icon activity-icon-rose">
-                <span class="material-icons-round">favorite</span>
-              </div>
-              <div class="activity-info">
-                <span class="activity-name" data-i18n="act-elderly">Elderly Care Visit</span>
-                <span class="activity-date">Oct 30, 2025 · 4 hrs</span>
-              </div>
-              <div class="activity-points">+400</div>
-            </div>
-            <div class="activity-item" id="activity-4">
-              <div class="activity-icon activity-icon-amber">
-                <span class="material-icons-round">menu_book</span>
-              </div>
-              <div class="activity-info">
-                <span class="activity-name" data-i18n="act-literacy">Literacy Workshop</span>
-                <span class="activity-date">Oct 12, 2025 · 2 hrs</span>
-              </div>
-              <div class="activity-points">+200</div>
-            </div>
-          </div>
-        </section>
-      </div>
-    </section>
-
-    <!-- ===== PAGE: DISCOVER ===== -->
-    <section id="page-discover" class="page">
-      <header class="page-header">
-        <div class="header-left">
-          <img src="gemini_generated_image_gxr01qgxr01qgxr0_2.png/screen.png" alt="Taw Logo" class="header-logo" />
-        </div>
         <div class="header-right">
-          <button class="icon-btn" id="discover-search-btn">
-            <span class="material-icons-round">search</span>
+          <button class="icon-btn" onclick="navigateTo('notifications')">
+            <span class="material-icons-round">notifications</span>
           </button>
         </div>
       </header>
 
-      <div class="page-content discover-redesign-content">
-        <!-- Hero Section: The Civic Tapestry Hero Card -->
-        <section class="discover-weave-hero" onclick="navigateTo('event-details')">
-          <div class="weave-hero-bg">
-            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaKh4Yu_x1bHbw3cFRO4eOS54DEWK9zqfANWauuUmGoMaxnYCtl8GfAtxvzwSZK-bI_1QHWpNmAN-BYlTpHspXuSNR69Grt-60qzaMusFWyhsyesIeVNVdSNb0ZfY19EBpEUvUrBJZ59SpQfU6E-KiR7fCCgYTZI5PyNVigsPOD5eZWuzaqIB3C8WEvOpfQvFMsuorLeptHyt_VfRPlTbrx6CN3qag1lJis4Uc_K5EgE7dOGaDZNkSieqTtx0FbrJCh_g47mLa9j9W" alt="Bahrain Skyline" class="weave-hero-img" />
-            <div class="weave-hero-gradient"></div>
-          </div>
-          <div class="weave-hero-content">
-            <div class="weave-hero-text">
-              <h1 class="weave-hero-title" data-i18n="weave-hero-title">Weave Your Part in <br/>Bahrain’s Story</h1>
-              <p class="weave-hero-desc" data-i18n="weave-hero-desc">Join 2,500+ volunteers making a daily difference.</p>
-              <div class="weave-hero-stats">
-                <span>2,500 volunteers</span> &middot; <span>12 active spots</span> &middot; <span>8 orgs</span>
-              </div>
+      <div class="page-content">
+        <!-- Welcome Section -->
+        <div class="home-welcome">
+          <h1 class="home-welcome-name" data-i18n="greeting">Hello, Ali!</h1>
+          <p class="home-welcome-sub" data-i18n="home-subtitle">Ready to make an impact today?</p>
+        </div>
+
+        <!-- Points Banner -->
+        <div class="points-banner" id="home-points-card">
+          <div class="points-banner-top">
+            <div>
+              <p class="points-banner-label" data-i18n="points-total-label">Total Balance</p>
+              <h2 class="points-banner-value" id="home-points-value">0 <span class="points-banner-unit" data-i18n="points-label">Taw Points</span></h2>
             </div>
-            <button class="weave-hero-btn">
-              <span data-i18n="explore-now">Explore Now</span>
-              <span class="material-icons-round">arrow_forward</span>
-            </button>
+            <div class="tier-badge" id="home-tier-badge">
+              <span class="material-icons-round" style="font-size:16px;">grade</span>
+              <span id="home-tier-name">Beginner</span>
+            </div>
+          </div>
+          <div class="points-banner-progress">
+            <div class="progress-labels">
+              <span id="home-progress-label">Progress to next tier</span>
+              <span class="progress-remaining" id="home-progress-remaining">—</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" id="home-progress-fill" style="width: 0%;"></div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Urgent Needs -->
+        <section class="section">
+          <div class="section-header">
+            <h2 class="section-title" data-i18n="urgent-needs">Urgent Needs</h2>
+            <div class="high-priority-badge pulse-anim">
+              <span class="dot"></span>
+              <span class="badge-text" data-i18n="high-priority">High Priority</span>
+            </div>
+          </div>
+          <div class="discover-bento-grid" id="urgent-bento-grid">
+            <!-- Populated dynamically by live-data.js -->
           </div>
         </section>
 
@@ -386,34 +480,34 @@
         <section class="discover-mosaic-section">
           <div class="discover-section-header">
             <h2 class="discover-section-title" data-i18n="browse-by-impact">Browse by Impact</h2>
-            <button class="see-all" data-i18n="view-all">View All</button>
+            <button class="see-all" onclick="navigateTo('volunteer-map')" data-i18n="view-all">View All</button>
           </div>
           <div class="discover-mosaic-scroll no-scrollbar">
-            <button class="discover-mosaic-btn env-btn" onclick="navigateTo('event-details')">
+            <button class="discover-mosaic-btn env-btn" onclick="filterOpportunitiesByCategory('environment')">
               <div class="mosaic-icon env-icon">
                 <span class="material-icons-round">eco</span>
               </div>
               <span class="mosaic-label" data-i18n="pill-environment">Environment</span>
             </button>
-            <button class="discover-mosaic-btn elderly-btn" onclick="navigateTo('event-details')">
+            <button class="discover-mosaic-btn elderly-btn" onclick="filterOpportunitiesByCategory('elderly')">
               <div class="mosaic-icon elderly-icon">
                 <span class="material-icons-round">elderly</span>
               </div>
               <span class="mosaic-label" data-i18n="pill-elderly">Elderly Care</span>
             </button>
-            <button class="discover-mosaic-btn edu-btn" onclick="navigateTo('event-details')">
+            <button class="discover-mosaic-btn edu-btn" onclick="filterOpportunitiesByCategory('education')">
               <div class="mosaic-icon edu-icon">
                 <span class="material-icons-round">school</span>
               </div>
               <span class="mosaic-label" data-i18n="pill-education">Education</span>
             </button>
-            <button class="discover-mosaic-btn health-btn" onclick="navigateTo('event-details')">
+            <button class="discover-mosaic-btn health-btn" onclick="filterOpportunitiesByCategory('health')">
               <div class="mosaic-icon health-icon">
                 <span class="material-icons-round">health_and_safety</span>
               </div>
               <span class="mosaic-label" data-i18n="pill-health">Health</span>
             </button>
-            <button class="discover-mosaic-btn community-btn" onclick="navigateTo('event-details')">
+            <button class="discover-mosaic-btn community-btn" onclick="filterOpportunitiesByCategory('community')">
               <div class="mosaic-icon community-icon">
                 <span class="material-icons-round">groups</span>
               </div>
@@ -422,79 +516,24 @@
           </div>
         </section>
 
-        <!-- Urgent Needs: Bento Grid Inspired -->
-        <section class="discover-bento-section">
-          <div class="discover-section-header">
-            <h2 class="discover-section-title" data-i18n="urgent-needs">Urgent Needs</h2>
-            <div class="high-priority-badge pulse-anim">
-              <span class="dot"></span>
-              <span class="badge-text" data-i18n="high-priority">High Priority</span>
-            </div>
+        <!-- Opportunities Section -->
+        <section class="section">
+          <div class="section-header">
+            <h2 class="section-title" data-i18n="opportunities-title">Opportunities Near You</h2>
+            <a href="#" class="see-all" id="home-see-all" onclick="event.preventDefault(); navigateTo('volunteer-map')" data-i18n="see-all">See All</a>
           </div>
-          <div class="discover-bento-grid">
-            <!-- Large Feature Card -->
-            <div class="bento-card-large" data-capacity="2" data-date="2026-04-05T09:00:00Z" onclick="navigateTo('event-details')">
-              <div class="bento-large-header">
-                <div class="bento-org-info">
-                  <div class="bento-org-logo">
-                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBQ_UkzD-NhE2a9jpcr-pSJhOquDM6BdmLBmRWs3bRPosGC14JES5k0hrPxq_P7RrysxflsH-YmJsUlafVGgILJYHs-sCp0H6tE0kLvrszLe3Ghe5ho1FKaKj9j_ndWql3OhdTZXbefLtx1PAl3KvDVrWCoR48gc7D70lnwJwe_SjQB580NEED3eheMVvq_VL-vbh4j_n9H_1H1TUD3315RCKJchdREur-bA981ZAU0HHkdnRe8rQTRO7GZuZ_NUF-DffQDeAz7_AE" alt="Org Logo" />
-                  </div>
-                  <div class="bento-org-text">
-                    <h3 class="bento-title" data-i18n="marine-title">Marine Cleanup: Malkiya Beach</h3>
-                    <p class="bento-subtitle" data-i18n="marine-org">Bahrain Ocean Society</p>
-                  </div>
-                </div>
-                <span class="bento-date-badge" data-i18n="tomorrow">Tomorrow</span>
-              </div>
-              <div class="bento-image-wrap">
-                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoXGK4NJKVaXa3tyxKQHvjTJAmN7mOlBKMZJ4mrBd8PmdcmF3BMiUZLkZ3Z5VFfEH_51H4WUQHz60BdasN5V5HmRfUq-PLZ_K9lnoh9qu1_3CITzJyP0syWtGylLMdKehMyDOW2aXdi5mrvjiIYfs8DIlAyYHB2maQpnz7fy699uA-E-Qz37qMuR82wvtQta2GZTsei-M55c8_Y-kWJSmaefRIW3ssSwbjbkDLK7TeVfcJRUCI_qqlxtwHklppN3djBq1NU4r70Lk-" alt="Cleaning Beach" class="bento-img" />
-                <div class="bento-tags">
-                  <div class="bento-tag">
-                    <span class="material-icons-round">person_add</span>
-                    <span data-i18n="slots-8">8 Slots Left</span>
-                  </div>
-                  <div class="bento-tag">
-                    <span class="material-icons-round">stars</span>
-                    <span data-i18n="points-50">50 Taw</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Secondary Row -->
-            <div class="bento-row">
-              <div class="bento-card-small" onclick="navigateTo('event-details')">
-                <div class="bento-small-meta">
-                  <span class="material-icons-round text-secondary">volunteer_activism</span>
-                  <span class="bento-small-label text-secondary" data-i18n="elderly-support">Elderly Support</span>
-                </div>
-                <h4 class="bento-small-title" data-i18n="evening-tea">Evening Tea at Muharraq Care Home</h4>
-                <div class="bento-small-footer">
-                  <span class="bento-small-time" data-i18n="1800-today">18:00 Today</span>
-                  <span class="material-icons-round text-primary">arrow_outward</span>
-                </div>
-              </div>
-              <div class="bento-card-small" onclick="navigateTo('event-details')">
-                <div class="bento-small-meta">
-                  <span class="material-icons-round text-tertiary">local_library</span>
-                  <span class="bento-small-label text-tertiary" data-i18n="tutoring">Tutoring</span>
-                </div>
-                <h4 class="bento-small-title" data-i18n="math-help">Math Help for Secondary Students</h4>
-                <div class="bento-small-footer">
-                  <span class="bento-small-time" data-i18n="online-wed">Online • Wed</span>
-                  <span class="material-icons-round text-primary">arrow_outward</span>
-                </div>
-              </div>
-            </div>
+          <div class="carousel" id="opportunities-carousel">
+            <!-- Populated dynamically from Supabase -->
           </div>
         </section>
-        <!-- Community Impact Cards -->
-        <section class="discover-section" style="margin-bottom: var(--sp-6);">
-          <div class="discover-section-header" style="padding-inline: var(--sp-1); margin-bottom: var(--sp-4);">
-            <h2 class="discover-section-title" data-i18n="community-impact">Community Impact</h2>
-            <button class="see-all" data-i18n="see-all">See All</button>
-          </div>
 
+
+        <!-- Community Impact Stories -->
+        <section class="section">
+          <div class="section-header">
+            <h2 class="section-title" data-i18n="community-impact">Community Impact</h2>
+            <a href="#" class="see-all" onclick="event.preventDefault(); navigateTo('volunteer-map')" data-i18n="see-all">See All</a>
+          </div>
           <div class="discover-impact-list">
             <!-- Impact Card 1 -->
             <div class="discover-impact-card" data-category="environment" onclick="navigateTo('event-details')">
@@ -519,7 +558,7 @@
                   <span class="impact-location" data-i18n="loc-karzakan">Karzakan Coast</span>
                 </div>
                 <h3 class="impact-title" data-i18n="impact-title-1">Preserving our Coastline Together</h3>
-                <p class="impact-desc" data-i18n="impact-desc-1">Join a growing community dedicated to restoring the natural beauty of Bahrain's shores. This weekend, we focus on the north lagoon.</p>
+                <p class="impact-desc" data-i18n="impact-desc-1">Join a growing community dedicated to restoring the natural beauty of Bahrain's shores.</p>
               </div>
             </div>
 
@@ -543,33 +582,47 @@
                   <span class="impact-location" data-i18n="loc-hidaya">Al-Hidaya Center</span>
                 </div>
                 <h3 class="impact-title" data-i18n="impact-title-2">Passing Down the Gift of Words</h3>
-                <p class="impact-desc" data-i18n="impact-desc-2">Mentor young students in traditional storytelling and literacy skills. Help keep our rich oral history alive for the next generation.</p>
+                <p class="impact-desc" data-i18n="impact-desc-2">Mentor young students in traditional storytelling and literacy skills.</p>
               </div>
             </div>
           </div>
         </section>
+      </div>
+    </section>
 
-        <!-- Impact Highlight -->
-        <section class="discover-impact-highlight" onclick="navigateTo('rewards')">
-          <div class="impact-hl-text">
-            <p class="impact-hl-label" data-i18n="your-community-impact">Your Community Impact</p>
-            <h3 class="impact-hl-title" data-i18n="weekly-goal-15">Weekly Goal: 15 Hours</h3>
-            <div class="impact-hl-bar-bg">
-              <div class="impact-hl-bar-fill" style="width: 65%;"></div>
-            </div>
+    <!-- ===== PAGE: REWARDS MARKETPLACE ===== -->
+    <section id="page-marketplace" class="page">
+      <header class="page-header">
+        <div class="header-left">
+          <h1 class="page-title" data-i18n="nav-rewards">Rewards</h1>
+        </div>
+        <div class="header-right">
+          <div class="avatar" id="marketplace-avatar" onclick="navigateTo('profile')">
+            <span class="material-icons-round">person</span>
           </div>
-          <div class="impact-hl-stats">
-            <div class="impact-hl-number">10.5</div>
-            <div class="impact-hl-unit" data-i18n="hours-done">Hours Done</div>
-          </div>
-        </section>
+        </div>
+      </header>
+
+      <div class="page-content">
+        <!-- Category Chips -->
+        <div class="category-chips" id="category-chips">
+          <button class="chip active" id="chip-cafes" onclick="filterCategory(this, 'cafe')" data-i18n="chip-cafes">☕ Cafés</button>
+          <button class="chip" id="chip-dining" onclick="filterCategory(this, 'dining')" data-i18n="chip-dining">🍽️ Dining</button>
+          <button class="chip" id="chip-entertainment" onclick="filterCategory(this, 'entertainment')" data-i18n="chip-entertainment">🎬 Entertainment</button>
+          <button class="chip" id="chip-wellness" onclick="filterCategory(this, 'wellness')" data-i18n="chip-wellness">💆 Wellness</button>
+        </div>
+
+        <!-- Rewards Grid -->
+        <div class="rewards-grid" id="rewards-grid">
+          <!-- Populated dynamically from Supabase -->
+        </div>
       </div>
     </section>
 
     <!-- ===== PAGE: VOLUNTEER MAP ===== -->
     <section id="page-volunteer-map" class="page sub-page">
       <header class="sub-header">
-        <button class="back-btn" id="map-back-btn" onclick="goBack()">
+        <button class="back-btn" aria-label="Go back" id="map-back-btn" onclick="goBack()">
           <span class="material-icons-round">arrow_back</span>
         </button>
         <h1 class="sub-header-title">Volunteer Map</h1>
@@ -646,7 +699,7 @@
           <div class="volmap-cards-scroll" id="volmap-cards-scroll">
 
             <!-- Card 1 -->
-            <div class="volmap-event-card" data-index="0" onclick="navigateTo('event-details')">
+            <div class="volmap-event-card" data-index="0" onclick="openEventDetails('tree-planting')">
               <div class="volmap-card-color volmap-color-green"></div>
               <div class="volmap-card-body">
                 <div class="volmap-card-org">
@@ -663,7 +716,7 @@
             </div>
 
             <!-- Card 2 -->
-            <div class="volmap-event-card" data-index="1" onclick="navigateTo('event-details')">
+            <div class="volmap-event-card" data-index="1" onclick="openEventDetails('amwaj-cleanup')">
               <div class="volmap-card-color volmap-color-blue"></div>
               <div class="volmap-card-body">
                 <div class="volmap-card-org">
@@ -680,7 +733,7 @@
             </div>
 
             <!-- Card 3 -->
-            <div class="volmap-event-card" data-index="2" onclick="navigateTo('event-details')">
+            <div class="volmap-event-card" data-index="2" onclick="openEventDetails('elderly-visit')">
               <div class="volmap-card-color volmap-color-rose"></div>
               <div class="volmap-card-body">
                 <div class="volmap-card-org">
@@ -697,7 +750,7 @@
             </div>
 
             <!-- Card 4 -->
-            <div class="volmap-event-card" data-index="3" onclick="navigateTo('event-details')">
+            <div class="volmap-event-card" data-index="3" onclick="openEventDetails('literacy-workshop')">
               <div class="volmap-card-color volmap-color-amber"></div>
               <div class="volmap-card-body">
                 <div class="volmap-card-org">
@@ -714,7 +767,7 @@
             </div>
 
             <!-- Card 5 -->
-            <div class="volmap-event-card" data-index="4" onclick="navigateTo('event-details')">
+            <div class="volmap-event-card" data-index="4" onclick="openEventDetails('blood-donation')">
               <div class="volmap-card-color volmap-color-teal"></div>
               <div class="volmap-card-body">
                 <div class="volmap-card-org">
@@ -731,7 +784,7 @@
             </div>
 
             <!-- Card 6 -->
-            <div class="volmap-event-card" data-index="5" onclick="navigateTo('event-details')">
+            <div class="volmap-event-card" data-index="5" onclick="openEventDetails('meal-prep')">
               <div class="volmap-card-color volmap-color-amber"></div>
               <div class="volmap-card-body">
                 <div class="volmap-card-org">
@@ -753,7 +806,7 @@
         <!-- Spot Count Badge -->
         <div class="volmap-count-badge">
           <span class="material-icons-round">location_on</span>
-          <span>12 Active Spots</span>
+          <span id="volmap-active-count">0 Active Spots</span>
         </div>
       </div>
     </section>
@@ -761,7 +814,7 @@
     <!-- ===== PAGE: EVENT DETAILS ===== -->
     <section id="page-event-details" class="page sub-page">
       <header class="sub-header">
-        <button class="back-btn" id="event-back-btn" onclick="goBack()">
+        <button class="back-btn" aria-label="Go back" id="event-back-btn" onclick="goBack()">
           <span class="material-icons-round">arrow_back</span>
         </button>
         <h1 class="sub-header-title" data-i18n="event-details-title">Event Details</h1>
@@ -844,7 +897,7 @@
 
         <!-- Apply Button -->
         <div class="action-footer">
-          <button class="btn-primary" id="event-apply-btn" onclick="navigateTo('checkin-success')" data-i18n="apply-btn">
+          <button class="btn-primary" id="event-apply-btn" onclick="showConfirmApplication()" data-i18n="apply-btn">
             Apply for This Event
           </button>
         </div>
@@ -886,110 +939,10 @@
       </div>
     </section>
 
-    <!-- ===== PAGE: REWARDS MARKETPLACE ===== -->
-    <section id="page-marketplace" class="page">
-      <header class="sub-header">
-        <button class="back-btn" id="market-back-btn" onclick="navigateTo('home')">
-          <span class="material-icons-round">arrow_back</span>
-        </button>
-        <h1 class="sub-header-title" data-i18n="rewards-title">Rewards Marketplace</h1>
-        <div class="avatar small-avatar" id="market-avatar" onclick="navigateTo('profile')">
-          <span class="material-icons-round">person</span>
-        </div>
-      </header>
-
-      <div class="page-content">
-        <!-- Category Chips -->
-        <div class="category-chips" id="category-chips">
-          <button class="chip active" id="chip-cafes" onclick="filterCategory(this, 'cafes')" data-i18n="chip-cafes">☕ Cafés</button>
-          <button class="chip" id="chip-dining" onclick="filterCategory(this, 'dining')" data-i18n="chip-dining">🍽️ Dining</button>
-          <button class="chip" id="chip-entertainment" onclick="filterCategory(this, 'entertainment')" data-i18n="chip-entertainment">🎬 Entertainment</button>
-          <button class="chip" id="chip-wellness" onclick="filterCategory(this, 'wellness')" data-i18n="chip-wellness">💆 Wellness</button>
-        </div>
-
-        <!-- Rewards Grid -->
-        <div class="rewards-grid" id="rewards-grid">
-          <!-- Card 1: Costa Coffee -->
-          <div class="reward-card" id="reward-card-1" data-category="cafes" onclick="openRewardDetails('costa')">
-            <div class="reward-image-wrap">
-              <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFtjGjJBz4rKkpBZxWX4R69lDkfogiml87c2Vl_SzCsHeGqpDS-6b8GfbvIumqJ5PREXi5Hr6vkAbDB0n02QpHp7YAMG1wWUrrD6yrcS1FLPAnRGKvE9VMZnVpOMi6YLyk6rW0dkIdcPXvf8owJIS6BdhGXs24zYgLxHI8GanMJNervJXF9Ap-qyDWPgfwbgOEXpvvZ7LEpLkkek68fg0znlvZehGZt8QTYuPxbjDYGtzkDOPIm_NhsPMxgv45ET9kxJbWF11xK5qB" alt="Costa Coffee Beverage" class="reward-photo" />
-              <div class="reward-brand-logo">
-                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPOaX1zBNf4HePRp-WODZzoP95-APc5cPhywZ9gB5ZTcEgrFqF0UJ0NjGOpvqGLo-kiCZmH--jmGAhj3pDvOIw2v5rvccFq6Q_2zuRsirM6Pr5yX1mm5U9JUCIB4Pd2GN-uFC8jY4tX4waMc-wQECW7SWEwRH-Nhun_pJY6OemaerfSGHIzjma79eCMe6w4Ob8L5AIN9vlsbTSJHAEkapkYgJEsqYt1YNrsUgfNCM-iDBV0D7k_Oq8VSQIkoGkkAxq-lWQI4BQ5FVX" alt="Costa Logo" />
-              </div>
-            </div>
-            <div class="reward-card-body">
-              <h3 class="reward-card-title" data-i18n="reward-1">50% off any beverage</h3>
-            </div>
-            <div class="reward-price-badge">
-              <div class="price-coin"><span class="material-icons-round">toll</span></div>
-              <span class="price-amount">600</span>
-              <span class="price-unit">Points</span>
-            </div>
-          </div>
-
-          <!-- Card 2: Jasmi's -->
-          <div class="reward-card" id="reward-card-2" data-category="cafes" onclick="openRewardDetails('jasmis')">
-            <div class="reward-image-wrap">
-              <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBr5rg6vflFvo-fB0JVX2vXLcH8L8scDJ3yOhvnSuL5pg3fy8SPF-DjSZZZiO7S0yCN009FAgDfgeOwzgb_L_QPJTKe9l6mWO2g5FffHugypjMPUAKCNWWMvr9hbVNwzKeXvxFrU0jI3ALemhcUMELASjAEU2qyQR3yNnsX-RQxQyKPIrlgOuliNf5e2-3pAqoricmilnsM8n6iN3R-xHU99X9lLftGSyJ63-9bC8nb8ce4GCyRiOqjdylbfMXYlArWl45_bJZBhA-r" alt="Jasmi's Food" class="reward-photo" />
-              <div class="reward-brand-logo">
-                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZWPP07ryMiii7qOE_trAEcai39fESiIR-i5shbsivT4nj755_JaMnOB4BwNtAJzqvW0XEqo1j58fC37gORiSJR0NHR2QfMHJihNG4rdhqnZ8QKRzynh7s78DkUBDq7Ea7AZAOE1YrfAhOD_a-wLN7gX966gBbJjajVbsaaDKF1em8pMf2XnLzFbipRm75iHICBo6HOJ6jNOXqRG8_JXk4cXU7bB9hSWcEmezorEyit3loVpBKG-cA-y3rYIcJ_CCB6wvc8e6ZDpyT" alt="Jasmi's Logo" />
-              </div>
-            </div>
-            <div class="reward-card-body">
-              <h3 class="reward-card-title" data-i18n="reward-2">Free appetizer</h3>
-            </div>
-            <div class="reward-price-badge">
-              <div class="price-coin"><span class="material-icons-round">toll</span></div>
-              <span class="price-amount">600</span>
-              <span class="price-unit">Points</span>
-            </div>
-          </div>
-
-          <!-- Card 3: Dining -->
-          <div class="reward-card" id="reward-card-3" data-category="dining" onclick="openRewardDetails('dining')">
-            <div class="reward-image-wrap">
-              <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZrnDP-9nWUguc_yRbGaxTBrpzfxRqM_9QD32M5QACeaq5aJXFd2MuEfqK0dV4pLLAYleNVrKq8vNQkVy14glDGEKshTEqaxUbHtHOa5HRT_KyhmlJVAElum-aDlrehBMTwjCPhS5q5bL6RFIxQoUK-1G_dw2ZbjqH5dAQMEYGSp_wYYMLcXblV3sq9ahJZGsURYi_NEGAGzDG-qgs5k4pcVyYo2y9x0EtfQLMopjw3WE8pEQBuCmisi52RuJBQAHlHQY9nHVbnCj_" alt="People dining" class="reward-photo" />
-              <div class="reward-brand-logo brand-logo-icon">
-                <span class="material-icons-round">restaurant</span>
-                <span class="brand-label" data-i18n="brand-dining">Dining</span>
-              </div>
-            </div>
-            <div class="reward-card-body">
-              <h3 class="reward-card-title" data-i18n="reward-3">20% off dinner bill</h3>
-            </div>
-            <div class="reward-price-badge">
-              <div class="price-coin"><span class="material-icons-round">toll</span></div>
-              <span class="price-amount">800</span>
-              <span class="price-unit">Points</span>
-            </div>
-          </div>
-
-          <!-- Card 4: Cinema -->
-          <div class="reward-card" id="reward-card-4" data-category="entertainment">
-            <div class="reward-image-wrap">
-              <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-NRaFg91ZZgjstB4sgWp_asAf5SnAsP0OKsaDKHwsWPTZ9ur_AiKWmLo5ofczf3dquy1r2V1N-6zKmFlEmeB36cUkY7V8p_ylXpF-4CC_zrxTAAM5ypQIvetrMt-CPT2ay0xiDpQuZB2bVYUvw-CtVVtG0mNl0dqDXDT58aeN4STrwbbzq03UVA6LfjkN4AZs-pacWR_V-jVZrLpHrHlajA4vV4l3q6pXBwJzWp6Gl_4ocUAgeCvLcAH4Wzb9AvQeig85UqDAgNP6" alt="Cinema experience" class="reward-photo" />
-              <div class="reward-brand-logo brand-logo-icon">
-                <span class="material-icons-round">movie</span>
-                <span class="brand-label" data-i18n="brand-entertainment">Entertainment</span>
-              </div>
-            </div>
-            <div class="reward-card-body">
-              <h3 class="reward-card-title" data-i18n="reward-4">Buy 1 Get 1 Free Cinema Ticket</h3>
-            </div>
-            <div class="reward-price-badge">
-              <div class="price-coin"><span class="material-icons-round">toll</span></div>
-              <span class="price-amount">500</span>
-              <span class="price-unit">Points</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- ===== PAGE: VOLUNTEER PROFILE ===== -->
     <section id="page-profile" class="page">
       <header class="sub-header">
-        <button class="back-btn" id="profile-back-btn" onclick="navigateTo('home')">
+        <button class="back-btn" aria-label="Go back" id="profile-back-btn" onclick="navigateTo('home')">
           <span class="material-icons-round">arrow_back</span>
         </button>
         <h1 class="sub-header-title" data-i18n="profile-title">Volunteer Profile</h1>
@@ -998,9 +951,16 @@
       <div class="page-content">
         <!-- Profile Hero -->
         <div class="profile-hero" id="profile-hero">
-          <div class="profile-avatar-large">
-            <span class="material-icons-round">person</span>
-          </div>
+          <input type="file" id="avatar-upload" accept="image/*" style="display:none;" onchange="if(window.handleAvatarUpload) window.handleAvatarUpload(event)" />
+          <label for="avatar-upload" class="profile-avatar-large editable-avatar" id="profile-avatar-ui">
+            <img alt="Profile Avatar" class="avatar-custom-img def-icon" src="default_avatar.png" style="display:block;" />
+            <div class="avatar-edit-badge">
+              <span class="material-icons-round">edit</span>
+            </div>
+            <div class="avatar-edit-overlay">
+              <span class="material-icons-round">camera_alt</span>
+            </div>
+          </label>
           <h2 class="profile-name" data-i18n="profile-name">Ali Al-Hassan</h2>
           <p class="profile-title" data-i18n="profile-since">Community Volunteer since 2023</p>
         </div>
@@ -1012,16 +972,31 @@
               <span class="material-icons-round">schedule</span>
             </div>
             <span class="stat-card-label" data-i18n="stat-hours-label">Total Hours Given</span>
-            <span class="stat-card-value" data-i18n="stat-hours-val">125 hrs</span>
+            <span class="stat-card-value" id="stat-hours-value">0 hrs</span>
           </div>
           <div class="stat-card" id="stat-points">
             <div class="stat-card-icon icon-gold">
               <span class="material-icons-round">star</span>
             </div>
             <span class="stat-card-label" data-i18n="stat-points-label">Points Balance</span>
-            <span class="stat-card-value">2,500</span>
+            <span class="stat-card-value" id="stat-points-value">0</span>
           </div>
         </div>
+
+        <!-- Weekly Goal -->
+        <section class="discover-impact-highlight">
+          <div class="impact-hl-text">
+            <p class="impact-hl-label" data-i18n="your-community-impact">Your Community Impact</p>
+            <h3 class="impact-hl-title" data-i18n="weekly-goal-15">Weekly Goal: 15 Hours</h3>
+            <div class="impact-hl-bar-bg">
+              <div class="impact-hl-bar-fill" id="impact-hl-bar-fill" style="width: 0%;"></div>
+            </div>
+          </div>
+          <div class="impact-hl-stats">
+            <div class="impact-hl-number" id="impact-hl-number">0</div>
+            <div class="impact-hl-unit" data-i18n="hours-done">Hours Done</div>
+          </div>
+        </section>
 
         <!-- Volunteer History -->
         <section class="section">
@@ -1147,13 +1122,26 @@
             </div>
           </div>
         </section>
+
+        <!-- Sign Out -->
+        <section class="section" style="margin-top: var(--sp-6); padding-bottom: var(--sp-8);">
+          <button class="settings-item sign-out-btn" onclick="handleSignOut()">
+            <div class="settings-info">
+              <div class="settings-icon sign-out-icon">
+                <span class="material-icons-round">logout</span>
+              </div>
+              <span class="settings-label" data-i18n="sign-out">Sign Out</span>
+            </div>
+            <span class="material-icons-round">chevron_right</span>
+          </button>
+        </section>
       </div>
     </section>
 
     <!-- ===== PAGE: REWARD DETAILS ===== -->
     <section id="page-reward-details" class="page">
       <header class="reward-detail-header">
-        <button class="back-btn" onclick="navigateTo('marketplace')">
+        <button class="back-btn" aria-label="Go back" onclick="navigateTo('marketplace')">
           <span class="material-icons-round">arrow_back</span>
         </button>
         <h1 class="reward-detail-title" data-i18n="reward-detail-title">Reward Details</h1>
@@ -1230,15 +1218,38 @@
       </div>
     </section>
 
+    <!-- ===== MODAL: CONFIRM APPLICATION ===== -->
+    <div id="modal-confirm-application" class="modal-overlay" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="confirm-app-title" onclick="hideConfirmApplication(event)">
+      <div class="confirm-modal-card" onclick="event.stopPropagation()">
+        <div class="confirm-icon-ring" style="color: var(--primary); background: rgba(0, 102, 79, 0.1);">
+          <span class="material-icons-round">check_circle</span>
+        </div>
+        <h2 class="confirm-title" id="confirm-app-title">Application Submitted!</h2>
+        <p class="confirm-subtitle">You have successfully applied for this event.</p>
+        
+        <div class="confirm-notice">
+          <span class="material-icons-round confirm-notice-icon">info</span>
+          <p class="confirm-notice-text">The organizer will review your application. You will receive a notification when approved.</p>
+        </div>
+
+        <button class="confirm-btn-primary" onclick="hideConfirmApplication(null); navigateTo('home')">
+          Back to Home
+        </button>
+        <button class="confirm-btn-cancel" onclick="hideConfirmApplication(null); navigateTo('volunteer-map')">
+          Find More Events
+        </button>
+      </div>
+    </div>
+
     <!-- ===== MODAL: CONFIRM REDEMPTION ===== -->
-    <div id="modal-confirm-redemption" class="modal-overlay" style="display:none;" onclick="hideConfirmRedemption(event)">
+    <div id="modal-confirm-redemption" class="modal-overlay" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="confirm-redeem-title" onclick="hideConfirmRedemption(event)">
       <div class="confirm-modal-card" onclick="event.stopPropagation()">
         <!-- Icon -->
         <div class="confirm-icon-ring">
           <span class="material-icons-round">redeem</span>
         </div>
 
-        <h2 class="confirm-title">Final Step</h2>
+        <h2 class="confirm-title" id="confirm-redeem-title">Final Step</h2>
         <p class="confirm-subtitle">Verify your selection before we finalize your reward.</p>
 
         <!-- Reward Summary Card -->
@@ -1261,7 +1272,7 @@
           </div>
           <div class="confirm-points-box">
             <span class="confirm-points-label">YOUR BALANCE</span>
-            <span class="confirm-points-value">2,450 Taw</span>
+            <span class="confirm-points-value" id="cr-balance">— Taw</span>
           </div>
         </div>
 
@@ -1290,7 +1301,7 @@
     <!-- ===== PAGE: REWARD REDEEMED ===== -->
     <section id="page-reward-redeemed" class="page">
       <header class="reward-detail-header">
-        <button class="back-btn" onclick="navigateTo('marketplace')">
+        <button class="back-btn" aria-label="Go back" onclick="navigateTo('marketplace')">
           <span class="material-icons-round">close</span>
         </button>
         <h1 class="reward-detail-title">Reward Redeemed</h1>
@@ -1369,20 +1380,13 @@
     </section>
 
     <!-- ===== BOTTOM NAV BAR ===== -->
-    <nav class="bottom-nav" id="bottom-nav">
-      <button class="nav-item active" id="nav-home" onclick="navigateTo('home')">
+    <nav class="bottom-nav" id="bottom-nav" role="navigation" aria-label="Main navigation">
+      <button class="nav-item active" id="nav-home" onclick="navigateTo('home')" aria-current="page">
         <span class="material-icons-round">home</span>
         <span class="nav-label" data-i18n="nav-home">Home</span>
       </button>
-      <button class="nav-item" id="nav-discover" onclick="navigateTo('discover')">
-        <span class="material-icons-round">explore</span>
-        <span class="nav-label" data-i18n="nav-discover">Discover</span>
-      </button>
-      <button class="nav-item nav-scanner" id="nav-scanner" onclick="navigateTo('checkin-success')">
-        <span class="material-icons-round">qr_code_scanner</span>
-      </button>
       <button class="nav-item" id="nav-marketplace" onclick="navigateTo('marketplace')">
-        <span class="material-icons-round">storefront</span>
+        <span class="material-icons-round">redeem</span>
         <span class="nav-label" data-i18n="nav-rewards">Rewards</span>
       </button>
       <button class="nav-item" id="nav-profile" onclick="navigateTo('profile')">
@@ -1392,9 +1396,39 @@
     </nav>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="config.js"></script>
+  <script src="supabaseClient.js"></script>
   <script src="fallback-illustrations.js"></script>
   <script src="dynamic-badges.js"></script>
   <script src="i18n.js"></script>
   <script src="app.js"></script>
+  <script src="points.js"></script>
+  <script src="live-data.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then(registration => console.log('SW registered'))
+          .catch(err => console.log('SW registration failed:', err));
+      });
+    }
+  </script>
+
+  <!-- Auth Prompt Modal (shown when guest attempts a protected action) -->
+  <div id="modal-auth-prompt" class="modal-overlay" style="display:none;"
+       role="dialog" aria-modal="true" aria-labelledby="auth-prompt-label">
+    <div class="modal-sheet" style="text-align:center;padding:32px 24px 28px;">
+      <div class="modal-handle"></div>
+      <span class="material-icons-round" style="font-size:44px;color:var(--primary);margin-bottom:12px;display:block;">lock_open</span>
+      <h2 id="auth-prompt-label" class="modal-title" style="margin-bottom:8px;">Sign in to continue</h2>
+      <p class="modal-subtitle" style="margin-bottom:24px;color:var(--on-surface-variant);">Create a free account or sign in to take part.</p>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <button class="btn-primary" onclick="hideAuthPrompt(); setAuthMode('signup'); navigateTo('auth')">Create Account</button>
+        <button class="btn-secondary" onclick="hideAuthPrompt(); setAuthMode('signin'); navigateTo('auth')">Sign In</button>
+        <button class="btn-ghost" onclick="hideAuthPrompt()" style="color:var(--on-surface-variant);font-size:0.875rem;padding:8px;">Maybe Later</button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

@@ -4,41 +4,107 @@
 
 const translations = {
   en: {
+    // Landing
+    'landing-headline':     'Volunteer. Earn. <br/>Impact.',
+    'landing-subtitle':     'Join the movement transforming lives in Bahrain.',
+    'landing-cta':          'Join the Cause',
+    'landing-signin':       'Already making an impact?',
+    'landing-signin-link':  'Sign In',
+
+    // Onboarding: Interests
+    'interests-title':      'What drives you?',
+    'interests-subtitle':   'Select the causes you\'re most passionate about to personalize your volunteer journey.',
+    'interests-why-title':  'Why this matters?',
+    'interests-why-desc':   'Personalizing your interests helps us match you with high-impact opportunities that earn you more Taw Points.',
+    'btn-skip':             'Skip',
+    'btn-next':             'Next',
+
+    // Onboarding: Notifications
+    'notif-title':          'Stay in the Loop',
+    'notif-subtitle':       'Enable notifications to get real-time alerts for urgent volunteer needs, reward milestones, and community updates.',
+    'notif-b1-title':       'Urgent Direct Actions',
+    'notif-b1-desc':        'Immediate opportunities to help in your immediate area.',
+    'notif-b2-title':       'Verification Alerts',
+    'notif-b2-desc':        'Get notified the moment your service hours are approved.',
+    'notif-b3-title':       'Local Rewards',
+    'notif-b3-desc':        'Get notified the moment you earn new points and rewards.',
+    'btn-allow':            'Allow Notifications',
+    'btn-maybe-later':      'Maybe Later',
+
+    // Interest categories
+    'cat-environment':      'Environment',
+    'cat-elderly':          'Elderly Care',
+    'cat-education':        'Education',
+    'cat-health':           'Health',
+    'cat-animal':           'Animal Welfare',
+    'cat-social':           'Social Welfare',
+    'cat-advocacy':         'Advocacy',
+    'cat-arts':             'Arts & Culture',
+    'cat-food':             'Food Security',
+
     // Home
-    'greeting':             'Hello, Ali!',
-    'points-label':         'Taw Points',
-    'opportunities-title':  'Opportunities Near You',
-    'see-all':              'See All',
-    'recent-activity':      'Recent Activity',
+    'greeting':                 'Hello, Ali!',
+    'home-subtitle':            'Ready to make an impact today?',
+    'points-label':             'Taw Points',
+    'points-total-label':       'Total Balance',
+    'tier-gold':                'Gold Tier',
+    'progress-platinum':        'Progress to Platinum',
+    'progress-pts-left':        '500 pts to next level',
+    'impact-community-title':   'Total Community Impact',
+    'impact-community-sub':     'You\'re making Bahrain better.',
+    'hours-label':              'Hours',
+    'opportunities-title':      'Opportunities Near You',
+    'see-all':                  'See All',
 
     // Opportunity cards
-    'org-red-crescent':     'Bahrain Red Crescent',
-    'org-green-bahrain':    'Green Bahrain Society',
-    'org-muharraq':         'Muharraq Welfare',
-    'opp-tree-planting':    'Tree Planting at Al Areen',
-    'opp-beach-cleanup':    'Beach Cleanup — Amwaj',
-    'opp-elderly-care':     'Elderly Care Visit',
+    'org-red-crescent':         'Bahrain Red Crescent',
+    'org-green-bahrain':        'Green Bahrain Society',
+    'org-muharraq':             'Muharraq Welfare',
+    'opp-tree-planting':        'Tree Planting at Al Areen',
+    'opp-beach-cleanup':        'Coastal Beach Cleanup',
+    'opp-food-drive':           'Ramadan Food Drive',
+    'opp-elderly-care':         'Elderly Care Visit',
+    'opp-date-tomorrow':        'Tomorrow, 08:00',
+    'opp-date-sat':             'Sat, 16:00',
+    'opp-date-sun':             'Sun, 10:00',
 
-    // Activity
-    'act-tree':             'Tree Planting — Al Areen',
-    'act-beach':            'Beach Cleanup — Zallaq',
-    'act-elderly':          'Elderly Care Visit',
-    'act-literacy':         'Literacy Workshop',
 
     // Discover
-    'discover-badge':       'Urgent Story',
-    'discover-hero-title':  'The Warmth of a Shared Meal in Manama',
-    'discover-hero-desc':   'Every evening, Zainab and her team serve over 200 meals. They need four more hands tonight.',
-    'discover-hero-btn':    'Answer the Call',
+    'weave-hero-title':     'Weave Your Part in Bahrain\'s Story',
+    'weave-hero-desc':      'Join 2,500+ volunteers making a daily difference.',
+    'explore-now':          'Explore Now',
+    'browse-by-impact':     'Browse by Impact',
+    'view-all':             'View All',
     'pill-all':             'All',
     'pill-environment':     'Environment',
     'pill-elderly':         'Elderly Care',
     'pill-education':       'Education',
+    'pill-health':          'Health',
+    'pill-community':       'Community',
+    'urgent-needs':         'Urgent Needs',
+    'high-priority':        'High Priority',
+    'marine-title':         'Marine Cleanup: Malkiya Beach',
+    'marine-org':           'Bahrain Ocean Society',
+    'tomorrow':             'Tomorrow',
+    'slots-8':              '8 Slots Left',
+    'points-50':            '50 Taw',
+    'elderly-support':      'Elderly Support',
+    'evening-tea':          'Evening Tea at Muharraq Care Home',
+    '1800-today':           '18:00 Today',
+    'tutoring':             'Tutoring',
+    'math-help':            'Math Help for Secondary Students',
+    'online-wed':           'Online • Wed',
+    'community-impact':     'Community Impact',
+    'your-community-impact':'Your Community Impact',
+    'weekly-goal-15':       'Weekly Goal: 15 Hours',
+    'hours-done':           'Hours Done',
+    'discover-badge':       'Urgent Story',
+    'discover-hero-title':  'The Warmth of a Shared Meal in Manama',
+    'discover-hero-desc':   'Every evening, Zainab and her team serve over 200 meals. They need four more hands tonight.',
+    'discover-hero-btn':    'Answer the Call',
     'volunteer-map':        'Volunteer Map',
     'active-spots':         '12 Active Spots',
     'view-map':             'View Map',
-    'community-impact':     'Community Impact',
-    'cat-environment':      'Environment',
     'cat-education':        'Education',
     'loc-karzakan':         'Karzakan Coast',
     'loc-hidaya':           'Al-Hidaya Center',
@@ -92,6 +158,7 @@ const translations = {
 
     // Rewards Marketplace
     'rewards-title':        'Rewards Marketplace',
+    'reward-detail-title':  'Reward Details',
     'chip-cafes':           '☕ Cafés',
     'chip-dining':          '🍽️ Dining',
     'chip-entertainment':   '🎬 Entertainment',
@@ -118,6 +185,11 @@ const translations = {
     'hist-literacy':        'Literacy Workshop',
     'hist-blood':           'Blood Donation Drive',
 
+    // Settings
+    'app-prefs':            'App Preferences',
+    'lang-setting':         'Language',
+    'dark-mode-label':      'Appearance (Dark Mode)',
+
     // Bottom Nav
     'nav-home':             'Home',
     'nav-discover':         'Discover',
@@ -129,42 +201,107 @@ const translations = {
   },
 
   ar: {
+    // Landing
+    'landing-headline':     'تطوّع. اكسب. <br/>أثِّر.',
+    'landing-subtitle':     'انضم للحركة التي تغيّر حياة الناس في البحرين.',
+    'landing-cta':          'انضم للقضية',
+    'landing-signin':       'سبق وأحدثت أثراً؟',
+    'landing-signin-link':  'سجّل دخول',
+
+    // Onboarding: Interests
+    'interests-title':      'ما الذي يُلهمك؟',
+    'interests-subtitle':   'اختر القضايا التي تهمك لنُخصّص لك رحلة تطوعية تناسب شغفك.',
+    'interests-why-title':  'لماذا هذا مهم؟',
+    'interests-why-desc':   'تخصيص اهتماماتك يساعدنا في ربطك بفرص تطوعية مؤثرة تُكسبك نقاط طوع أكثر.',
+    'btn-skip':             'تخطّي',
+    'btn-next':             'التالي',
+
+    // Onboarding: Notifications
+    'notif-title':          'ابقَ على اطّلاع',
+    'notif-subtitle':       'فعّل الإشعارات لتصلك تنبيهات فورية عن فرص التطوع العاجلة، والمكافآت، وأخبار المجتمع.',
+    'notif-b1-title':       'إجراءات عاجلة',
+    'notif-b1-desc':        'فرص تطوعية فورية في منطقتك.',
+    'notif-b2-title':       'تنبيهات التحقق',
+    'notif-b2-desc':        'ستُبلَّغ فور اعتماد ساعاتك التطوعية.',
+    'notif-b3-title':       'مكافآت محلية',
+    'notif-b3-desc':        'ستُبلَّغ فور حصولك على نقاط ومكافآت جديدة.',
+    'btn-allow':            'السماح بالإشعارات',
+    'btn-maybe-later':      'لاحقاً',
+
+    // Interest categories
+    'cat-environment':      'البيئة',
+    'cat-elderly':          'رعاية المسنين',
+    'cat-education':        'التعليم',
+    'cat-health':           'الصحة',
+    'cat-animal':           'رعاية الحيوان',
+    'cat-social':           'الرعاية الاجتماعية',
+    'cat-advocacy':         'المناصرة',
+    'cat-arts':             'الفنون والثقافة',
+    'cat-food':             'الأمن الغذائي',
+
     // Home
-    'greeting':             'أهلاً، علي!',
-    'points-label':         'نقاط طوع',
-    'opportunities-title':  'فرص قريبة منك',
-    'see-all':              'عرض الكل',
-    'recent-activity':      'النشاط الأخير',
+    'greeting':                 'أهلاً، علي!',
+    'home-subtitle':            'مستعد لإحداث أثر اليوم؟',
+    'points-label':             'نقاط طوع',
+    'points-total-label':       'الرصيد الكلي',
+    'tier-gold':                'الفئة الذهبية',
+    'progress-platinum':        'التقدم نحو البلاتين',
+    'progress-pts-left':        '٥٠٠ نقطة للمستوى التالي',
+    'impact-community-title':   'إجمالي الأثر المجتمعي',
+    'impact-community-sub':     'أنت تجعل البحرين أفضل.',
+    'hours-label':              'ساعة',
+    'opportunities-title':      'فرص قريبة منك',
+    'see-all':                  'عرض الكل',
 
     // Opportunity cards
-    'org-red-crescent':     'الهلال الأحمر البحريني',
-    'org-green-bahrain':    'جمعية البحرين الخضراء',
-    'org-muharraq':         'رعاية المحرق',
-    'opp-tree-planting':    'زراعة الأشجار في العرين',
-    'opp-beach-cleanup':    'تنظيف الشاطئ — أمواج',
-    'opp-elderly-care':     'زيارة رعاية المسنين',
+    'org-red-crescent':         'الهلال الأحمر البحريني',
+    'org-green-bahrain':        'جمعية البحرين الخضراء',
+    'org-muharraq':             'رعاية المحرق',
+    'opp-tree-planting':        'زراعة الأشجار في العرين',
+    'opp-beach-cleanup':        'تنظيف الشاطئ الساحلي',
+    'opp-food-drive':           'حملة توزيع طعام رمضان',
+    'opp-elderly-care':         'زيارة رعاية المسنين',
+    'opp-date-tomorrow':        'غداً، ٠٨:٠٠',
+    'opp-date-sat':             'السبت، ١٦:٠٠',
+    'opp-date-sun':             'الأحد، ١٠:٠٠',
 
-    // Activity
-    'act-tree':             'زراعة الأشجار — العرين',
-    'act-beach':            'تنظيف الشاطئ — الزلاق',
-    'act-elderly':          'زيارة رعاية المسنين',
-    'act-literacy':         'ورشة محو الأمية',
 
     // Discover
-    'discover-badge':       'قصة عاجلة',
-    'discover-hero-title':  'دفء وجبة مشتركة في المنامة',
-    'discover-hero-desc':   'كل مساء، تقدم زينب وفريقها أكثر من ٢٠٠ وجبة. يحتاجون أربعة أيادٍ إضافية الليلة.',
-    'discover-hero-btn':    'لبِّ النداء',
+    'weave-hero-title':     'اصنع أثرك في قصة البحرين',
+    'weave-hero-desc':      'انضم لأكثر من ٢٬٥٠٠ متطوع يصنعون فرقاً كل يوم.',
+    'explore-now':          'استكشف الآن',
+    'browse-by-impact':     'تصفّح حسب الأثر',
+    'view-all':             'عرض الكل',
     'pill-all':             'الكل',
     'pill-environment':     'البيئة',
     'pill-elderly':         'رعاية المسنين',
     'pill-education':       'التعليم',
+    'pill-health':          'الصحة',
+    'pill-community':       'المجتمع',
+    'urgent-needs':         'احتياجات عاجلة',
+    'high-priority':        'أولوية عالية',
+    'marine-title':         'تنظيف بحري: شاطئ مالكية',
+    'marine-org':           'جمعية البحرين للمحيطات',
+    'tomorrow':             'غداً',
+    'slots-8':              '٨ أماكن متبقية',
+    'points-50':            '٥٠ طوع',
+    'elderly-support':      'دعم المسنين',
+    'evening-tea':          'شاي المساء في دار رعاية المحرق',
+    '1800-today':           '٦:٠٠ م اليوم',
+    'tutoring':             'دروس خصوصية',
+    'math-help':            'مساعدة رياضيات لطلاب الثانوي',
+    'online-wed':           'عبر الإنترنت • الأربعاء',
+    'community-impact':     'الأثر المجتمعي',
+    'your-community-impact':'أثرك في المجتمع',
+    'weekly-goal-15':       'هدف الأسبوع: ١٥ ساعة',
+    'hours-done':           'ساعات مُنجزة',
+    'discover-badge':       'قصة عاجلة',
+    'discover-hero-title':  'دفء وجبة مشتركة في المنامة',
+    'discover-hero-desc':   'كل مساء، تقدم زينب وفريقها أكثر من ٢٠٠ وجبة. يحتاجون أربعة أيادٍ إضافية الليلة.',
+    'discover-hero-btn':    'لبِّ النداء',
     'volunteer-map':        'خريطة المتطوعين',
     'active-spots':         '١٢ نقطة نشطة',
     'view-map':             'عرض الخريطة',
-    'community-impact':     'الأثر المجتمعي',
-    'cat-environment':      'البيئة',
-    'cat-education':        'التعليم',
     'loc-karzakan':         'ساحل كرزكان',
     'loc-hidaya':           'مركز الهداية',
     'impact-title-1':       'نحافظ على ساحلنا معاً',
@@ -217,6 +354,7 @@ const translations = {
 
     // Rewards Marketplace
     'rewards-title':        'سوق المكافآت',
+    'reward-detail-title':  'تفاصيل المكافأة',
     'chip-cafes':           '☕ مقاهي',
     'chip-dining':          '🍽️ مطاعم',
     'chip-entertainment':   '🎬 ترفيه',
@@ -242,6 +380,11 @@ const translations = {
     'hist-elderly':         'زيارة رعاية المسنين',
     'hist-literacy':        'ورشة محو الأمية',
     'hist-blood':           'حملة التبرع بالدم',
+
+    // Settings
+    'app-prefs':            'تفضيلات التطبيق',
+    'lang-setting':         'اللغة',
+    'dark-mode-label':      'المظهر (الوضع الداكن)',
 
     // Bottom Nav
     'nav-home':             'الرئيسية',
@@ -272,8 +415,6 @@ function toWesternNumerals(str) {
 const numericSelectors = [
   '.points-value',
   '.opp-badge',
-  '.activity-points',
-  '.activity-date',
   '.opp-meta span:last-child',
   '.price-amount',
   '.price-unit',
@@ -339,7 +480,13 @@ function applyLanguage(lang) {
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
     if (translations[lang] && translations[lang][key]) {
-      el.textContent = translations[lang][key];
+      const val = translations[lang][key];
+      // Use innerHTML if translation contains HTML tags, otherwise textContent
+      if (val.includes('<')) {
+        el.innerHTML = val;
+      } else {
+        el.textContent = val;
+      }
     }
   });
 
@@ -363,10 +510,28 @@ function applyLanguage(lang) {
 
   // Update active states in ALL dropdown menus
   document.querySelectorAll('.lang-option').forEach(opt => {
-    const optLang = opt.getAttribute('onclick').match(/'([^']+)'/)[1];
-    opt.classList.toggle('active', optLang === lang);
+    const onclick = opt.getAttribute('onclick');
+    if (onclick) {
+      const match = onclick.match(/'([^']+)'/);
+      if (match) {
+        opt.classList.toggle('active', match[1] === lang);
+      }
+    }
   });
+
+  // Re-apply auth page text if auth mode function exists
+  if (typeof setAuthMode === 'function') {
+    setAuthMode(typeof authMode !== 'undefined' ? authMode : 'signin');
+  }
+
+  // Re-apply dynamic greeting with real user name
+  if (typeof updateUserDisplay === 'function') {
+    updateUserDisplay();
+  }
 }
+
+// Make applyLanguage available globally
+window.applyLanguage = applyLanguage;
 
 // Initialize on load
 document.addEventListener('DOMContentLoaded', () => {

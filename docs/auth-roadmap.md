@@ -1,86 +1,95 @@
-# Taw Authentication & Data Persistence Roadmap (Supabase)
+# Taw Authentication & Data Persistence Roadmap (Supabase MVP)
 
-This roadmap outlines the strategy for integrating a modern, state-of-the-art authentication and backend data persistence layer into the Taw volunteerism application using **Supabase** (Managed PostgreSQL + Built-in Auth/RLS). 
+This roadmap outlines the strategy for integrating authentication and backend data persistence into the Taw volunteerism app using **Supabase** (Managed PostgreSQL + Built-in Auth/RLS).
+
+> **Note:** Taw is a vanilla JS app with no build step. All integration uses CDN imports and global scripts.
 
 ---
 
-## Phase 1: Architecture & Project Setup
-Getting the Supabase engine running and connected to the Taw frontend.
+## Phase 1: Project Setup & Supabase Connection
 
 - [ ] **Create Supabase Project**
   - Create a new project in the Supabase Dashboard.
-  - Set up a robust, secure database password.
-- [ ] **Configure Environment Variables**
-  - Add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` (or equivalent for your framework) to the local `.env.local` file.
-- [ ] **Install Supabase Client & Setup Connection**
-  - Install the client: `npm install @supabase/supabase-js`.
-  - Create a reusable `supabaseClient.js` helper utility.
+  - Set a secure database password.
+- [x] **Add Supabase CDN Script** — `index.html`
+  - Added before `app.js`:
+    ```html
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    ```
+- [x] **Create `config.js` for Keys** — `config.js`, `.gitignore`
+  - Created git-ignored `config.js` with placeholder `SUPABASE_URL` and `SUPABASE_ANON_KEY`.
+- [x] **Create `supabaseClient.js` Helper** — `supabaseClient.js`
+  - Initializes client, auth state tracking (`authState`), `onAuthStateChange` listener, and helper functions (`signUp`, `signIn`, `signOut`, `getSession`, `saveUserInterests`).
 
 ---
 
 ## Phase 2: Database Schema & Row Level Security (RLS)
-Designing the data layer and securing access policies so data is not publicly mutable.
 
-- [ ] **Design Core Tables**
-  - `profiles`: Extending the built-in Supabase `auth.users` for Taw (Points, Roles).
-  - `interests`: Lookup table for volunteer categories.
-  - `user_interests`: Junction table mapping volunteers to chosen interests.
-  - `opportunities`: The volunteer tasks shown on the Home Feed.
-  - `rewards`: Items available in the marketplace (Name, Cost, Image URL).
-  - `transactions`: Ledger tracking points earned and spent on rewards.
-- [ ] **Implement Row Level Security (RLS)**
-  - Enable RLS on all tables.
-  - `profiles`: Users can only `SELECT` and `UPDATE` their own profile (UUID match).
-  - `opportunities`: Publicly readable (`SELECT`), but requires Admin privileges to `INSERT`/`UPDATE`.
-  - `transactions`: Insertable via authenticated clients, but read-only for their own transactions.
-
----
-
-## Phase 3: Core Authentication Flow (Supabase Auth)
-Wiring up Supabase identity provider into Taw’s existing multi-step onboarding flow.
-
-- [ ] **Configure Supabase Auth Providers**
-  - Define whether to use simple Email/Password, Magic Links, or Social Providers (Google, Apple) in the Supabase Dashboard.
-- [ ] **Initialize Global Auth Context**
-  - Create a React Context (or equivalent) to track the Supabase `session` globally using `supabase.auth.onAuthStateChange`.
-- [ ] **Implement Registration & Onboarding Sync**
-  - Call `supabase.auth.signUp()` at the beginning of the onboarding flow.
-  - When the final onboarding step completes, push the selected 'Interests' into the `user_interests` table using the new `user.id`.
-- [ ] **Implement Login (Sign In)**
-  - Call `supabase.auth.signInWithPassword()` or `signInWithOtp()`.
+- [x] **Design Core Tables** — `docs/supabase-schema.sql`
+  - `profiles`: Extends `auth.users` (display name, points, avatar URL).
+  - `interests`: Lookup table for volunteer categories (seeded with 9 categories).
+  - `user_interests`: Junction table mapping users to chosen interests.
+  - `opportunities`: Volunteer tasks shown on the Home Feed.
+  - `opportunity_signups`: Tracks which users signed up / checked in to which opportunities.
+  - `rewards`: Items in the marketplace (name, cost, image URL).
+  - `point_ledger`: Tracks points earned and spent.
+- [x] **Create DB Trigger for Profile Auto-Creation** — `docs/supabase-schema.sql`
+  - `handle_new_user()` trigger auto-creates a `profiles` row on `auth.users` insert.
+- [x] **Implement Row Level Security (RLS)** — `docs/supabase-schema.sql`
+  - All tables have RLS enabled with appropriate policies.
+- [x] **Reward Redemption RPC** — `docs/supabase-schema.sql`
+  - `redeem_reward()` function atomically checks balance and deducts points.
+- [ ] **Run Schema in Supabase SQL Editor**
+  - Copy `docs/supabase-schema.sql` into Supabase Dashboard → SQL Editor → Run.
 
 ---
 
-## Phase 4: Frontend Route Protection & State
-Ensuring that unauthorized users are pushed to the login flow.
+## Phase 3: Authentication Flow
 
-- [ ] **Implement Route Guards**
-  - Wrap protected pages (Home Feed, Rewards, Profile) in an `<Authenticated>` guard that checks the Supabase session token.
-- [ ] **Handle Loading States**
-  - Build a skeleton screen/spinner while `supabase.auth.getSession()` resolves on app initialization.
-- [ ] **Implement Logout (Sign Out)**
-  - Add a completely functional logout using `supabase.auth.signOut()`.
-
----
-
-## Phase 5: API & Feature Integration
-Running SQL queries transparently through the Supabase client to hydrate the UI.
-
-- [ ] **Integrate the Home Feed**
-  - Fetch real `opportunities` via `supabase.from('opportunities').select('*')`.
-  - Implement a real-time subscription via Supabase Realtime to push new opportunities instantly to connected users.
-- [ ] **Integrate the Rewards Marketplace**
-  - Fetch `rewards` data.
-  - Deduct points: Use a Supabase **Postgres Function** (RPC) to atomically check the user's point balance and create a `transaction` in one secure step so they cannot overdraft.
+- [ ] **Configure Auth Provider**
+  - Enable Email/Password in Supabase Dashboard.
+  - Disable email confirmation for dev/MVP (Dashboard > Auth > Settings).
+- [x] **Build `page-auth` Login/Signup UI** — `index.html`
+  - Added `<section id="page-auth">` with email/password form, sign-up/sign-in toggle, error display, and loading spinner.
+  - Updated landing page "Sign In" button to `navigateTo('auth')`.
+- [x] **Wire Up Auth Calls** — `app.js`
+  - `handleAuthSubmit()`: Sign up → onboarding flow; Sign in → home.
+  - `toggleAuthMode()`: Toggles between Sign In / Sign Up modes.
+- [x] **Track Auth State Globally** — `supabaseClient.js`, `app.js`
+  - `authState` object synced via `supabase.auth.onAuthStateChange()`.
+- [x] **Implement Logout** — `index.html`, `app.js`
+  - Sign Out button added to profile page settings.
+  - `handleSignOut()` calls `supabase.auth.signOut()` and returns to landing.
 
 ---
 
-## Phase 6: Advanced Features
-Polishing the system for longevity.
+## Phase 4: Route Protection
 
-- [ ] **Setup Storage Buckets**
-  - Use Supabase Storage for user avatars and Reward images instead of hotlinking.
-- [ ] **Role-Based Access Control (Admin UI)**
-  - Implement an Admin flag in the `profiles` table to allow coordinators to add new rewards directly from the UI.
-- [ ] **Database Triggers**
-  - Auto-create a `profiles` row using Postgres Triggers whenever a new row is inserted into the `auth.users` system table.
+- [x] **Guard Protected Routes** — `app.js`
+  - `protectedPages` set defines guarded pages.
+  - `navigateTo()` checks `authState.session` and redirects to `page-auth` if unauthenticated.
+- [x] **Session Restore on Load** — `app.js`
+  - `DOMContentLoaded` calls `getSession()` before rendering. If session exists, skips landing and navigates to home.
+
+---
+
+## Phase 5: Live Data Integration
+
+- [ ] **Home Feed**
+  - Fetch opportunities via `supabase.from('opportunities').select('*')`.
+  - Filter by user's interests from `user_interests` where practical.
+- [ ] **Rewards Marketplace**
+  - Fetch `rewards` data from Supabase.
+  - Reward redemption: call `supabase.rpc('redeem_reward', { reward_id })`.
+- [ ] **Check-In Flow**
+  - On QR check-in, insert a row into `opportunity_signups` to record attendance.
+
+---
+
+## Phase 6: Post-MVP Stretch Goals
+
+- [ ] **Realtime subscriptions** for the Home Feed (push new opportunities to connected users).
+- [ ] **Supabase Storage** for user avatars and reward images.
+- [ ] **Admin role flag** in `profiles` to allow coordinators to manage opportunities/rewards from the UI.
+- [ ] **Volunteer hours tracking** table and profile stats wiring.
+- [ ] **Social auth providers** (Google, Apple).
