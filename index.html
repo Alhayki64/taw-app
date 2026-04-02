@@ -246,15 +246,18 @@
     <!-- ===== PAGE: NOTIFICATIONS (CENTER) ===== -->
     <!-- ===== PAGE: NOTIFICATION PERMISSION (ONBOARDING) ===== -->
     <section id="page-notif-permission" class="page sub-page">
-      <header class="sub-header">
-        <button class="back-btn" aria-label="Go back" onclick="goBack()">
+
+      <!-- Full-screen landscape background -->
+      <div class="np-bg">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVGIdmO9jfFwKC8bIHXbXawcIbBapdQszhFqqMeVy0x06LFtElsOQqcRqXGnzF_VALJvt-EGKpelP76cYJWZeten0JHg9Kc4g8QJRevaX51gx2RY8Uc6QbuSGIAIuN10Q7abbD9g5F333U9tOAQdzSF8j_MHt2PcLZJ5RwgGGcZNxn3GgXGYjWa3lXwhtFV7swPOwGx4kGCqRcW1gm5ongZS-kSurkO5XXIqFvRT4Yqlkv6UthnE79mUczrqL3dTTm5vEERSBBLmaR" alt="" class="np-bg-img" />
+        <div class="np-bg-overlay"></div>
+      </div>
+
+      <!-- Header -->
+      <div class="np-header">
+        <button class="np-back-btn" aria-label="Go back" onclick="goBack()">
           <span class="material-icons-round">arrow_back</span>
         </button>
-        <h1 class="sub-header-title"></h1>
-        <div class="w-6"></div>
-      </header>
-
-      <div class="notif-perm-content">
 
         <!-- Profile Avatar Editor -->
         <div class="notif-perm-avatar-wrap" onclick="showNotifPermPhotoSheet()" aria-label="Edit profile photo" role="button" tabindex="0">
@@ -263,57 +266,60 @@
             <span class="material-icons-round">photo_camera</span>
           </div>
         </div>
-
-        <!-- Oval Illustration -->
-        <div class="notif-perm-hero">
-          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4cUPvlTaEbj1zbQ8ygoF9OaNQlbqqnLYeh02KhwW5klHmEcagNK-QuQpbOeZzdXd-RBjhWdXQOyYKfSCP54kgwzUNwS77YJWOLDcM3MShxNLpFJlrsC2fbA1W6b_WOSQFHtyGmBqW7NFYk-4uO89bp0BzRK2_iiu5lq75jUfDi-kFI10yp19GnKXHs6yHNoJ1U-3tEArRvQ6RUfHYE8Gwd3DIt2U5_EL4rT5rkqVPCT5NVGcKWviWdrMUhwNCVrDnZBYuh3" alt="Notifications illustration" class="notif-perm-img" />
-        </div>
-
-        <!-- Headline -->
-        <div class="notif-perm-headline">
-          <h2 class="notif-perm-title">Stay in the Loop</h2>
-          <p class="notif-perm-subtitle">Enable notifications to get real-time alerts for urgent volunteer needs, reward milestones, and community updates.</p>
-        </div>
-
-        <!-- Benefits -->
-        <div class="notif-perm-benefits">
-          <div class="notif-perm-benefit">
-            <div class="notif-perm-benefit-icon icon-urgent">
-              <span class="material-icons-round">emergency</span>
-            </div>
-            <div>
-              <h3 class="notif-perm-benefit-title">Urgent Direct Actions</h3>
-              <p class="notif-perm-benefit-text">Immediate opportunities to help in your area.</p>
-            </div>
-          </div>
-          <div class="notif-perm-benefit">
-            <div class="notif-perm-benefit-icon icon-verify">
-              <span class="material-icons-round">verified</span>
-            </div>
-            <div>
-              <h3 class="notif-perm-benefit-title">Verification Alerts</h3>
-              <p class="notif-perm-benefit-text">Get notified the moment your service hours are approved.</p>
-            </div>
-          </div>
-          <div class="notif-perm-benefit">
-            <div class="notif-perm-benefit-icon icon-reward">
-              <span class="material-icons-round">military_tech</span>
-            </div>
-            <div>
-              <h3 class="notif-perm-benefit-title">Local Rewards</h3>
-              <p class="notif-perm-benefit-text">Exclusive milestones and gifts from our Bahraini partners.</p>
-            </div>
-          </div>
-        </div>
       </div>
 
-      <!-- Footer actions -->
-      <div class="notif-perm-footer">
-        <button class="notif-perm-btn-primary" onclick="
-          if ('Notification' in window) { Notification.requestPermission(); }
-          navigateTo('home');
-        ">Allow Notifications</button>
-        <button class="notif-perm-btn-secondary" onclick="navigateTo('home')">Maybe Later</button>
+      <!-- Story panel -->
+      <div class="np-body">
+        <div class="np-panel">
+
+          <!-- Story 1 -->
+          <div class="np-story active" id="np-story-1">
+            <div class="np-story-icon np-icon-green">
+              <span class="material-icons-round">groups</span>
+            </div>
+            <h3 class="np-story-title">4,200+ Lives Touched</h3>
+            <p class="np-story-quote">"Because of urgent notifications, 50 volunteers arrived in under an hour to support our flood relief efforts in Manama."</p>
+          </div>
+
+          <!-- Story 2 -->
+          <div class="np-story" id="np-story-2">
+            <div class="np-story-icon np-icon-amber">
+              <span class="material-icons-round">format_quote</span>
+            </div>
+            <h3 class="np-story-title">A Father's Gratitude</h3>
+            <p class="np-story-quote">"The blood donor alert saved my son. I saw the Taw volunteer walk into the hospital just 20 minutes after the request went out."</p>
+          </div>
+
+          <!-- Story 3 -->
+          <div class="np-story" id="np-story-3">
+            <div class="np-story-icon np-icon-blue">
+              <span class="material-icons-round">eco</span>
+            </div>
+            <h3 class="np-story-title">15 Tons of Waste Removed</h3>
+            <p class="np-story-quote">By coordinating via instant alerts, our community removed 15 tons of ocean plastic from local shores in just one weekend.</p>
+          </div>
+
+          <!-- Dots -->
+          <div class="np-dots">
+            <div class="np-dot active" id="np-dot-1"></div>
+            <div class="np-dot" id="np-dot-2"></div>
+            <div class="np-dot" id="np-dot-3"></div>
+          </div>
+
+        </div>
+
+        <!-- Actions -->
+        <div class="np-actions">
+          <button class="np-btn-next" id="np-btn-next" onclick="advanceNotifStory()">
+            Next Story <span class="material-icons-round">chevron_right</span>
+          </button>
+          <div class="np-final-actions" id="np-final-actions">
+            <button class="np-btn-hero" onclick="if('Notification' in window){Notification.requestPermission();} navigateTo('home');">
+              Be the Next Hero
+            </button>
+            <button class="np-btn-skip" onclick="navigateTo('home')">Skip for now</button>
+          </div>
+        </div>
       </div>
 
       <!-- Hidden file inputs for photo selection -->
@@ -976,6 +982,9 @@
           </label>
           <h2 class="profile-name" data-i18n="profile-name">Ali Al-Hassan</h2>
           <p class="profile-title" data-i18n="profile-since">Community Volunteer since 2023</p>
+          <button class="ep-profile-edit-btn" onclick="navigateTo('edit-profile')">
+            <span class="material-icons-round">edit</span> Edit Profile
+          </button>
         </div>
 
         <!-- Stats Cards -->
@@ -1148,6 +1157,63 @@
             <span class="material-icons-round">chevron_right</span>
           </button>
         </section>
+      </div>
+    </section>
+
+    <!-- ===== PAGE: EDIT PROFILE ===== -->
+    <section id="page-edit-profile" class="page sub-page">
+      <header class="sub-header">
+        <button class="back-btn" aria-label="Go back" onclick="goBack()">
+          <span class="material-icons-round">arrow_back</span>
+        </button>
+        <h1 class="sub-header-title">Edit Profile</h1>
+        <div class="w-6"></div>
+      </header>
+
+      <div class="page-content ep-page-content">
+
+        <!-- Avatar -->
+        <div class="ep-avatar-section">
+          <div class="notif-perm-avatar-wrap" onclick="showNotifPermPhotoSheet()" aria-label="Edit profile photo" role="button" tabindex="0" style="width:100px;height:100px;">
+            <img id="ep-avatar-img" src="default_avatar.png" alt="Profile photo" class="notif-perm-avatar-img" style="width:100px;height:100px;" />
+            <div class="notif-perm-avatar-edit" style="width:30px;height:30px;">
+              <span class="material-icons-round" style="font-size:15px;">photo_camera</span>
+            </div>
+          </div>
+          <p class="ep-avatar-hint">Tap to change photo</p>
+        </div>
+
+        <!-- Form -->
+        <form class="ep-form" onsubmit="saveProfileChanges(event)">
+
+          <div class="ep-field">
+            <label class="ep-field-label" for="ep-name">Full Name</label>
+            <input class="ep-field-input" type="text" id="ep-name" placeholder="Your full name" autocomplete="name" />
+          </div>
+
+          <div class="ep-field">
+            <label class="ep-field-label" for="ep-email">Email</label>
+            <input class="ep-field-input" type="email" id="ep-email" placeholder="you@example.com" readonly />
+          </div>
+
+          <div class="ep-field">
+            <label class="ep-field-label" for="ep-phone">Phone Number</label>
+            <input class="ep-field-input" type="tel" id="ep-phone" placeholder="+973 xxxx xxxx" autocomplete="tel" />
+          </div>
+
+          <div class="ep-field">
+            <label class="ep-field-label" for="ep-bio">Bio</label>
+            <textarea class="ep-field-input ep-field-textarea" id="ep-bio" rows="3" placeholder="Tell us about yourself..."></textarea>
+          </div>
+
+          <button type="submit" class="ep-save-btn" id="ep-save-btn">
+            <span id="ep-save-text">Save Changes</span>
+            <span class="ep-save-spinner" id="ep-save-spinner" style="display:none;">
+              <span class="material-icons-round spinning">refresh</span>
+            </span>
+          </button>
+
+        </form>
       </div>
     </section>
 

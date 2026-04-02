@@ -37,6 +37,7 @@ const pageMap = {
   'checkin-success':  'page-checkin-success',
   'marketplace':      'page-marketplace',
   'profile':          'page-profile',
+  'edit-profile':     'page-edit-profile',
   'reward-details':   'page-reward-details',
   'reward-redeemed':  'page-reward-redeemed'
 };
@@ -48,7 +49,7 @@ const navMap = {
 };
 
 // Pages that should hide the bottom nav
-const subPages = new Set(['landing', 'auth', 'interests', 'notifications', 'notif-permission', 'event-details', 'checkin-success', 'volunteer-map', 'reward-details', 'reward-redeemed']);
+const subPages = new Set(['landing', 'auth', 'interests', 'notifications', 'notif-permission', 'edit-profile', 'event-details', 'checkin-success', 'volunteer-map', 'reward-details', 'reward-redeemed']);
 
 // Pages that require authentication
 const protectedPages = new Set(['checkin-success', 'profile', 'reward-redeemed']);
@@ -105,6 +106,10 @@ function navigateTo(pageName) {
   }
 
   currentPage = pageName;
+
+  // Page-specific init hooks
+  if (pageName === 'notif-permission') initNotifPermStories();
+  if (pageName === 'edit-profile') initEditProfile();
 
   // Accessibility: focus the new page heading after transition
   setTimeout(() => {
@@ -361,9 +366,11 @@ function updateUserDisplay() {
       }
     }
 
-    // 2. Notif-permission page avatar
+    // 2. Notif-permission + edit-profile page avatars
     const notifPermAvatar = document.getElementById('notif-perm-avatar-img');
     if (notifPermAvatar) notifPermAvatar.src = avatarUrl;
+    const epAvatar = document.getElementById('ep-avatar-img');
+    if (epAvatar) epAvatar.src = avatarUrl;
 
     // 3. Header and other small avatars
     const smallAvatars = ['home-avatar', 'market-avatar', 'onboarding-avatar-ui'];
@@ -452,6 +459,113 @@ window.handleAvatarUpload = function(event) {
   };
   reader.readAsDataURL(file);
 };
+
+// ── Notif Permission Page — Photo Editor ──────────────────────────────────────
+
+// ── Notif Permission — Story Carousel ──────────────────────────────────────
+
+let _npCurrentStory = 1;
+const NP_TOTAL_STORIES = 3;
+
+function advanceNotifStory() {
+  if (_npCurrentStory >= NP_TOTAL_STORIES) return;
+  const prev = _npCurrentStory;
+  _npCurrentStory++;
+
+  // Swap story cards
+  document.getElementById(`np-story-${prev}`)?.classList.remove('active');
+  document.getElementById(`np-story-${_npCurrentStory}`)?.classList.add('active');
+
+  // Update dots
+  const prevDot = document.getElementById(`np-dot-${prev}`);
+  const nextDot = document.getElementById(`np-dot-${_npCurrentStory}`);
+  if (prevDot) prevDot.classList.remove('active');
+  if (nextDot) nextDot.classList.add('active');
+
+  // On last story: swap button for final CTAs
+  if (_npCurrentStory === NP_TOTAL_STORIES) {
+    const nextBtn = document.getElementById('np-btn-next');
+    const finalActions = document.getElementById('np-final-actions');
+    if (nextBtn) nextBtn.style.display = 'none';
+    if (finalActions) finalActions.style.display = 'flex';
+  }
+}
+
+function initNotifPermStories() {
+  _npCurrentStory = 1;
+  for (let i = 1; i <= NP_TOTAL_STORIES; i++) {
+    const story = document.getElementById(`np-story-${i}`);
+    const dot = document.getElementById(`np-dot-${i}`);
+    if (story) story.classList.toggle('active', i === 1);
+    if (dot) dot.classList.toggle('active', i === 1);
+  }
+  const nextBtn = document.getElementById('np-btn-next');
+  const finalActions = document.getElementById('np-final-actions');
+  if (nextBtn) nextBtn.style.display = '';
+  if (finalActions) finalActions.style.display = 'none';
+}
+
+// ── Edit Profile Page ───────────────────────────────────────────────────────
+
+function initEditProfile() {
+  const user = authState.user;
+  if (!user) return;
+
+  const name = user.user_metadata?.full_name || '';
+  const phone = user.user_metadata?.phone || '';
+  const bio = user.user_metadata?.bio || '';
+  const email = user.email || '';
+  const avatarUrl = user.user_metadata?.avatar_url;
+
+  const nameEl = document.getElementById('ep-name');
+  const emailEl = document.getElementById('ep-email');
+  const phoneEl = document.getElementById('ep-phone');
+  const bioEl = document.getElementById('ep-bio');
+  const avatarEl = document.getElementById('ep-avatar-img');
+
+  if (nameEl) nameEl.value = name;
+  if (emailEl) emailEl.value = email;
+  if (phoneEl) phoneEl.value = phone;
+  if (bioEl) bioEl.value = bio;
+  if (avatarEl) avatarEl.src = avatarUrl || 'default_avatar.png';
+}
+
+async function saveProfileChanges(e) {
+  if (e) e.preventDefault();
+  if (!authState.user) { navigateTo('auth'); return; }
+
+  const name = document.getElementById('ep-name')?.value.trim() || '';
+  const phone = document.getElementById('ep-phone')?.value.trim() || '';
+  const bio = document.getElementById('ep-bio')?.value.trim() || '';
+
+  const saveBtn = document.getElementById('ep-save-btn');
+  const saveText = document.getElementById('ep-save-text');
+  const saveSpinner = document.getElementById('ep-save-spinner');
+  if (saveBtn) saveBtn.disabled = true;
+  if (saveText) saveText.style.display = 'none';
+  if (saveSpinner) saveSpinner.style.display = '';
+
+  try {
+    if (typeof supabaseClient !== 'undefined') {
+      const { data, error } = await supabaseClient.auth.updateUser({
+        data: { full_name: name, phone, bio }
+      });
+      if (error) throw error;
+      if (data?.user) {
+        authState.user = data.user;
+        updateUserDisplay();
+      }
+    }
+    goBack();
+  } catch (err) {
+    console.error('Failed to save profile', err);
+    if (typeof showToast === 'function') showToast('Failed to save. Please try again.', 'error');
+  } finally {
+    if (saveBtn) saveBtn.disabled = false;
+    if (saveText) saveText.style.display = '';
+    if (saveSpinner) saveSpinner.style.display = 'none';
+  }
+}
 
 // ── Notif Permission Page — Photo Editor ──────────────────────────────────────
 
