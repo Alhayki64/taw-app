@@ -361,7 +361,11 @@ function updateUserDisplay() {
       }
     }
 
-    // 2. Header and other small avatars
+    // 2. Notif-permission page avatar
+    const notifPermAvatar = document.getElementById('notif-perm-avatar-img');
+    if (notifPermAvatar) notifPermAvatar.src = avatarUrl;
+
+    // 3. Header and other small avatars
     const smallAvatars = ['home-avatar', 'market-avatar', 'onboarding-avatar-ui'];
     smallAvatars.forEach(id => {
       const el = document.getElementById(id);
@@ -441,6 +445,87 @@ window.handleAvatarUpload = function(event) {
         if (overlay) {
           overlay.classList.remove('spinning');
           overlay.textContent = 'camera_alt';
+        }
+      }
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+};
+
+// ── Notif Permission Page — Photo Editor ──────────────────────────────────────
+
+function showNotifPermPhotoSheet() {
+  const sheet = document.getElementById('notif-perm-photo-sheet');
+  if (!sheet) return;
+  sheet.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function hideNotifPermPhotoSheet() {
+  const sheet = document.getElementById('notif-perm-photo-sheet');
+  if (!sheet) return;
+  sheet.style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function notifPermTakePhoto() {
+  hideNotifPermPhotoSheet();
+  document.getElementById('notif-perm-camera-input')?.click();
+}
+
+function notifPermChooseGallery() {
+  hideNotifPermPhotoSheet();
+  document.getElementById('notif-perm-gallery-input')?.click();
+}
+
+function notifPermRemovePhoto() {
+  hideNotifPermPhotoSheet();
+  const avatarImg = document.getElementById('notif-perm-avatar-img');
+  if (avatarImg) avatarImg.src = 'default_avatar.png';
+  // Also clear from user profile if logged in
+  if (typeof supabaseClient !== 'undefined' && authState.user) {
+    supabaseClient.auth.updateUser({ data: { avatar_url: null } }).then(() => {
+      authState.user = { ...authState.user, user_metadata: { ...authState.user.user_metadata, avatar_url: null } };
+      updateUserDisplay();
+    });
+  }
+}
+
+window.handleNotifPermPhotoSelected = function(input) {
+  const file = input.files?.[0];
+  if (!file) return;
+  input.value = '';
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = async function() {
+      const canvas = document.createElement('canvas');
+      const SIZE = 150;
+      canvas.width = SIZE;
+      canvas.height = SIZE;
+      const ctx = canvas.getContext('2d');
+      const side = Math.min(img.width, img.height);
+      const sx = (img.width - side) / 2;
+      const sy = (img.height - side) / 2;
+      ctx.drawImage(img, sx, sy, side, side, 0, 0, SIZE, SIZE);
+      const base64 = canvas.toDataURL('image/jpeg', 0.72);
+
+      // Update preview immediately
+      const avatarImg = document.getElementById('notif-perm-avatar-img');
+      if (avatarImg) avatarImg.src = base64;
+
+      // Persist to Supabase if signed in
+      if (typeof supabaseClient !== 'undefined' && authState.user) {
+        try {
+          const { data, error } = await supabaseClient.auth.updateUser({ data: { avatar_url: base64 } });
+          if (!error && data?.user) {
+            authState.user = data.user;
+            updateUserDisplay();
+          }
+        } catch (err) {
+          console.error('Failed to save avatar', err);
         }
       }
     };

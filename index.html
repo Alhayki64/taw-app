@@ -255,7 +255,16 @@
       </header>
 
       <div class="notif-perm-content">
-        <!-- Illustration -->
+
+        <!-- Profile Avatar Editor -->
+        <div class="notif-perm-avatar-wrap" onclick="showNotifPermPhotoSheet()" aria-label="Edit profile photo" role="button" tabindex="0">
+          <img id="notif-perm-avatar-img" src="default_avatar.png" alt="Profile photo" class="notif-perm-avatar-img" />
+          <div class="notif-perm-avatar-edit">
+            <span class="material-icons-round">photo_camera</span>
+          </div>
+        </div>
+
+        <!-- Oval Illustration -->
         <div class="notif-perm-hero">
           <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4cUPvlTaEbj1zbQ8ygoF9OaNQlbqqnLYeh02KhwW5klHmEcagNK-QuQpbOeZzdXd-RBjhWdXQOyYKfSCP54kgwzUNwS77YJWOLDcM3MShxNLpFJlrsC2fbA1W6b_WOSQFHtyGmBqW7NFYk-4uO89bp0BzRK2_iiu5lq75jUfDi-kFI10yp19GnKXHs6yHNoJ1U-3tEArRvQ6RUfHYE8Gwd3DIt2U5_EL4rT5rkqVPCT5NVGcKWviWdrMUhwNCVrDnZBYuh3" alt="Notifications illustration" class="notif-perm-img" />
         </div>
@@ -269,7 +278,7 @@
         <!-- Benefits -->
         <div class="notif-perm-benefits">
           <div class="notif-perm-benefit">
-            <div class="notif-perm-benefit-icon icon-primary">
+            <div class="notif-perm-benefit-icon icon-urgent">
               <span class="material-icons-round">emergency</span>
             </div>
             <div>
@@ -278,7 +287,7 @@
             </div>
           </div>
           <div class="notif-perm-benefit">
-            <div class="notif-perm-benefit-icon icon-primary">
+            <div class="notif-perm-benefit-icon icon-verify">
               <span class="material-icons-round">verified</span>
             </div>
             <div>
@@ -287,7 +296,7 @@
             </div>
           </div>
           <div class="notif-perm-benefit">
-            <div class="notif-perm-benefit-icon icon-secondary">
+            <div class="notif-perm-benefit-icon icon-reward">
               <span class="material-icons-round">military_tech</span>
             </div>
             <div>
@@ -300,12 +309,16 @@
 
       <!-- Footer actions -->
       <div class="notif-perm-footer">
-        <button class="btn-primary" onclick="
+        <button class="notif-perm-btn-primary" onclick="
           if ('Notification' in window) { Notification.requestPermission(); }
           navigateTo('home');
         ">Allow Notifications</button>
-        <button class="btn-ghost" onclick="navigateTo('home')" style="color:var(--on-surface-variant);padding:12px;">Maybe Later</button>
+        <button class="notif-perm-btn-secondary" onclick="navigateTo('home')">Maybe Later</button>
       </div>
+
+      <!-- Hidden file inputs for photo selection -->
+      <input type="file" id="notif-perm-camera-input" accept="image/*" capture="user" style="display:none" onchange="handleNotifPermPhotoSelected(this)">
+      <input type="file" id="notif-perm-gallery-input" accept="image/*" style="display:none" onchange="handleNotifPermPhotoSelected(this)">
     </section>
 
     <section id="page-notifications" class="page">
@@ -1416,6 +1429,24 @@
   </script>
 
   <!-- Auth Prompt Modal (shown when guest attempts a protected action) -->
+  <!-- Photo Action Sheet (notif-permission page) -->
+  <div id="notif-perm-photo-sheet" class="modal-overlay" style="display:none;" onclick="if(event.target===this) hideNotifPermPhotoSheet()" role="dialog" aria-modal="true">
+    <div class="notif-perm-photo-sheet-inner">
+      <div class="modal-handle"></div>
+      <p class="notif-perm-sheet-title">Profile Photo</p>
+      <button class="notif-perm-sheet-btn" onclick="notifPermTakePhoto()">
+        <span class="material-icons-round">photo_camera</span> Take Photo
+      </button>
+      <button class="notif-perm-sheet-btn" onclick="notifPermChooseGallery()">
+        <span class="material-icons-round">photo_library</span> Choose from Gallery
+      </button>
+      <button class="notif-perm-sheet-btn notif-perm-sheet-btn-danger" onclick="notifPermRemovePhoto()">
+        <span class="material-icons-round">delete_outline</span> Remove Photo
+      </button>
+      <button class="notif-perm-sheet-btn notif-perm-sheet-btn-cancel" onclick="hideNotifPermPhotoSheet()">Cancel</button>
+    </div>
+  </div>
+
   <div id="modal-auth-prompt" class="modal-overlay" style="display:none;"
        role="dialog" aria-modal="true" aria-labelledby="auth-prompt-label">
     <div class="modal-sheet" style="text-align:center;padding:32px 24px 28px;">
