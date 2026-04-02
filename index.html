@@ -247,19 +247,22 @@
     <!-- ===== PAGE: NOTIFICATION PERMISSION (ONBOARDING) ===== -->
     <section id="page-notif-permission" class="page sub-page">
 
-      <!-- Full-screen landscape background -->
+      <!-- Full-screen background — same wallpaper as landing/join-the-cause -->
       <div class="np-bg">
-        <img src="https://images.unsplash.com/photo-1593113630400-ea4288922497?q=80&w=2070&auto=format&fit=crop" alt="" class="np-bg-img" />
+        <div class="landing-bg-image"></div>
         <div class="np-bg-overlay"></div>
       </div>
 
-      <!-- Header -->
+      <!-- Header: back button + centered avatar -->
       <div class="np-header">
         <button class="np-back-btn" aria-label="Go back" onclick="goBack()">
           <span class="material-icons-round">arrow_back</span>
         </button>
+        <div class="np-header-spacer"></div>
+      </div>
 
-        <!-- Profile Avatar Editor -->
+      <!-- Centered Avatar -->
+      <div class="np-avatar-row">
         <div class="notif-perm-avatar-wrap" onclick="showNotifPermPhotoSheet()" aria-label="Edit profile photo" role="button" tabindex="0">
           <img id="notif-perm-avatar-img" src="default_avatar.png" alt="Profile photo" class="notif-perm-avatar-img" />
           <div class="notif-perm-avatar-edit">
@@ -268,8 +271,16 @@
         </div>
       </div>
 
-      <!-- Story panel -->
+      <!-- Body: title + story panel + actions, pushed to bottom -->
       <div class="np-body">
+
+        <!-- Title section -->
+        <div class="np-title-section">
+          <h1 class="np-headline">See Your Impact</h1>
+          <p class="np-subtitle-text">Discover how real-time notifications turn your small acts into nationwide community milestones.</p>
+        </div>
+
+        <!-- Story panel -->
         <div class="np-panel">
 
           <!-- Story 1 -->

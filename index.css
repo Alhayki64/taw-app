@@ -748,56 +748,79 @@ body {
 }
 
 /* ── Notification Permission Page ── */
-/* ── Notification Permission Page (Stitch redesign) ── */
+/* ── Notification Permission Page (Redesign — "See Your Impact") ── */
 #page-notif-permission {
   position: relative;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  padding-bottom: 0;
+  background: #0D2420;
 }
 
-/* Full-screen background */
+/* Full-screen background — reuses .landing-bg-image from landing page */
 .np-bg {
   position: absolute;
   inset: 0;
   z-index: 0;
 }
-.np-bg-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.np-bg .landing-bg-image {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: grayscale(20%);
 }
 .np-bg-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.05) 40%, rgba(245,242,236,0.92) 75%, #F5F2EC 100%);
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.20) 0%,
+    transparent 35%,
+    rgba(245, 242, 236, 0.90) 65%,
+    #F5F2EC 80%
+  );
 }
 
-/* Header: back btn + centered avatar */
+/* Header: back button + spacer */
 .np-header {
   position: relative;
   z-index: 10;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 56px 24px 0;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 24px 24px 0;
 }
 .np-back-btn {
-  position: absolute;
-  top: 0;
-  left: 20px;
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.2);
+  background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.3);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  transition: background 0.2s;
+}
+.np-back-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+.np-header-spacer {
+  width: 40px;
+}
+
+/* Centered Avatar Row */
+.np-avatar-row {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  padding: 16px 0 0;
 }
 
 /* Avatar editor (shared with edit-profile) */
@@ -816,26 +839,28 @@ body {
   border-radius: 50%;
   object-fit: cover;
   border: 4px solid #fff;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
   display: block;
+  background: #fff;
 }
 .notif-perm-avatar-edit {
   position: absolute;
   bottom: 2px;
   right: 2px;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background: #2D5A3D;
+  background: #1E5C3A;
   border: 2px solid #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
-.notif-perm-avatar-edit .material-icons-round { font-size: 13px; }
+.notif-perm-avatar-edit .material-icons-round { font-size: 16px; }
 
-/* Body: story panel + actions */
+/* Body: title + panel + actions — fills remaining space, content at end */
 .np-body {
   position: relative;
   z-index: 10;
@@ -843,22 +868,45 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 20px 20px 36px;
-  gap: 16px;
+  padding: 24px 24px 36px;
+  gap: 20px;
+}
+
+/* Title section */
+.np-title-section {
+  text-align: center;
+  max-width: 380px;
+  margin: 0 auto;
+}
+.np-headline {
+  font-family: var(--font-display);
+  font-size: 2.125rem;
+  font-weight: 800;
+  color: #1E5C3A;
+  line-height: 1.15;
+  margin-bottom: 12px;
+}
+.np-subtitle-text {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--on-surface);
+  line-height: 1.6;
 }
 
 /* Story panel */
 .np-panel {
-  background: rgba(255,255,255,0.96);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-radius: 40px;
+  border-radius: 2.5rem;
   padding: 32px 28px 28px;
-  box-shadow: 0 8px 40px rgba(0,0,0,0.14);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   min-height: 220px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 12px;
 }
 
@@ -879,21 +927,23 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 8px;
 }
 .np-story-icon .material-icons-round { font-size: 28px; }
 .np-icon-green { background: #E8F5EE; color: #1E5C3A; }
 .np-icon-amber { background: #FEF3E2; color: #B45309; }
 .np-icon-blue  { background: #EBF4FD; color: #1E6FA8; }
 .np-story-title {
-  font-size: 1.375rem;
-  font-weight: 800;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
   color: #1E5C3A;
   line-height: 1.2;
 }
 .np-story-quote {
   font-size: 0.9375rem;
-  color: #555;
-  line-height: 1.6;
+  color: var(--on-surface-variant);
+  line-height: 1.65;
   font-style: italic;
 }
 
@@ -902,17 +952,17 @@ body {
   display: flex;
   gap: 6px;
   align-items: center;
-  margin-top: 4px;
+  margin-top: 16px;
 }
 .np-dot {
   height: 6px;
-  width: 6px;
+  width: 8px;
   border-radius: 9999px;
-  background: rgba(30,92,58,0.2);
-  transition: width 0.3s, background 0.3s;
+  background: rgba(30, 92, 58, 0.2);
+  transition: width 0.3s var(--ease-out), background 0.3s;
 }
 .np-dot.active {
-  width: 28px;
+  width: 32px;
   background: #1E5C3A;
 }
 
@@ -920,56 +970,65 @@ body {
 .np-actions {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 .np-btn-next {
   width: 100%;
-  height: 60px;
+  height: 64px;
   background: #1E5C3A;
   color: #fff;
+  font-family: var(--font-body);
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 1.125rem;
   border: none;
-  border-radius: 50px;
+  border-radius: 9999px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 6px;
   letter-spacing: 0.02em;
-  box-shadow: 0 4px 20px rgba(30,92,58,0.35);
+  box-shadow: 0 4px 20px rgba(30, 92, 58, 0.35);
+  transition: transform 0.15s, box-shadow 0.15s;
 }
+.np-btn-next:active { transform: scale(0.98); }
 .np-btn-next .material-icons-round { font-size: 20px; }
 .np-final-actions {
   display: none;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 .np-btn-hero {
   width: 100%;
-  height: 60px;
+  height: 64px;
   background: #1E5C3A;
   color: #fff;
+  font-family: var(--font-body);
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 1.125rem;
   border: none;
-  border-radius: 50px;
+  border-radius: 9999px;
   cursor: pointer;
-  box-shadow: 0 4px 20px rgba(30,92,58,0.35);
+  box-shadow: 0 4px 20px rgba(30, 92, 58, 0.35);
+  transition: transform 0.15s;
 }
+.np-btn-hero:active { transform: scale(0.98); }
 .np-btn-skip {
   width: 100%;
-  height: 52px;
-  background: rgba(255,255,255,0.6);
+  height: 56px;
+  background: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   color: #1E5C3A;
+  font-family: var(--font-body);
   font-weight: 600;
   font-size: 0.9375rem;
-  border: 1px solid rgba(30,92,58,0.15);
-  border-radius: 50px;
+  border: 1px solid rgba(30, 92, 58, 0.1);
+  border-radius: 9999px;
   cursor: pointer;
+  transition: transform 0.15s;
 }
+.np-btn-skip:active { transform: scale(0.98); }
 
 /* Photo action sheet */
 .notif-perm-photo-sheet-inner {
