@@ -5567,8 +5567,17 @@ body.dark-mode .notif-allow-btn {
 }
 
 /* Dark Mode Overrides */
-body.dark-mode #page-notifications {
+body.dark-mode #page-notifications,
+body.dark-mode #page-notif-permission {
   background: var(--surface);
+}
+
+body.dark-mode .notif-perm-benefit {
+  background: var(--surface-container);
+}
+
+body.dark-mode #modal-auth-prompt .modal-sheet {
+  background: var(--surface-container);
 }
 
 body.dark-mode .notif-header {

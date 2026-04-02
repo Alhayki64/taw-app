@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(grep -r \"api\\\\|endpoint\\\\|http\\\\|axios\\\\|fetch\\\\|XMLHttpRequest\" /c/Users/alhay/OneDrive/Desktop/stitch/*.js)",
-      "mcp__claude_ai_Supabase__apply_migration"
-    ]
-  }
-}
