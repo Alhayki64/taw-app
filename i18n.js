@@ -8,6 +8,7 @@ const translations = {
     'landing-headline':     'Volunteer. Earn. <br/>Impact.',
     'landing-subtitle':     'Join the movement transforming lives in Bahrain.',
     'landing-cta':          'Join the Cause',
+    'landing-explore':      'Explore the app →',
     'landing-signin':       'Already making an impact?',
     'landing-signin-link':  'Sign In',
 
@@ -195,6 +196,84 @@ const translations = {
     'nav-discover':         'Discover',
     'nav-rewards':          'Rewards',
     'nav-profile':          'Profile',
+    'nav-notifications':    'Notifications',
+    'sign-out':             'Sign Out',
+
+    // Notification permission page — stories
+    'np-headline':           'See Your Impact',
+    'np-subtitle-text':      'Discover how real-time notifications turn your small acts into nationwide community milestones.',
+    'np-story-1-title':      '4,200+ Lives Touched',
+    'np-story-1-quote':      '"Because of urgent notifications, 50 volunteers arrived in under an hour to support our flood relief efforts in Manama."',
+    'np-story-2-title':      "A Father's Gratitude",
+    'np-story-2-quote':      '"The blood donor alert saved my son. I saw the Taw volunteer walk into the hospital just 20 minutes after the request went out."',
+    'np-story-3-title':      '15 Tons of Waste Removed',
+    'np-story-3-quote':      'By coordinating via instant alerts, our community removed 15 tons of ocean plastic from local shores in just one weekend.',
+    'np-btn-next-story':     'Next Story',
+    'np-btn-hero':           'Be the Next Hero',
+    'np-btn-skip-now':       'Skip for now',
+
+    // Edit profile
+    'ep-title':              'Edit Profile',
+    'ep-avatar-hint':        'Tap to change photo',
+    'ep-name-label':         'Full Name',
+    'ep-email-label':        'Email',
+    'ep-phone-label':        'Phone Number',
+    'ep-bio-label':          'Bio',
+    'ep-save-text':          'Save Changes',
+
+    // Photo action sheet
+    'photo-sheet-title':     'Profile Photo',
+    'photo-take':            'Take Photo',
+    'photo-gallery':         'Choose from Gallery',
+    'photo-remove':          'Remove Photo',
+    'photo-cancel':          'Cancel',
+
+    // Notifications page
+    'notif-today':           'Today',
+    'notif-earlier':         'Earlier',
+    'notif-view-details':    'View Details',
+
+    // Confirm application modal
+    'confirm-app-title':     'Application Submitted!',
+    'confirm-app-notice':    'The organizer will review your application. You will receive a notification when approved.',
+    'confirm-app-home':      'Back to Home',
+    'confirm-app-more':      'Find More Events',
+
+    // Confirm redemption modal
+    'confirm-redeem-title':  'Final Step',
+    'confirm-redeem-sub':    'Verify your selection before we finalize your reward.',
+    'confirm-redeem-notice': 'This reward will be added to your My Rewards section immediately upon confirmation.',
+    'confirm-purchase-btn':  'Confirm Purchase',
+    'confirm-cancel-btn':    'Cancel',
+
+    // Auth prompt modal
+    'auth-prompt-title':     'Sign in to continue',
+    'auth-prompt-sub':       'Create a free account or sign in to take part.',
+    'auth-prompt-create':    'Create Account',
+    'auth-prompt-signin':    'Sign In',
+    'auth-prompt-later':     'Maybe Later',
+
+    // Reward redeemed page
+    'rr-page-title':         'Reward Redeemed',
+    'rr-code-label':         'REDEMPTION CODE',
+    'rr-valid-duration':     'Valid for 48 hours',
+    'rr-expires-label':      'Expires:',
+    'rr-branches':           'Available at all Bahrain branches',
+    'rr-how-to-title':       'How to use',
+
+    // Notification category labels
+    'notif-label-urgent':    'Urgent Action',
+    'notif-label-reward':    'Rewards',
+    'notif-label-discovery': 'Discovery',
+    'notif-label-system':    'System',
+
+    // Dynamic JS strings
+    'valid-at':              'Valid at',
+    'taw-currency':          'Taw',
+    'reward-converted-msg':  'Your Taw Points have been converted into a great reward.',
+    'applied-for':           'You have successfully applied for',
+    'email-invalid':         'Please enter a valid email',
+    'password-too-short':    'Password must be at least 6 characters',
 
     // Language toggle
     'lang-label':           'ع',
@@ -205,6 +284,7 @@ const translations = {
     'landing-headline':     'تطوّع. اكسب. <br/>أثِّر.',
     'landing-subtitle':     'انضم للحركة التي تغيّر حياة الناس في البحرين.',
     'landing-cta':          'انضم للقضية',
+    'landing-explore':      'استكشف التطبيق ←',
     'landing-signin':       'سبق وأحدثت أثراً؟',
     'landing-signin-link':  'سجّل دخول',
 
@@ -391,6 +471,84 @@ const translations = {
     'nav-discover':         'اكتشف',
     'nav-rewards':          'المكافآت',
     'nav-profile':          'الملف',
+    'nav-notifications':    'الإشعارات',
+    'sign-out':             'تسجيل الخروج',
+
+    // Notification permission page — stories
+    'np-headline':           'شاهد أثرك',
+    'np-subtitle-text':      'اكتشف كيف تحوّل الإشعارات الفورية أعمالك الصغيرة إلى إنجازات مجتمعية كبرى.',
+    'np-story-1-title':      '٤٬٢٠٠+ حياة تلمستها',
+    'np-story-1-quote':      '"بفضل الإشعارات العاجلة، وصل ٥٠ متطوعاً في أقل من ساعة لدعم جهودنا في إغاثة فيضانات المنامة."',
+    'np-story-2-title':      'امتنان أب',
+    'np-story-2-quote':      '"تنبيه التبرع بالدم أنقذ ابني. رأيت المتطوع يدخل المستشفى بعد ٢٠ دقيقة فقط من إرسال الطلب."',
+    'np-story-3-title':      '١٥ طناً من النفايات أُزيلت',
+    'np-story-3-quote':      'بالتنسيق عبر التنبيهات الفورية، أزال مجتمعنا ١٥ طناً من البلاستيك البحري من شواطئنا في عطلة نهاية أسبوع واحدة.',
+    'np-btn-next-story':     'القصة التالية',
+    'np-btn-hero':           'كن البطل القادم',
+    'np-btn-skip-now':       'تخطّي الآن',
+
+    // Edit profile
+    'ep-title':              'تعديل الملف الشخصي',
+    'ep-avatar-hint':        'اضغط لتغيير الصورة',
+    'ep-name-label':         'الاسم الكامل',
+    'ep-email-label':        'البريد الإلكتروني',
+    'ep-phone-label':        'رقم الهاتف',
+    'ep-bio-label':          'نبذة تعريفية',
+    'ep-save-text':          'حفظ التغييرات',
+
+    // Photo action sheet
+    'photo-sheet-title':     'صورة الملف الشخصي',
+    'photo-take':            'التقاط صورة',
+    'photo-gallery':         'اختر من المعرض',
+    'photo-remove':          'حذف الصورة',
+    'photo-cancel':          'إلغاء',
+
+    // Notifications page
+    'notif-today':           'اليوم',
+    'notif-earlier':         'سابقاً',
+    'notif-view-details':    'عرض التفاصيل',
+
+    // Confirm application modal
+    'confirm-app-title':     'تم التسجيل!',
+    'confirm-app-notice':    'سيراجع المنظّم طلبك وستتلقى إشعاراً عند القبول.',
+    'confirm-app-home':      'العودة للرئيسية',
+    'confirm-app-more':      'ابحث عن المزيد',
+
+    // Confirm redemption modal
+    'confirm-redeem-title':  'الخطوة الأخيرة',
+    'confirm-redeem-sub':    'تحقق من اختيارك قبل تأكيد استبدال مكافأتك.',
+    'confirm-redeem-notice': 'ستُضاف هذه المكافأة إلى قسم مكافآتي فور التأكيد.',
+    'confirm-purchase-btn':  'تأكيد الشراء',
+    'confirm-cancel-btn':    'إلغاء',
+
+    // Auth prompt modal
+    'auth-prompt-title':     'سجّل دخولك للمتابعة',
+    'auth-prompt-sub':       'أنشئ حساباً مجانياً أو سجّل دخولك للمشاركة.',
+    'auth-prompt-create':    'إنشاء حساب',
+    'auth-prompt-signin':    'تسجيل الدخول',
+    'auth-prompt-later':     'ربما لاحقاً',
+
+    // Reward redeemed page
+    'rr-page-title':         'تم استبدال المكافأة',
+    'rr-code-label':         'رمز الاستبدال',
+    'rr-valid-duration':     'صالح لمدة ٤٨ ساعة',
+    'rr-expires-label':      'ينتهي:',
+    'rr-branches':           'متاح في جميع فروع البحرين',
+    'rr-how-to-title':       'كيفية الاستخدام',
+
+    // Notification category labels
+    'notif-label-urgent':    'إجراء عاجل',
+    'notif-label-reward':    'المكافآت',
+    'notif-label-discovery': 'اكتشاف',
+    'notif-label-system':    'النظام',
+
+    // Dynamic JS strings
+    'valid-at':              'صالح في',
+    'taw-currency':          'طوع',
+    'reward-converted-msg':  'تم تحويل نقاط طوع الخاصة بك إلى مكافأة رائعة.',
+    'applied-for':           'لقد سجّلت بنجاح في',
+    'email-invalid':         'يرجى إدخال بريد إلكتروني صحيح',
+    'password-too-short':    'يجب أن تكون كلمة المرور ٦ أحرف على الأقل',
 
     // Language toggle
     'lang-label':           'EN',

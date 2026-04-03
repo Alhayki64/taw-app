@@ -276,8 +276,8 @@
 
         <!-- Title section -->
         <div class="np-title-section">
-          <h1 class="np-headline">See Your Impact</h1>
-          <p class="np-subtitle-text">Discover how real-time notifications turn your small acts into nationwide community milestones.</p>
+          <h1 class="np-headline" data-i18n="np-headline">See Your Impact</h1>
+          <p class="np-subtitle-text" data-i18n="np-subtitle-text">Discover how real-time notifications turn your small acts into nationwide community milestones.</p>
         </div>
 
         <!-- Story panel -->
@@ -288,8 +288,8 @@
             <div class="np-story-icon np-icon-green">
               <span class="material-icons-round">groups</span>
             </div>
-            <h3 class="np-story-title">4,200+ Lives Touched</h3>
-            <p class="np-story-quote">"Because of urgent notifications, 50 volunteers arrived in under an hour to support our flood relief efforts in Manama."</p>
+            <h3 class="np-story-title" data-i18n="np-story-1-title">4,200+ Lives Touched</h3>
+            <p class="np-story-quote" data-i18n="np-story-1-quote">"Because of urgent notifications, 50 volunteers arrived in under an hour to support our flood relief efforts in Manama."</p>
           </div>
 
           <!-- Story 2 -->
@@ -297,8 +297,8 @@
             <div class="np-story-icon np-icon-amber">
               <span class="material-icons-round">format_quote</span>
             </div>
-            <h3 class="np-story-title">A Father's Gratitude</h3>
-            <p class="np-story-quote">"The blood donor alert saved my son. I saw the Taw volunteer walk into the hospital just 20 minutes after the request went out."</p>
+            <h3 class="np-story-title" data-i18n="np-story-2-title">A Father's Gratitude</h3>
+            <p class="np-story-quote" data-i18n="np-story-2-quote">"The blood donor alert saved my son. I saw the Taw volunteer walk into the hospital just 20 minutes after the request went out."</p>
           </div>
 
           <!-- Story 3 -->
@@ -306,8 +306,8 @@
             <div class="np-story-icon np-icon-blue">
               <span class="material-icons-round">eco</span>
             </div>
-            <h3 class="np-story-title">15 Tons of Waste Removed</h3>
-            <p class="np-story-quote">By coordinating via instant alerts, our community removed 15 tons of ocean plastic from local shores in just one weekend.</p>
+            <h3 class="np-story-title" data-i18n="np-story-3-title">15 Tons of Waste Removed</h3>
+            <p class="np-story-quote" data-i18n="np-story-3-quote">By coordinating via instant alerts, our community removed 15 tons of ocean plastic from local shores in just one weekend.</p>
           </div>
 
           <!-- Dots -->
@@ -322,13 +322,13 @@
         <!-- Actions -->
         <div class="np-actions">
           <button class="np-btn-next" id="np-btn-next" onclick="advanceNotifStory()">
-            Next Story <span class="material-icons-round">chevron_right</span>
+            <span data-i18n="np-btn-next-story">Next Story</span> <span class="material-icons-round">chevron_right</span>
           </button>
           <div class="np-final-actions" id="np-final-actions">
             <button class="np-btn-hero" onclick="if('Notification' in window){Notification.requestPermission();} navigateTo('home');">
-              Be the Next Hero
+              <span data-i18n="np-btn-hero">Be the Next Hero</span>
             </button>
-            <button class="np-btn-skip" onclick="navigateTo('home')">Skip for now</button>
+            <button class="np-btn-skip" onclick="navigateTo('home')" data-i18n="np-btn-skip-now">Skip for now</button>
           </div>
         </div>
       </div>
@@ -359,7 +359,7 @@
         <!-- Group: Today -->
         <div class="notif-group">
           <div class="notif-group-header">
-            <h2 class="notif-group-title">Today</h2>
+            <h2 class="notif-group-title" data-i18n="notif-today">Today</h2>
             <span class="notif-group-badge">2 New</span>
           </div>
 
@@ -371,13 +371,13 @@
               </div>
               <div class="notif-card-main">
                 <div class="notif-card-top">
-                  <span class="notif-card-label urgent">Urgent Action</span>
+                  <span class="notif-card-label urgent" data-i18n="notif-label-urgent">Urgent Action</span>
                   <span class="notif-card-time">2h ago</span>
                 </div>
                 <p class="notif-card-text">
                   <strong>URGENT:</strong> Beach Cleanup needs 5 more volunteers for tomorrow morning.
                 </p>
-                <button class="notif-card-btn">View Details</button>
+                <button class="notif-card-btn" data-i18n="notif-view-details">View Details</button>
               </div>
             </div>
 
@@ -388,7 +388,7 @@
               </div>
               <div class="notif-card-main">
                 <div class="notif-card-top">
-                  <span class="notif-card-label reward">Rewards</span>
+                  <span class="notif-card-label reward" data-i18n="notif-label-reward">Rewards</span>
                   <span class="notif-card-time">5h ago</span>
                 </div>
                 <p class="notif-card-text">
@@ -402,7 +402,7 @@
         <!-- Group: Earlier -->
         <div class="notif-group earlier">
           <div class="notif-group-header">
-            <h2 class="notif-group-title">Earlier</h2>
+            <h2 class="notif-group-title" data-i18n="notif-earlier">Earlier</h2>
           </div>
 
           <div class="notif-list" id="notif-earlier-list">
@@ -413,7 +413,7 @@
               </div>
               <div class="notif-card-main">
                 <div class="notif-card-top">
-                  <span class="notif-card-label discovery">Discovery</span>
+                  <span class="notif-card-label discovery" data-i18n="notif-label-discovery">Discovery</span>
                   <span class="notif-card-time">Yesterday</span>
                 </div>
                 <p class="notif-card-text">
@@ -433,7 +433,7 @@
               </div>
               <div class="notif-card-main">
                 <div class="notif-card-top">
-                  <span class="notif-card-label system">System</span>
+                  <span class="notif-card-label system" data-i18n="notif-label-system">System</span>
                   <span class="notif-card-time">2 days ago</span>
                 </div>
                 <p class="notif-card-text">
@@ -1177,7 +1177,7 @@
         <button class="back-btn" aria-label="Go back" onclick="goBack()">
           <span class="material-icons-round">arrow_back</span>
         </button>
-        <h1 class="sub-header-title">Edit Profile</h1>
+        <h1 class="sub-header-title" data-i18n="ep-title">Edit Profile</h1>
         <div class="w-6"></div>
       </header>
 
@@ -1191,34 +1191,34 @@
               <span class="material-icons-round" style="font-size:15px;">photo_camera</span>
             </div>
           </div>
-          <p class="ep-avatar-hint">Tap to change photo</p>
+          <p class="ep-avatar-hint" data-i18n="ep-avatar-hint">Tap to change photo</p>
         </div>
 
         <!-- Form -->
         <form class="ep-form" onsubmit="saveProfileChanges(event)">
 
           <div class="ep-field">
-            <label class="ep-field-label" for="ep-name">Full Name</label>
+            <label class="ep-field-label" for="ep-name" data-i18n="ep-name-label">Full Name</label>
             <input class="ep-field-input" type="text" id="ep-name" placeholder="Your full name" autocomplete="name" />
           </div>
 
           <div class="ep-field">
-            <label class="ep-field-label" for="ep-email">Email</label>
+            <label class="ep-field-label" for="ep-email" data-i18n="ep-email-label">Email</label>
             <input class="ep-field-input" type="email" id="ep-email" placeholder="you@example.com" readonly />
           </div>
 
           <div class="ep-field">
-            <label class="ep-field-label" for="ep-phone">Phone Number</label>
+            <label class="ep-field-label" for="ep-phone" data-i18n="ep-phone-label">Phone Number</label>
             <input class="ep-field-input" type="tel" id="ep-phone" placeholder="+973 xxxx xxxx" autocomplete="tel" />
           </div>
 
           <div class="ep-field">
-            <label class="ep-field-label" for="ep-bio">Bio</label>
+            <label class="ep-field-label" for="ep-bio" data-i18n="ep-bio-label">Bio</label>
             <textarea class="ep-field-input ep-field-textarea" id="ep-bio" rows="3" placeholder="Tell us about yourself..."></textarea>
           </div>
 
           <button type="submit" class="ep-save-btn" id="ep-save-btn">
-            <span id="ep-save-text">Save Changes</span>
+            <span id="ep-save-text" data-i18n="ep-save-text">Save Changes</span>
             <span class="ep-save-spinner" id="ep-save-spinner" style="display:none;">
               <span class="material-icons-round spinning">refresh</span>
             </span>
@@ -1314,18 +1314,18 @@
         <div class="confirm-icon-ring" style="color: var(--primary); background: rgba(0, 102, 79, 0.1);">
           <span class="material-icons-round">check_circle</span>
         </div>
-        <h2 class="confirm-title" id="confirm-app-title">Application Submitted!</h2>
-        <p class="confirm-subtitle">You have successfully applied for this event.</p>
-        
+        <h2 class="confirm-title" id="confirm-app-title" data-i18n="confirm-app-title">Application Submitted!</h2>
+        <p class="confirm-subtitle" id="confirm-app-subtitle">You have successfully applied for this event.</p>
+
         <div class="confirm-notice">
           <span class="material-icons-round confirm-notice-icon">info</span>
-          <p class="confirm-notice-text">The organizer will review your application. You will receive a notification when approved.</p>
+          <p class="confirm-notice-text" data-i18n="confirm-app-notice">The organizer will review your application. You will receive a notification when approved.</p>
         </div>
 
-        <button class="confirm-btn-primary" onclick="hideConfirmApplication(null); navigateTo('home')">
+        <button class="confirm-btn-primary" onclick="hideConfirmApplication(null); navigateTo('home')" data-i18n="confirm-app-home">
           Back to Home
         </button>
-        <button class="confirm-btn-cancel" onclick="hideConfirmApplication(null); navigateTo('volunteer-map')">
+        <button class="confirm-btn-cancel" onclick="hideConfirmApplication(null); navigateTo('volunteer-map')" data-i18n="confirm-app-more">
           Find More Events
         </button>
       </div>
@@ -1339,8 +1339,8 @@
           <span class="material-icons-round">redeem</span>
         </div>
 
-        <h2 class="confirm-title" id="confirm-redeem-title">Final Step</h2>
-        <p class="confirm-subtitle">Verify your selection before we finalize your reward.</p>
+        <h2 class="confirm-title" id="confirm-redeem-title" data-i18n="confirm-redeem-title">Final Step</h2>
+        <p class="confirm-subtitle" data-i18n="confirm-redeem-sub">Verify your selection before we finalize your reward.</p>
 
         <!-- Reward Summary Card -->
         <div class="confirm-reward-card">
@@ -1369,15 +1369,15 @@
         <!-- Info Notice -->
         <div class="confirm-notice">
           <span class="material-icons-round confirm-notice-icon">info</span>
-          <p class="confirm-notice-text">This reward will be added to your <strong>My Rewards</strong> section immediately upon confirmation.</p>
+          <p class="confirm-notice-text" data-i18n="confirm-redeem-notice">This reward will be added to your My Rewards section immediately upon confirmation.</p>
         </div>
 
         <!-- Actions -->
         <button class="confirm-btn-primary" onclick="confirmRedemption()">
           <span class="material-icons-round">verified_user</span>
-          Confirm Purchase
+          <span data-i18n="confirm-purchase-btn">Confirm Purchase</span>
         </button>
-        <button class="confirm-btn-cancel" onclick="hideConfirmRedemption(null)">
+        <button class="confirm-btn-cancel" onclick="hideConfirmRedemption(null)" data-i18n="confirm-cancel-btn">
           Cancel
         </button>
 
@@ -1394,7 +1394,7 @@
         <button class="back-btn" aria-label="Go back" onclick="navigateTo('marketplace')">
           <span class="material-icons-round">close</span>
         </button>
-        <h1 class="reward-detail-title">Reward Redeemed</h1>
+        <h1 class="reward-detail-title" data-i18n="rr-page-title">Reward Redeemed</h1>
       </header>
 
       <main class="reward-detail-main">
@@ -1423,8 +1423,11 @@
             <!-- QR generated by JS -->
           </div>
           <div class="redeemed-code-box">
-            <span class="redeemed-code-label">REDEMPTION CODE</span>
+            <span class="redeemed-code-label" data-i18n="rr-code-label">REDEMPTION CODE</span>
             <span class="redeemed-code-value" id="rr-code">TAW-COSTA-2024</span>
+            <button class="redeemed-copy-btn" onclick="copyRedemptionCode()" aria-label="Copy code">
+              <span class="material-icons-round" id="rr-copy-icon">content_copy</span>
+            </button>
           </div>
         </div>
 
@@ -1435,8 +1438,8 @@
               <span class="material-icons-round">timer</span>
             </div>
             <div class="countdown-text-wrap">
-              <span class="countdown-main">Valid for 48 hours</span>
-              <span class="countdown-expires">Expires: <span id="rr-expires-time">--</span></span>
+              <span class="countdown-main" data-i18n="rr-valid-duration">Valid for 48 hours</span>
+              <span class="countdown-expires"><span data-i18n="rr-expires-label">Expires:</span> <span id="rr-expires-time">--</span></span>
             </div>
           </div>
         </div>
@@ -1444,7 +1447,7 @@
         <ul class="redeemed-validity-list">
           <li>
             <span class="material-icons-round validity-icon">store</span>
-            <span>Available at all Bahrain branches</span>
+            <span data-i18n="rr-branches">Available at all Bahrain branches</span>
           </li>
         </ul>
 
@@ -1452,8 +1455,8 @@
         <div class="redeemed-howto-box">
           <span class="material-icons-round redeemed-howto-icon">info</span>
           <div>
-            <p class="redeemed-howto-title">How to use</p>
-            <p class="redeemed-howto-text">Present this screen to the barista before ordering. The discount applies to any single beverage on the menu.</p>
+            <p class="redeemed-howto-title" data-i18n="rr-how-to-title">How to use</p>
+            <p class="redeemed-howto-text" id="rr-how-to-use-text">Present this screen to the barista before ordering. The discount applies to any single beverage on the menu.</p>
           </div>
         </div>
 
@@ -1510,17 +1513,17 @@
   <div id="notif-perm-photo-sheet" class="modal-overlay" style="display:none;" onclick="if(event.target===this) hideNotifPermPhotoSheet()" role="dialog" aria-modal="true">
     <div class="notif-perm-photo-sheet-inner">
       <div class="modal-handle"></div>
-      <p class="notif-perm-sheet-title">Profile Photo</p>
+      <p class="notif-perm-sheet-title" data-i18n="photo-sheet-title">Profile Photo</p>
       <button class="notif-perm-sheet-btn" onclick="notifPermTakePhoto()">
-        <span class="material-icons-round">photo_camera</span> Take Photo
+        <span class="material-icons-round">photo_camera</span> <span data-i18n="photo-take">Take Photo</span>
       </button>
       <button class="notif-perm-sheet-btn" onclick="notifPermChooseGallery()">
-        <span class="material-icons-round">photo_library</span> Choose from Gallery
+        <span class="material-icons-round">photo_library</span> <span data-i18n="photo-gallery">Choose from Gallery</span>
       </button>
       <button class="notif-perm-sheet-btn notif-perm-sheet-btn-danger" onclick="notifPermRemovePhoto()">
-        <span class="material-icons-round">delete_outline</span> Remove Photo
+        <span class="material-icons-round">delete_outline</span> <span data-i18n="photo-remove">Remove Photo</span>
       </button>
-      <button class="notif-perm-sheet-btn notif-perm-sheet-btn-cancel" onclick="hideNotifPermPhotoSheet()">Cancel</button>
+      <button class="notif-perm-sheet-btn notif-perm-sheet-btn-cancel" onclick="hideNotifPermPhotoSheet()" data-i18n="photo-cancel">Cancel</button>
     </div>
   </div>
 
@@ -1529,12 +1532,12 @@
     <div class="modal-sheet" style="text-align:center;padding:32px 24px 28px;">
       <div class="modal-handle"></div>
       <span class="material-icons-round" style="font-size:44px;color:var(--primary);margin-bottom:12px;display:block;">lock_open</span>
-      <h2 id="auth-prompt-label" class="modal-title" style="margin-bottom:8px;">Sign in to continue</h2>
-      <p class="modal-subtitle" style="margin-bottom:24px;color:var(--on-surface-variant);">Create a free account or sign in to take part.</p>
+      <h2 id="auth-prompt-label" class="modal-title" style="margin-bottom:8px;" data-i18n="auth-prompt-title">Sign in to continue</h2>
+      <p class="modal-subtitle" style="margin-bottom:24px;color:var(--on-surface-variant);" data-i18n="auth-prompt-sub">Create a free account or sign in to take part.</p>
       <div style="display:flex;flex-direction:column;gap:10px;">
-        <button class="btn-primary" onclick="hideAuthPrompt(); setAuthMode('signup'); navigateTo('auth')">Create Account</button>
-        <button class="btn-secondary" onclick="hideAuthPrompt(); setAuthMode('signin'); navigateTo('auth')">Sign In</button>
-        <button class="btn-ghost" onclick="hideAuthPrompt()" style="color:var(--on-surface-variant);font-size:0.875rem;padding:8px;">Maybe Later</button>
+        <button class="btn-primary" onclick="hideAuthPrompt(); setAuthMode('signup'); navigateTo('auth')" data-i18n="auth-prompt-create">Create Account</button>
+        <button class="btn-secondary" onclick="hideAuthPrompt(); setAuthMode('signin'); navigateTo('auth')" data-i18n="auth-prompt-signin">Sign In</button>
+        <button class="btn-ghost" onclick="hideAuthPrompt()" style="color:var(--on-surface-variant);font-size:0.875rem;padding:8px;" data-i18n="auth-prompt-later">Maybe Later</button>
       </div>
     </div>
   </div>

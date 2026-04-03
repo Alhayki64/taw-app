@@ -188,7 +188,10 @@ function filterOpportunitiesByCategory(category) {
 // ── Auth Prompt (for guests attempting protected actions) ──
 function showAuthPrompt(actionLabel) {
   const label = document.getElementById('auth-prompt-label')
-  if (label) label.textContent = `Sign in to ${actionLabel}`
+  if (label) {
+    const isAr = typeof currentLang !== 'undefined' && currentLang === 'ar';
+    label.textContent = isAr ? 'سجّل دخولك للمتابعة' : 'Sign in to continue';
+  }
   const modal = document.getElementById('modal-auth-prompt')
   if (!modal) return
   modal.style.display = 'flex'
@@ -292,28 +295,47 @@ const carousel = document.getElementById('opportunities-carousel');
 if (carousel) {
   let isDragging = false;
   let startX, scrollStart;
+  let lastX, lastTime, velocity = 0;
+  let momentumId = null;
 
   carousel.addEventListener('pointerdown', (e) => {
     isDragging = true;
     startX = e.clientX;
     scrollStart = carousel.scrollLeft;
+    lastX = e.clientX;
+    lastTime = Date.now();
+    velocity = 0;
+    if (momentumId) { cancelAnimationFrame(momentumId); momentumId = null; }
     carousel.setPointerCapture(e.pointerId);
     carousel.style.cursor = 'grabbing';
   });
 
   carousel.addEventListener('pointermove', (e) => {
     if (!isDragging) return;
-    const dx = e.clientX - startX;
-    carousel.scrollLeft = scrollStart - dx;
+    const now = Date.now();
+    const dt = now - lastTime;
+    if (dt > 0) velocity = (lastX - e.clientX) / dt;
+    lastX = e.clientX;
+    lastTime = now;
+    carousel.scrollLeft = scrollStart - (e.clientX - startX);
   });
+
+  function applyMomentum() {
+    if (Math.abs(velocity) < 0.05) { velocity = 0; return; }
+    carousel.scrollLeft += velocity * 16;
+    velocity *= 0.93;
+    momentumId = requestAnimationFrame(applyMomentum);
+  }
 
   carousel.addEventListener('pointerup', () => {
     isDragging = false;
     carousel.style.cursor = '';
+    momentumId = requestAnimationFrame(applyMomentum);
   });
 
   carousel.addEventListener('pointercancel', () => {
     isDragging = false;
+    velocity = 0;
     carousel.style.cursor = '';
   });
 }
@@ -447,7 +469,7 @@ window.handleAvatarUpload = function(event) {
         }
       } catch (err) {
         console.error('Failed to upload avatar:', err);
-        alert('Failed to save profile image. Please try again.');
+        if (typeof showToast === 'function') showToast('Failed to save profile image. Please try again.', 'error');
       } finally {
         if (overlay) {
           overlay.classList.remove('spinning');
@@ -806,7 +828,8 @@ const rewardsData = {
       'Redemption is subject to availability and store operating hours.'
     ],
     heroImg: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCFtjGjJBz4rKkpBZxWX4R69lDkfogiml87c2Vl_SzCsHeGqpDS-6b8GfbvIumqJ5PREXi5Hr6vkAbDB0n02QpHp7YAMG1wWUrrD6yrcS1FLPAnRGKvE9VMZnVpOMi6YLyk6rW0dkIdcPXvf8owJIS6BdhGXs24zYgLxHI8GanMJNervJXF9Ap-qyDWPgfwbgOEXpvvZ7LEpLkkek68fg0znlvZehGZt8QTYuPxbjDYGtzkDOPIm_NhsPMxgv45ET9kxJbWF11xK5qB',
-    logoHtml: '<div style="background-color: #630D16; color: white; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">COSTA</div>'
+    logoHtml: '<div style="background-color: #630D16; color: white; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">COSTA</div>',
+    howToUse: 'Present this screen to the barista before ordering. The discount applies to any single beverage on the menu.'
   },
   'jasmis': {
     category: 'Dining',
@@ -822,7 +845,8 @@ const rewardsData = {
       'Available at selected Jasmi\'s branches in Bahrain.'
     ],
     heroImg: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBr5rg6vflFvo-fB0JVX2vXLcH8L8scDJ3yOhvnSuL5pg3fy8SPF-DjSZZZiO7S0yCN009FAgDfgeOwzgb_L_QPJTKe9l6mWO2g5FffHugypjMPUAKCNWWMvr9hbVNwzKeXvxFrU0jI3ALemhcUMELASjAEU2qyQR3yNnsX-RQxQyKPIrlgOuliNf5e2-3pAqoricmilnsM8n6iN3R-xHU99X9lLftGSyJ63-9bC8nb8ce4GCyRiOqjdylbfMXYlArWl45_bJZBhA-r',
-    logoHtml: '<img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZWPP07ryMiii7qOE_trAEcai39fESiIR-i5shbsivT4nj755_JaMnOB4BwNtAJzqvW0XEqo1j58fC37gORiSJR0NHR2QfMHJihNG4rdhqnZ8QKRzynh7s78DkUBDq7Ea7AZAOE1YrfAhOD_a-wLN7gX966gBbJjajVbsaaDKF1em8pMf2XnLzFbipRm75iHICBo6HOJ6jNOXqRG8_JXk4cXU7bB9hSWcEmezorEyit3loVpBKG-cA-y3rYIcJ_CCB6wvc8e6ZDpyT" alt="Jasmis" />'
+    logoHtml: '<img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZWPP07ryMiii7qOE_trAEcai39fESiIR-i5shbsivT4nj755_JaMnOB4BwNtAJzqvW0XEqo1j58fC37gORiSJR0NHR2QfMHJihNG4rdhqnZ8QKRzynh7s78DkUBDq7Ea7AZAOE1YrfAhOD_a-wLN7gX966gBbJjajVbsaaDKF1em8pMf2XnLzFbipRm75iHICBo6HOJ6jNOXqRG8_JXk4cXU7bB9hSWcEmezorEyit3loVpBKG-cA-y3rYIcJ_CCB6wvc8e6ZDpyT" alt="Jasmis" />',
+    howToUse: "Show this screen to your server before ordering. The free appetizer will be applied with any main meal purchase."
   },
   'dining': {
     category: 'Dining',
@@ -838,7 +862,8 @@ const rewardsData = {
       'Present the QR redemption code before asking for the bill.'
     ],
     heroImg: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCZrnDP-9nWUguc_yRbGaxTBrpzfxRqM_9QD32M5QACeaq5aJXFd2MuEfqK0dV4pLLAYleNVrKq8vNQkVy14glDGEKshTEqaxUbHtHOa5HRT_KyhmlJVAElum-aDlrehBMTwjCPhS5q5bL6RFIxQoUK-1G_dw2ZbjqH5dAQMEYGSp_wYYMLcXblV3sq9ahJZGsURYi_NEGAGzDG-qgs5k4pcVyYo2y9x0EtfQLMopjw3WE8pEQBuCmisi52RuJBQAHlHQY9nHVbnCj_',
-    logoHtml: '<div style="background-color: var(--primary); color: white; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;"><span class="material-icons-round" style="font-size:20px;">restaurant</span></div>'
+    logoHtml: '<div style="background-color: var(--primary); color: white; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;"><span class="material-icons-round" style="font-size:20px;">restaurant</span></div>',
+    howToUse: 'Show this screen to your server before asking for the bill. The QR code will be scanned to apply the 25% discount.'
   }
 };
 
@@ -919,7 +944,7 @@ const eventsData = {
     orgName: 'Bahrain Red Crescent',
     orgType: 'Humanitarian Organization',
     orgLogo: '🌙',
-    date: 'December 12, 2025',
+    date: 'April 10, 2026',
     time: '5:00 PM — 8:00 PM',
     location: 'Al Areen, Bahrain',
     volunteers: '24 / 40 spots filled',
@@ -933,7 +958,7 @@ const eventsData = {
     orgName: 'Amwaj Communities',
     orgType: 'Environmental Group',
     orgLogo: '🌊',
-    date: 'December 18, 2025',
+    date: 'April 18, 2026',
     time: '7:00 AM — 10:00 AM',
     location: 'Amwaj Islands, Bahrain',
     volunteers: '12 / 20 spots filled',
@@ -947,7 +972,7 @@ const eventsData = {
     orgName: 'Social Care Society',
     orgType: 'Elderly Support',
     orgLogo: '🫖',
-    date: 'December 22, 2025',
+    date: 'April 20, 2026',
     time: '10:00 AM — 12:00 PM',
     location: 'Muharraq, Bahrain',
     volunteers: '5 / 10 spots filled',
@@ -961,7 +986,7 @@ const eventsData = {
     orgName: 'Bahrain Education Initiative',
     orgType: 'Education',
     orgLogo: '📚',
-    date: 'December 25, 2025',
+    date: 'April 25, 2026',
     time: '4:00 PM — 6:00 PM',
     location: 'Isa Town Community Center',
     volunteers: '8 / 20 spots filled',
@@ -975,7 +1000,7 @@ const eventsData = {
     orgName: 'Salmaniya Medical Complex',
     orgType: 'Health Services',
     orgLogo: '🩸',
-    date: 'December 28, 2025',
+    date: 'April 28, 2026',
     time: '9:00 AM — 2:00 PM',
     location: 'Salmaniya Hospital, Bahrain',
     volunteers: '10 / 30 spots filled',
@@ -1000,7 +1025,10 @@ const eventsData = {
   }
 };
 
+let _currentEventId = null;
+
 window.openEventDetails = function(eventId) {
+  _currentEventId = eventId || 'tree-planting';
   const event = eventsData[eventId] || eventsData['tree-planting'];
 
   const heroImg = document.querySelector('#event-hero img');
@@ -1097,6 +1125,14 @@ window.showConfirmApplication = function() {
   if (!authState.session) { showAuthPrompt('apply for this event'); return; }
   const modal = document.getElementById('modal-confirm-application');
   if (modal) {
+    // Show which event was applied for
+    const event = _currentEventId ? eventsData[_currentEventId] : null;
+    const subtitleEl = document.getElementById('confirm-app-subtitle');
+    if (subtitleEl && event) {
+      const isAr = typeof currentLang !== 'undefined' && currentLang === 'ar';
+      const prefix = isAr ? 'لقد سجّلت بنجاح في' : 'You have successfully applied for';
+      subtitleEl.textContent = `${prefix} "${event.title}".`;
+    }
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
     trapFocus(modal);
@@ -1125,10 +1161,11 @@ window.showConfirmRedemption = function() {
   if (!reward) return;
 
   // Populate modal
+  const isAr = typeof currentLang !== 'undefined' && currentLang === 'ar';
   document.getElementById('cr-brand-logo').innerHTML = reward.logoHtml;
   document.getElementById('cr-title').textContent = reward.title;
-  document.getElementById('cr-sub').textContent = `Valid at ${reward.brandName}.`;
-  document.getElementById('cr-cost').textContent = `${reward.points} Taw`;
+  document.getElementById('cr-sub').textContent = `${isAr ? 'صالح في' : 'Valid at'} ${reward.brandName}.`;
+  document.getElementById('cr-cost').textContent = `${reward.points} ${isAr ? 'طوع' : 'Taw'}`;
 
   const modal = document.getElementById('modal-confirm-redemption');
   modal.style.display = 'flex';
@@ -1161,9 +1198,12 @@ window.confirmRedemption = function() {
   const code = `TAW-${reward.brandName.split(' ')[0].toUpperCase()}-${new Date().getFullYear()}`;
 
   // Populate Reward Redeemed page
+  const isArRedeemed = typeof currentLang !== 'undefined' && currentLang === 'ar';
   document.getElementById('rr-logo').innerHTML = reward.logoHtml;
   document.getElementById('rr-title').textContent = reward.title;
-  document.getElementById('rr-subtitle').textContent = `Your taw points have been converted into a great reward.`;
+  document.getElementById('rr-subtitle').textContent = isArRedeemed
+    ? 'تم تحويل نقاط طوع الخاصة بك إلى مكافأة رائعة.'
+    : 'Your Taw Points have been converted into a great reward.';
   document.getElementById('rr-code').textContent = code;
 
   // Generate simple QR-like visual using a text pattern
@@ -1206,6 +1246,10 @@ window.confirmRedemption = function() {
       <rect x="120" y="120" width="8" height="8" rx="1" fill="#1d1c17"/>
     </svg>`;
 
+  // Populate dynamic "how to use" text
+  const howToUseEl = document.getElementById('rr-how-to-use-text');
+  if (howToUseEl && reward.howToUse) howToUseEl.textContent = reward.howToUse;
+
   // Navigate to redeemed page
   navigateTo('reward-redeemed');
 
@@ -1213,7 +1257,24 @@ window.confirmRedemption = function() {
   const now = new Date();
   const expiry = new Date(now.getTime() + (48 * 60 * 60 * 1000));
   const options = { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-  document.getElementById('rr-expires-time').textContent = expiry.toLocaleDateString('en-US', options);
+  const locale = (typeof currentLang !== 'undefined' && currentLang === 'ar') ? 'ar-BH' : 'en-US';
+  document.getElementById('rr-expires-time').textContent = expiry.toLocaleDateString(locale, options);
+};
+
+// ── Copy Redemption Code ──
+window.copyRedemptionCode = function() {
+  const code = document.getElementById('rr-code')?.textContent;
+  if (!code) return;
+  navigator.clipboard.writeText(code).then(() => {
+    const icon = document.getElementById('rr-copy-icon');
+    if (icon) {
+      icon.textContent = 'check';
+      setTimeout(() => { icon.textContent = 'content_copy'; }, 2000);
+    }
+    if (typeof showToast === 'function') showToast('Code copied to clipboard', 'success');
+  }).catch(() => {
+    if (typeof showToast === 'function') showToast('Could not copy — try selecting the code manually', 'error');
+  });
 };
 
 // ── Auth Page Logic ──
@@ -1301,7 +1362,8 @@ function toggleAuthMode() {
 }
 
 window.goToSignUp = function() {
-  navigateTo('home');
+  navigateTo('auth');
+  setAuthMode('signup');
 };
 
 // ── Real-time Form Validation ──
@@ -1328,7 +1390,8 @@ window.goToSignUp = function() {
       } else if (!emailRegex.test(val)) {
         emailWrap.classList.add('invalid');
         emailWrap.classList.remove('valid');
-        emailError.textContent = 'Please enter a valid email';
+        const isAr = typeof currentLang !== 'undefined' && currentLang === 'ar';
+        emailError.textContent = isAr ? 'يرجى إدخال بريد إلكتروني صحيح' : 'Please enter a valid email';
       } else {
         emailWrap.classList.add('valid');
         emailWrap.classList.remove('invalid');
@@ -1350,7 +1413,8 @@ window.goToSignUp = function() {
     if (val.length < 6) {
       passWrap.classList.add('invalid');
       passWrap.classList.remove('valid');
-      passError.textContent = 'Password must be at least 6 characters';
+      const isArPass = typeof currentLang !== 'undefined' && currentLang === 'ar';
+      passError.textContent = isArPass ? 'يجب أن تكون كلمة المرور ٦ أحرف على الأقل' : 'Password must be at least 6 characters';
     } else {
       passWrap.classList.add('valid');
       passWrap.classList.remove('invalid');

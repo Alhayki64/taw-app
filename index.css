@@ -5098,7 +5098,27 @@ body.dark-mode .reward-fixed-action {
   flex-direction: column;
   align-items: center;
   text-align: center;
+  position: relative;
 }
+
+.redeemed-copy-btn {
+  position: absolute;
+  top: 50%;
+  right: 0.625rem;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--primary);
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+.redeemed-copy-btn:hover { background: var(--surface-variant); }
+.redeemed-copy-btn .material-icons-round { font-size: 1.1rem; }
 
 .redeemed-code-label {
   font-size: 9px;
