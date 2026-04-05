@@ -39,17 +39,18 @@ const pageMap = {
   'profile':          'page-profile',
   'edit-profile':     'page-edit-profile',
   'reward-details':   'page-reward-details',
-  'reward-redeemed':  'page-reward-redeemed'
+  'reward-redeemed':  'page-reward-redeemed',
+  'partner-detail':   'page-partner-detail'
 };
 
 const navMap = {
   'home':        'nav-home',
   'marketplace': 'nav-marketplace',
-  'profile':     'nav-profile',
+  'profile':     'nav-profile'
 };
 
 // Pages that should hide the bottom nav
-const subPages = new Set(['landing', 'auth', 'interests', 'notifications', 'notif-permission', 'edit-profile', 'event-details', 'checkin-success', 'volunteer-map', 'reward-details', 'reward-redeemed']);
+const subPages = new Set(['landing', 'auth', 'interests', 'notifications', 'notif-permission', 'edit-profile', 'event-details', 'checkin-success', 'volunteer-map', 'reward-details', 'reward-redeemed', 'partner-detail']);
 
 // Pages that require authentication
 const protectedPages = new Set(['checkin-success', 'profile', 'reward-redeemed']);
@@ -96,6 +97,10 @@ function navigateTo(pageName) {
   } else {
     bottomNav.classList.remove('hidden');
   }
+
+  // Show/hide marketplace balance bar
+  const balanceBar = document.getElementById('marketplace-balance-bar');
+  if (balanceBar) balanceBar.style.display = pageName === 'marketplace' ? 'block' : 'none';
 
   // Update nav active states
   updateNavActive(pageName);
@@ -1054,6 +1059,159 @@ window.openEventDetails = function(eventId) {
   navigateTo('event-details');
 };
 
+// ── Partner Data ──
+const partnersData = {
+  mcdonalds: {
+    name: "McDonald's",
+    category: 'Quick Service Restaurant',
+    rating: '4.8',
+    offers: '12',
+    heroImg: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDfVFcH9tHoyKH_yxW7XySvetBsODgGCpYCGGpIFytknG5kAumwBVWeqDP9AiFNjlYCToceemSzc_91WfuFnx86Qg9T_UZ34cnwt7lDoo6QrP4kMv5kzudKkuXJ5PW3qevDlCkIHNoxwiHgoNt8_0vYuW0gfq1ihdj0n8OHbA_2xMLxe0bLxpTGZibY3OQb6yWL05X5chU5F9n96ZYVolMKRedMGo3MZm6r0tcpAEwUGlOnhuwLfluDvtMqKJbqrlx4xmMKudAxF5AW',
+    logoImg: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBi7lyUus2XH1sdEuX1hNeQnVeaN52Y-NrXzWeCQaVp-oN41FdETNtW49RXJkpxLbS8F8HexN_PWxAGGFWBnNLPF86vqZhMXmxxpKfumSdK9gKSGHBwepSSAlMi34DE-2FO7bJLslsgLu-5-GlVjZvHAJUBq3eGRjff2-jkGvoqSn9-JEoYV-kv1o1IEF4Ci7rX8UXAe13wV-ZPT3WkeI_O2QhY9_4C3351kYgcj3Hpgb3B_YWHcYpQO03DFXinW1iqNsYNY0ucv52Y',
+    civicText: "McDonald's Bahrain has been a pillar of our civic tapestry since 2024. For every meal claimed through Taw, they contribute to local community gardens across the Kingdom, fueling the spirit of giving back.",
+    rewards: [
+      { title: 'Free Appetizer', taw: '350', desc: 'With any meal purchase. Valid at all branches.', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAa-2DF20X_XvZK38m3zxANqiDY5wCN0t6_jNZmKJrVegE1XXClu7T_OkaxfVJAlOTelk1h_gwyNLS2Ef_nzun2tMZOnjFvbEdBDytsFrjhWCrP2afqkc9AKwcPNuJzwibUm4jKhM5adg_Br8nC42D30n04FfcMh_LXcOd5SKEMuk4sbmApJSBIsjBjfvnZR4qN55SSxAv-QOmnoz7X9RvHco1zXUqcO57ZSaYEnrYYby5-abPELPuae9bW4SSpLcuExCQouhdue81F' },
+      { title: '20% off Family Meal', taw: '850', desc: 'Valid on Share Box items. Perfect for weekend gatherings.', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA70PGT329JdoGjNHR4R-mdsTP_NLI0piNox_QuSx1VMbpe-lOsijPnLG0WkCcJiALZnMumfFefvpUcK3oYHuNWLTo4wWpKP4kRc-iYeSHWZjpWU9TGx-ol28cE1FxAoyCgKqxURslvaMJOTTR0oIS8mVYKERuEsVOaaY3QT6Awfvs9HaWCvI4Kzz13qSV0Ul14aJBkAgNsQLJlHKkq4lY81Vhr8f7n6UqWfBcAMpPJAKY-Wt-YTQCvYn_waQiTJT53Qh2IuOHKtHM-' },
+      { title: 'Free McFlurry', taw: '500', desc: 'Any flavor available. Limited time offer.', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCBaeKnvXWax3ZcGLKi76HdMXqYbnqM10JdB3aqat48yE9t1hVKBlq4vMaXVQs4HaVGOGyuRLdT8IFrA89xFEYBnVBS6FsGhLegn2NciafjI4AGjfzHCCELRWFC3uGKISMt25g_bUmFvLEnHHHHqmM1QFHR5x36uwzlozVEjFu10I08yEYOE6ZJYFJHVxPlg0pAyXYMamUcL51ZGATeIuN_35HieqvUunfsdzWCExaj_uMUAF7SLk1EbuKEZ3Eo_PEcJQQSU_5Jd' },
+    ],
+    branches: '4 locations within 5km of you'
+  },
+  barns: {
+    name: "Barn's",
+    category: 'Specialty Coffee',
+    rating: '4.9',
+    offers: '8',
+    heroImg: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCTptBM-8aBu7BS0QfocOMNoq4PzXBzxMn3duWzS91Y6gLAP9-VprawMdQpPRyNkAN8C0BkeQi14pN6qaldwUOIJJuOJscU-ulAWyYViQWvdTNuGCavnlIVeJ_44yghFWoHKpgc3iEKCwd7w7FF3mOz8GP0hhm7P9hF4vS1gTt2Im7FXGdpFHBAYz93f3VfWPuGciTsZbQYRLabgVcy9YjSSCBezBL4TBpCJQvpa9JNA85-6DxJROx_89RTLAFqb_wVdIKvAlsSXX4K',
+    logoImg: '',
+    logoIcon: 'local_cafe',
+    civicText: "Barn's Café supports local youth barista programs through Taw. Every beverage you claim helps fund coffee craft training for young Bahrainis, building community one cup at a time.",
+    rewards: [
+      { title: 'Free Special Latte', taw: '250', desc: 'Rich espresso with creamy textured milk. Any size.', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCTptBM-8aBu7BS0QfocOMNoq4PzXBzxMn3duWzS91Y6gLAP9-VprawMdQpPRyNkAN8C0BkeQi14pN6qaldwUOIJJuOJscU-ulAWyYViQWvdTNuGCavnlIVeJ_44yghFWoHKpgc3iEKCwd7w7FF3mOz8GP0hhm7P9hF4vS1gTt2Im7FXGdpFHBAYz93f3VfWPuGciTsZbQYRLabgVcy9YjSSCBezBL4TBpCJQvpa9JNA85-6DxJROx_89RTLAFqb_wVdIKvAlsSXX4K' },
+      { title: '50% Off Any Cold Brew', taw: '150', desc: 'Valid Monday–Thursday. Dine-in only.', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBPU-C1XtloCXOdralqFDiUc3ibXu1fIj-btClXRIrv4oOUeU6TvOBFPG4APE_g_bZ7RoTLxUyryzHxRplWAkaz4zHXhYE1QewsrXDipnD1OU-pBNDFeGgAZjSesEyhKNAuHKnzcKTBHE65OOe0Q-KzraqG2J2nd3s393kVgD7ZCzWNukiuvbvQ4atJ0kUQpnhJ22qzk8exCgKTni0KvYsMvyjHegZ_pu9ooR7IZhobzOhuxyYdQlNzDehAYwlCXTtfeqGa55iPBmBt' },
+    ],
+    branches: '6 locations across Bahrain'
+  },
+  odaburger: {
+    name: 'Oda Burger',
+    category: 'Burger Restaurant · Jid-Ali',
+    rating: '4.9',
+    offers: '3',
+    heroImg: 'Oda Burger.jpg',
+    logoImg: 'Oda Burger.jpg',
+    civicText: 'Oda Burger is a proud local brand from Jid-Ali, Bahrain. As a Taw partner, they support community events and local youth initiatives, proving that great burgers and a great community go hand in hand.',
+    rewards: [
+      { title: 'Free Drink', taw: '150', desc: 'Get a free cold drink with any burger order. Valid on delivery and pickup.', img: 'Oda Burger.jpg' },
+      { title: 'Double Smash Deal', taw: '400', desc: '2 Double Smash Beef Burgers at a special Taw price.', img: 'Oda Burger.jpg' },
+      { title: 'Free Size Upgrade', taw: '200', desc: 'Upgrade any meal to large for free. One per order.', img: 'Oda Burger.jpg' },
+    ],
+    branches: '1 location in Jid-Ali, Bahrain · Orders via Instagram @oda_burger.s'
+  },
+  reelcinemas: {
+    name: 'Reel Cinemas',
+    category: 'Entertainment',
+    rating: '4.6',
+    offers: '5',
+    heroImg: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB-DRDJjbzGxE3oJGXPFFoqdXJM54Qvb6cMcaRy_Qr16nNJF-gqXE1Y7751xTMbBSXT6JpWMCWXXekzqf58rUXI9UmSo25lD2DQzDqtxQd2eYukneyE0Ygi-QMSM2T_gDO5OuOFQQbTcUPu-bU4xkl1ftAcoqMch7NLjpdcUSZNXEfS74wrdXVQyM-o3eZGjJ58rN9KCVBWvZYvi4m2XcH_UU8nQlUStAtZ5hdXfau6MlwRnDM4lLy_29VrnxtIkIkdfpJRaeGnod-5',
+    logoImg: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC-1T77y33s7qzZhtJ3WnRb42e_tBbozBNAJg9Zl3aY7_7r4XeyPNkPOfM6jrOHOgI2sIzCvSGGxeyLmqZpm_8Em5bfPiCPV4ordcze9zXP0TSmoWbjXupxbtG_dNP5lVFNmcDel2SWK9gbtIrqsFJkmGM1kTn76C0vY1bQscF37FpJiR46v9-z8CtCalY9x9pCeGWUFbFuN2wz7AmCnlaAY8pARVQk5CLS-zR5V8o8lT4CMX4_W110mgfbih5albqBz7nHJ6NK5fsH',
+    civicText: 'Reel Cinemas partners with Taw to make culture accessible. A portion of every redeemed ticket goes toward free cinema screenings for underprivileged children in Bahrain.',
+    rewards: [
+      { title: 'Buy 1 Get 1 Free', taw: '450', desc: 'Standard 2D movie tickets. Valid weekdays.', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB-DRDJjbzGxE3oJGXPFFoqdXJM54Qvb6cMcaRy_Qr16nNJF-gqXE1Y7751xTMbBSXT6JpWMCWXXekzqf58rUXI9UmSo25lD2DQzDqtxQd2eYukneyE0Ygi-QMSM2T_gDO5OuOFQQbTcUPu-bU4xkl1ftAcoqMch7NLjpdcUSZNXEfS74wrdXVQyM-o3eZGjJ58rN9KCVBWvZYvi4m2XcH_UU8nQlUStAtZ5hdXfau6MlwRnDM4lLy_29VrnxtIkIkdfpJRaeGnod-5' },
+      { title: 'Popcorn + Drink Combo', taw: '200', desc: 'Large popcorn and any cold drink. Valid with any ticket.', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCq8kmQSxtw07XupuUof5PPGW3AcZQTR58cbsamB-GH4EXmHiSHHmh76Y7OVj3oMHA3TYQk5R2buaovmT3gRfmj4CexYQPmTllFElaiCy4f1YRPAz3Bf53HK8Oyyr52NeQ4twauRXqHoav_wkdIjEeSKpPvPAbjF2WmJ2C6Ae2z0AiZUbAnWA3vBptZYF_pi2Z100ajCDy1P-OqrLViscZv2b29uaqfFRUfXRDPHBjCUsVKOsJG0Gr9TKQnozrebhYVHs54bwckLqGo' },
+    ],
+    branches: '2 locations in Bahrain City Centre & Avenues'
+  }
+};
+
+// ── Open Partner Detail ──
+window.openPartnerDetail = function(partnerId) {
+  const p = partnersData[partnerId];
+  if (!p) return;
+
+  // Hero image
+  const hero = document.getElementById('pd-hero-img');
+  if (hero) hero.src = p.heroImg;
+
+  // Logo
+  const logoWrap = document.getElementById('pd-logo-wrap');
+  if (logoWrap) {
+    if (p.logoImg) {
+      logoWrap.innerHTML = `<img style="width:100%;height:100%;object-fit:contain;" alt="${p.name} logo" src="${p.logoImg}"/>`;
+    } else {
+      logoWrap.innerHTML = `<span class="material-symbols-outlined" style="color:#005440;font-size:32px;">${p.logoIcon || 'store'}</span>`;
+    }
+  }
+
+  // Name, category, stats
+  const nameEl = document.getElementById('pd-name');
+  if (nameEl) nameEl.textContent = p.name;
+  const catEl = document.getElementById('pd-category');
+  if (catEl) catEl.textContent = p.category;
+  const ratingEl = document.getElementById('pd-rating');
+  if (ratingEl) ratingEl.textContent = p.rating;
+  const offersEl = document.getElementById('pd-offers');
+  if (offersEl) offersEl.textContent = p.offers;
+
+  // Civic text
+  const civicEl = document.getElementById('pd-civic-text');
+  if (civicEl) civicEl.textContent = p.civicText;
+
+  // Rewards grid
+  const grid = document.getElementById('pd-rewards-grid');
+  if (grid) {
+    grid.innerHTML = p.rewards.map((r, i) => `
+      <div style="background:#ffffff;border-radius:14px;overflow:hidden;display:flex;flex-direction:${i === p.rewards.length - 1 && p.rewards.length % 2 !== 0 ? 'row' : 'column'};${i === p.rewards.length - 1 && p.rewards.length % 2 !== 0 ? 'grid-column:1/-1;' : ''}box-shadow:0 2px 10px rgba(29,28,23,0.07);">
+        <div style="${i === p.rewards.length - 1 && p.rewards.length % 2 !== 0 ? 'width:130px;flex-shrink:0;' : 'height:130px;width:100%;'}overflow:hidden;">
+          <img style="width:100%;height:100%;object-fit:cover;display:block;" alt="${r.title}" src="${r.img}"/>
+        </div>
+        <div style="padding:14px;display:flex;flex-direction:column;gap:8px;flex:1;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:6px;">
+            <h4 style="font-family:'Manrope',sans-serif;font-weight:700;font-size:13px;color:#1d1c17;margin:0;line-height:1.3;">${r.title}</h4>
+            <span style="background:rgba(254,216,138,0.5);color:#765a18;padding:2px 8px;border-radius:9999px;font-weight:700;font-size:10px;white-space:nowrap;">${r.taw} Taw</span>
+          </div>
+          <p style="font-size:11px;color:#3f4944;margin:0;line-height:1.5;flex:1;">${r.desc}</p>
+          <button onclick="openPartnerReward('${partnerId}', ${i})" style="width:100%;background:#005440;color:#fff;padding:9px;border-radius:9999px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;border:none;cursor:pointer;">Claim Deal</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Branches
+  const branchEl = document.getElementById('pd-branches');
+  if (branchEl) branchEl.textContent = p.branches;
+
+  navigateTo('partner-detail');
+};
+
+// ── Open a reward from a partner detail page ──
+window.openPartnerReward = function(partnerId, rewardIndex) {
+  const p = partnersData[partnerId];
+  if (!p) return;
+  const r = p.rewards[rewardIndex];
+  if (!r) return;
+
+  const tempKey = '_pd_' + partnerId + '_' + rewardIndex;
+  rewardsData[tempKey] = {
+    heroImg: r.img,
+    logoHtml: p.logoImg
+      ? `<img style="width:100%;height:100%;object-fit:contain;" alt="${p.name}" src="${p.logoImg}"/>`
+      : `<span class="material-symbols-outlined" style="color:#005440;font-size:32px;">${p.logoIcon || 'store'}</span>`,
+    category: p.category,
+    title: r.title,
+    points: r.taw,
+    brandName: p.name,
+    description: r.desc,
+    expires: 'Dec 31, 2026',
+    usage: 'One-time Use',
+    terms: [
+      'Valid at participating locations only.',
+      'Cannot be combined with other offers.',
+      'Subject to availability.',
+      'Taw points will be deducted upon confirmation.'
+    ]
+  };
+  openRewardDetails(tempKey);
+};
+
 // ── Show Reward Details ──
 window.openRewardDetails = function(rewardId) {
   const reward = rewardsData[rewardId];
@@ -1250,8 +1408,13 @@ window.confirmRedemption = function() {
   const howToUseEl = document.getElementById('rr-how-to-use-text');
   if (howToUseEl && reward.howToUse) howToUseEl.textContent = reward.howToUse;
 
+  // Populate hero image if available
+  const heroEl = document.getElementById('rr-hero-img');
+  if (heroEl) heroEl.src = reward.heroImg || '';
+
   // Navigate to redeemed page
   navigateTo('reward-redeemed');
+  startRedemptionCountdown();
 
   // Calculate and display 48-hour expiry
   const now = new Date();
@@ -1260,6 +1423,24 @@ window.confirmRedemption = function() {
   const locale = (typeof currentLang !== 'undefined' && currentLang === 'ar') ? 'ar-BH' : 'en-US';
   document.getElementById('rr-expires-time').textContent = expiry.toLocaleDateString(locale, options);
 };
+
+// ── Redemption Countdown Timer ──
+let _countdownInterval = null;
+function startRedemptionCountdown() {
+  if (_countdownInterval) clearInterval(_countdownInterval);
+  let seconds = 15 * 60;
+  const el = document.getElementById('rr-countdown');
+  function tick() {
+    if (!el) return;
+    const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const s = String(seconds % 60).padStart(2, '0');
+    el.textContent = m + ':' + s;
+    if (seconds <= 0) { clearInterval(_countdownInterval); return; }
+    seconds--;
+  }
+  tick();
+  _countdownInterval = setInterval(tick, 1000);
+}
 
 // ── Copy Redemption Code ──
 window.copyRedemptionCode = function() {

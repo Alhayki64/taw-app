@@ -1,5 +1,31 @@
 // ====== TAW: LIVE DATA HYDRATION ======
 
+// ── Static Partner Deals (always shown even if Supabase has none) ────────────
+const STATIC_DEALS = [
+  {
+    id: 'oda-burger-001',
+    title: 'Buy 2 Meals, Get 1 Sandwich FREE',
+    category: 'burgers',
+    points_cost: 500,
+    brand_name: 'ODA Burger',
+    description: 'Legendary flavors meet legendary giving. Redeem your Taw Points at ODA Burger in Jid-Ali for a free ODA sandwich when you buy any 2 meals. Every bite, a legend.',
+    image_url: 'oda_burger_hero.png',
+    expires_at: null,
+    usage_limit: null,
+    terms: 'Valid for dine-in or pickup only.\nNot valid on delivery orders (Jahez/Talabat).\nOne redemption per visit.\nValid at Jid-Ali branch only.\nCannot be combined with other offers.',
+    _static: true,
+    _brand: {
+      slogan: 'Every Bite, a Legend.',
+      phone: '+973 33903421',
+      location: 'Jid-Ali, Bahrain',
+      instagram: 'https://www.instagram.com/oda_burger.s',
+      delivery: 'Jahez & Talabat',
+      accent: '#C8102E',    // ODA red
+      logoText: '⚔️',
+    }
+  }
+];
+
 // Global store for opportunities (used by map wiring + category filter)
 let _dbOpportunities = [];
 // Prevent hydrateDashboard running multiple times for the same session
@@ -69,16 +95,16 @@ async function hydratePublicData() {
     // Fetch deals
     try {
         if (typeof fetchDeals === 'function') {
-            const deals = await fetchDeals();
-            populateRewards(deals);
+            const dbDeals = await fetchDeals();
+            const allDeals = [...STATIC_DEALS, ...dbDeals];
+            populateRewards(allDeals);
+        } else {
+             populateRewards(STATIC_DEALS);
         }
     } catch (e) {
         console.error('Failed to fetch deals', e);
-        showToast('Could not load rewards', 'error');
-        const grid = document.getElementById('rewards-grid');
-        if (typeof renderErrorState === 'function') {
-            renderErrorState(grid, { retryFn: 'hydratePublicData()', text: 'Could not load rewards' });
-        }
+        // Fallback to static deals even on error
+        populateRewards(STATIC_DEALS);
     }
 
     // Fetch opportunities
@@ -136,6 +162,12 @@ function updatePointsBanner(data) {
         pointsVal.innerHTML = `${current_balance.toLocaleString()} <span class="points-banner-unit" data-i18n="points-label">Taw Points</span>`;
     }
 
+    const tawBalanceCard = document.getElementById('taw-points-balance');
+    if (tawBalanceCard) {
+        tawBalanceCard.innerHTML = `<h5 class="text-lg font-['Manrope'] font-extrabold leading-none">${current_balance.toLocaleString()} Taw</h5>
+                <p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Available Balance</p>`;
+    }
+
     const tierName = document.getElementById('home-tier-name');
     const tierBadge = document.getElementById('home-tier-badge');
     if (tierName && tier) {
@@ -184,62 +216,73 @@ function populateRewards(deals) {
         Object.keys(rewardsData).forEach(k => delete rewardsData[k]);
     }
 
-    const grid = document.getElementById('rewards-grid');
+    const grid = document.getElementById('rewards-brand-grid');
     if (!grid) return;
     grid.innerHTML = '';
 
     if (deals.length === 0) {
-        if (typeof renderEmptyState === 'function') {
-            renderEmptyState(grid, {
-                icon: 'redeem',
-                title: 'No rewards yet',
-                text: 'Keep volunteering to unlock exclusive deals and discounts!'
-            });
-        }
+        grid.innerHTML = '<div class="col-span-2 text-center text-sm font-bold p-8">No deals yet. Keep volunteering!</div>';
         return;
     }
 
     deals.forEach(deal => {
+        const isStatic = deal._static === true;
+        let logoHtml = '';
+        if (isStatic && deal._brand) {
+             logoHtml = `<div style="background-color:${deal._brand.accent};color:white;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:20px;">${deal._brand.logoText}</div>`;
+        } else {
+             logoHtml = `<div style="background-color:var(--primary);color:white;width:100%;height:100%;display:flex;align-items:center;justify-content:center;"><span class="material-icons-round" style="font-size:20px;">local_offer</span></div>`;
+        }
+
+        const brandInitial = (deal.brand_name || 'P').charAt(0).toUpperCase();
+
         rewardsData[deal.id] = {
             deal_id: deal.id,
             category: deal.category || 'Special',
             title: deal.title,
-            points: deal.points_cost,
+            points: deal.points_cost || deal.cost,
             brandName: deal.brand_name || 'Partner',
             description: deal.description || '',
             expires: deal.expires_at ? new Date(deal.expires_at).toLocaleDateString() : 'Never',
             usage: deal.usage_limit ? `Limit: ${deal.usage_limit}` : 'One-time Use',
             terms: deal.terms ? deal.terms.split('\n') : ['Terms and conditions apply.'],
             heroImg: deal.image_url || 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=600&q=80',
-            logoHtml: `<div style="background-color:var(--primary);color:white;width:100%;height:100%;display:flex;align-items:center;justify-content:center;"><span class="material-icons-round" style="font-size:20px;">local_offer</span></div>`
+            logoHtml: logoHtml
         };
 
-        const card = document.createElement('div');
-        card.className = 'reward-card';
-        card.setAttribute('data-category', (deal.category || 'all').toLowerCase());
-        card.onclick = () => openRewardDetails(deal.id);
+        // Skip rendering Oda Burger in the grid since it's hardcoded in the slider
+        if (deal.id === 'oda-burger') return;
 
-        const fallbackImg = 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=600&q=80';
-        card.innerHTML = `
-            <div class="reward-image-wrap">
-              <img src="${deal.image_url || fallbackImg}" alt="${deal.title}" class="reward-photo"
-                   onerror="this.src='${fallbackImg}'" />
-              <div class="reward-brand-logo brand-logo-icon">
-                <span class="material-icons-round">local_offer</span>
-                <span class="brand-label">${deal.brand_name || deal.category || 'Reward'}</span>
-              </div>
-            </div>
-            <div class="reward-card-body">
-              <h3 class="reward-card-title">${deal.title}</h3>
-            </div>
-            <div class="reward-price-badge">
-              <div class="price-coin"><span class="material-icons-round">toll</span></div>
-              <span class="price-amount">${deal.points_cost}</span>
-              <span class="price-unit">Points</span>
+        const cardHtml = `
+            <div class="bg-surface-container-low rounded-xl overflow-hidden flex flex-col group hover:translate-y-[-4px] transition-transform cursor-pointer shadow-sm" onclick="openRewardDetails('${deal.id}')" data-category="${(deal.category || 'all').toLowerCase()}">
+                <div class="h-32 w-full relative">
+                    <img class="w-full h-full object-cover" src="${deal.image_url || 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=600&q=80'}" />
+                    <div class="absolute top-2 left-2 w-8 h-8 bg-white rounded-full flex items-center justify-center border-2 border-primary shadow-sm">
+                        <span class="text-[10px] font-bold text-primary">${brandInitial}</span>
+                    </div>
+                </div>
+                <div class="p-4 space-y-3 flex flex-col flex-grow justify-between">
+                    <div>
+                        <p class="text-[10px] font-bold text-primary tracking-widest uppercase">${deal.brand_name || 'Partner'}</p>
+                        <h4 class="font-bold text-on-surface leading-tight text-sm">${deal.title}</h4>
+                    </div>
+                    <button class="w-full bg-primary-container text-on-primary-container py-2 rounded-full text-[11px] font-bold active:scale-95 transition-all mt-2 shadow-sm">${deal.points_cost || deal.cost} Pts</button>
+                </div>
             </div>
         `;
-        grid.appendChild(card);
+
+        grid.insertAdjacentHTML('beforeend', cardHtml);
     });
+
+    // Add the "Missing a spot?" placeholder at the end
+    grid.insertAdjacentHTML('beforeend', `
+        <div class="col-span-2 flex items-center justify-center gap-4 cursor-pointer rounded-2xl" style="padding:28px;background:rgba(15,110,86,0.05);border:2px dashed rgba(15,110,86,0.2);">
+            <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm">
+            <span class="material-symbols-outlined text-primary font-bold" style="font-size:20px;">add</span>
+            </div>
+            <span class="font-black text-primary mkt-headline" style="font-family:'Manrope',sans-serif;">Missing a spot? Tell us!</span>
+        </div>
+    `);
 
     applyConversions();
 }

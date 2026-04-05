@@ -13,6 +13,124 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="index.css" />
+  <!-- Rewards screen: Tailwind + fonts -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      corePlugins: { preflight: false },
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-surface-variant": "#3f4944",
+            "surface-tint": "#086b53",
+            "on-background": "#1d1c17",
+            "error": "#ba1a1a",
+            "error-container": "#ffdad6",
+            "primary": "#005440",
+            "inverse-surface": "#32302b",
+            "surface-container-lowest": "#ffffff",
+            "on-secondary-fixed-variant": "#5b4300",
+            "secondary-fixed-dim": "#e6c276",
+            "on-tertiary": "#ffffff",
+            "surface-variant": "#e7e2da",
+            "secondary-fixed": "#ffdf9f",
+            "on-primary-fixed-variant": "#00513e",
+            "surface-container": "#f2ede5",
+            "on-surface": "#1d1c17",
+            "on-secondary": "#ffffff",
+            "on-primary": "#ffffff",
+            "primary-container": "#0f6e56",
+            "on-tertiary-fixed-variant": "#284d45",
+            "secondary-container": "#fed88a",
+            "on-secondary-container": "#785d1b",
+            "surface": "#fef9f1",
+            "on-error": "#ffffff",
+            "primary-fixed-dim": "#84d6b9",
+            "surface-container-high": "#ece8e0",
+            "surface-bright": "#fef9f1",
+            "tertiary-fixed-dim": "#a6cfc4",
+            "outline-variant": "#bec9c3",
+            "surface-container-low": "#f8f3eb",
+            "background": "#fef9f1",
+            "tertiary-container": "#42685f",
+            "surface-container-highest": "#e7e2da",
+            "primary-fixed": "#a0f3d4",
+            "on-secondary-fixed": "#261a00",
+            "inverse-on-surface": "#f5f0e8",
+            "on-primary-container": "#9aedcf",
+            "on-tertiary-container": "#bce5da",
+            "on-primary-fixed": "#002117",
+            "on-error-container": "#93000a",
+            "tertiary": "#2a5048",
+            "tertiary-fixed": "#c2ebe0",
+            "inverse-primary": "#84d6b9",
+            "secondary": "#765a18",
+            "outline": "#6f7a74",
+            "surface-dim": "#ded9d2",
+            "on-tertiary-fixed": "#00201b"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            "headline": ["Manrope"],
+            "body": ["Plus Jakarta Sans"],
+            "label": ["Plus Jakarta Sans"]
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .mkt-headline { font-family: 'Comfortaa', cursive; }
+    .mkt-body { font-family: 'Nunito', sans-serif; }
+    .mkt-blob { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+    .mkt-blob2 { border-radius: 40% 60% 70% 30% / 50% 60% 30% 50%; }
+    .mkt-hide-scrollbar::-webkit-scrollbar { display: none; }
+    .mkt-hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    #page-marketplace { background: #fef9f1; }
+    #page-marketplace h1, #page-marketplace h2, #page-marketplace h3, #page-marketplace h4 {
+      font-family: 'Manrope', sans-serif;
+    }
+    /* Journey page */
+    @keyframes journeyReveal {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .journey-timeline { position: relative; }
+    .journey-timeline::before {
+      content: '';
+      position: absolute;
+      left: 23px;
+      top: 0; bottom: 0;
+      width: 1px;
+      background: #bec9c3;
+      opacity: 0.5;
+      pointer-events: none;
+    }
+    .journey-reveal {
+      animation: journeyReveal 0.45s cubic-bezier(0.22,1,0.36,1) both;
+    }
+    .journey-reveal:nth-child(1) { animation-delay: 0.06s; }
+    .journey-reveal:nth-child(2) { animation-delay: 0.16s; }
+    .journey-reveal:nth-child(3) { animation-delay: 0.26s; }
+    .journey-reveal:nth-child(4) { animation-delay: 0.36s; }
+    .journey-card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .journey-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(29,28,23,0.12) !important;
+    }
+  </style>
   <style>
     @keyframes pulseRed {
       0% {
@@ -621,31 +739,299 @@
     </section>
 
     <!-- ===== PAGE: REWARDS MARKETPLACE ===== -->
-    <section id="page-marketplace" class="page">
-      <header class="page-header">
-        <div class="header-left">
-          <h1 class="page-title" data-i18n="nav-rewards">Rewards</h1>
-        </div>
-        <div class="header-right">
-          <div class="avatar" id="marketplace-avatar" onclick="navigateTo('profile')">
-            <span class="material-icons-round">person</span>
+    <section id="page-marketplace" class="page" style="font-family:'Plus Jakarta Sans',sans-serif;background:#fef9f1;">
+
+      <!-- ── TopAppBar ── -->
+      <header style="position:sticky;top:0;width:100%;z-index:50;background:rgba(245,240,232,0.85);backdrop-filter:blur(16px);box-shadow:0 1px 0 rgba(29,28,23,0.06);">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 24px;height:64px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:34px;height:34px;border-radius:9999px;background:#84d6b9;overflow:hidden;flex-shrink:0;">
+              <img style="width:100%;height:100%;object-fit:cover;" alt="User" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAr3lKY2eWJZjnRcxdrBVg8aKQtCCQ3vJmo53DS_w2VZdAySRTSnlOzE9yNzL9_x7vQEu4frXigh3R2a7QNVY3I34YWTWj-V-Pr4hSVUfoRfAxHWVKWwBPhwAFz15O2pmbrIsNokj-7yoQraZJq5SUcViIBtJkeVe1D6cbPpmku3sTchngS9DpnM3Nx2tf5gk-RYoZkzzmHb3hbJpfE-_8Tyx01DQSKPZG4CINbPd8V2jAdQnBAyB5jZVwwSLEo2BNtGSxT6G1RK2iZ"/>
+            </div>
+            <h1 style="font-family:'Manrope',sans-serif;font-weight:900;font-size:18px;letter-spacing:-0.03em;color:#0F6E56;margin:0;">Taw Rewards</h1>
           </div>
+          <button style="padding:8px;border-radius:9999px;background:none;border:none;cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background='rgba(15,110,86,0.07)'" onmouseout="this.style.background='none'">
+            <span class="material-symbols-outlined" style="color:#0F6E56;">notifications</span>
+          </button>
         </div>
       </header>
 
-      <div class="page-content">
-        <!-- Category Chips -->
-        <div class="category-chips" id="category-chips">
-          <button class="chip active" id="chip-cafes" onclick="filterCategory(this, 'cafe')" data-i18n="chip-cafes">☕ Cafés</button>
-          <button class="chip" id="chip-dining" onclick="filterCategory(this, 'dining')" data-i18n="chip-dining">🍽️ Dining</button>
-          <button class="chip" id="chip-entertainment" onclick="filterCategory(this, 'entertainment')" data-i18n="chip-entertainment">🎬 Entertainment</button>
-          <button class="chip" id="chip-wellness" onclick="filterCategory(this, 'wellness')" data-i18n="chip-wellness">💆 Wellness</button>
+      <!-- ── Scrollable body ── -->
+      <div style="padding:20px 16px 200px;display:flex;flex-direction:column;gap:32px;">
+
+        <!-- Search & Categories -->
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div style="position:relative;">
+            <div style="position:absolute;top:0;bottom:0;left:16px;display:flex;align-items:center;pointer-events:none;">
+              <span class="material-symbols-outlined" style="color:#6f7a74;font-size:22px;">search</span>
+            </div>
+            <input style="width:100%;background:#f8f3eb;border:none;border-radius:14px;padding:14px 16px 14px 48px;font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:500;color:#1d1c17;outline:none;box-sizing:border-box;box-shadow:0 1px 3px rgba(29,28,23,0.05);transition:box-shadow 0.2s;" placeholder="Explore brands and locations..." type="text" onfocus="this.style.boxShadow='0 0 0 2px rgba(0,84,64,0.15)'" onblur="this.style.boxShadow='0 1px 3px rgba(29,28,23,0.05)'"/>
+          </div>
+          <div class="hide-scrollbar" style="display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;margin:0 -16px;padding-left:16px;padding-right:16px;">
+            <button style="background:#005440;color:#fff;padding:10px 22px;border-radius:9999px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:13px;white-space:nowrap;border:none;cursor:pointer;transition:opacity 0.15s;" onmousedown="this.style.opacity='0.8'" onmouseup="this.style.opacity='1'">All</button>
+            <button style="background:#f2ede5;color:#3f4944;padding:10px 22px;border-radius:9999px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:13px;white-space:nowrap;border:none;cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background='#ece8e0'" onmouseout="this.style.background='#f2ede5'">Eat Out</button>
+            <button style="background:#f2ede5;color:#3f4944;padding:10px 22px;border-radius:9999px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:13px;white-space:nowrap;border:none;cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background='#ece8e0'" onmouseout="this.style.background='#f2ede5'">Market</button>
+            <button style="background:#f2ede5;color:#3f4944;padding:10px 22px;border-radius:9999px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:13px;white-space:nowrap;border:none;cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background='#ece8e0'" onmouseout="this.style.background='#f2ede5'">Coffee</button>
+            <button style="background:#f2ede5;color:#3f4944;padding:10px 22px;border-radius:9999px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:13px;white-space:nowrap;border:none;cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background='#ece8e0'" onmouseout="this.style.background='#f2ede5'">Leisure</button>
+          </div>
         </div>
 
-        <!-- Rewards Grid -->
-        <div class="rewards-grid" id="rewards-grid">
-          <!-- Populated dynamically from Supabase -->
+        <!-- Reward of the Day -->
+        <div style="display:flex;flex-direction:column;gap:0;border-radius:16px;overflow:hidden;background:#f8f3eb;box-shadow:0 2px 12px rgba(29,28,23,0.06);">
+          <div style="aspect-ratio:16/9;width:100%;position:relative;">
+            <img style="width:100%;height:100%;object-fit:cover;display:block;" alt="Barn's Special Latte" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTptBM-8aBu7BS0QfocOMNoq4PzXBzxMn3duWzS91Y6gLAP9-VprawMdQpPRyNkAN8C0BkeQi14pN6qaldwUOIJJuOJscU-ulAWyYViQWvdTNuGCavnlIVeJ_44yghFWoHKpgc3iEKCwd7w7FF3mOz8GP0hhm7P9hF4vS1gTt2Im7FXGdpFHBAYz93f3VfWPuGciTsZbQYRLabgVcy9YjSSCBezBL4TBpCJQvpa9JNA85-6DxJROx_89RTLAFqb_wVdIKvAlsSXX4K"/>
+            <div style="position:absolute;top:14px;left:14px;background:#fed88a;color:#785d1b;padding:5px 12px;border-radius:9999px;font-size:11px;font-weight:800;letter-spacing:0.08em;display:flex;align-items:center;gap:5px;">
+              <span class="material-symbols-outlined" style="font-size:13px;font-variation-settings:'FILL' 1;">stars</span>
+              DAILY SPECIAL
+            </div>
+          </div>
+          <div style="padding:20px 20px 24px;display:flex;flex-direction:column;gap:16px;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px;">
+              <div>
+                <h2 style="font-family:'Manrope',sans-serif;font-size:22px;font-weight:800;letter-spacing:-0.02em;color:#1d1c17;margin:0 0 4px;">Barn's Special Latte</h2>
+                <p style="font-size:13px;color:#3f4944;margin:0;">Rich espresso with creamy textured milk</p>
+              </div>
+              <div style="text-align:right;flex-shrink:0;">
+                <span style="display:block;font-family:'Manrope',sans-serif;font-weight:800;font-size:22px;color:#005440;line-height:1;">250</span>
+                <span style="font-size:9px;color:#6f7a74;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;">Taw Points</span>
+              </div>
+            </div>
+            <button style="width:100%;background:#005440;color:#fff;padding:14px;border-radius:9999px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(0,84,64,0.25);transition:transform 0.15s,box-shadow 0.15s;" onclick="openPartnerReward('barns', 0)" onmousedown="this.style.transform='scale(0.98)';this.style.boxShadow='0 2px 8px rgba(0,84,64,0.2)'" onmouseup="this.style.transform='scale(1)';this.style.boxShadow='0 4px 16px rgba(0,84,64,0.25)'">Claim Deal</button>
+          </div>
         </div>
+
+        <!-- Local Deals -->
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:0 2px;">
+            <h3 style="font-family:'Manrope',sans-serif;font-size:18px;font-weight:800;color:#1d1c17;margin:0;">Local Deals</h3>
+            <button style="background:none;border:none;cursor:pointer;color:#005440;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:13px;display:flex;align-items:center;gap:2px;padding:0;">View All <span class="material-symbols-outlined" style="font-size:16px;">chevron_right</span></button>
+          </div>
+          <div class="hide-scrollbar" style="display:flex;gap:14px;overflow-x:auto;padding-bottom:4px;margin:0 -16px;padding-left:16px;padding-right:16px;">
+
+            <!-- McDonald's deal card -->
+            <div style="min-width:272px;background:#f8f3eb;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 2px 10px rgba(29,28,23,0.06);cursor:pointer;transition:transform 0.2s;" onclick="openPartnerDetail('mcdonalds')" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+              <div style="height:152px;position:relative;">
+                <img style="width:100%;height:100%;object-fit:cover;display:block;" alt="McDonald's meal" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_EpurOPAw4-7H6pKobKm0YYxmVHSVp4-hPNmWmDkaH7hwIccJyCSSXSZrsv3KErYZgCH6mLxdESPP-pDy96XX1haxBQvZFRzB8Ww8rzzymDvC7TDoY4MGexsT-413li2D632qvSBw5W4XQaYuI64t53hf9ARm_bboSN3JaVccrgZZGQT8E2mvApGnFg2qDiN7YmDozxJuy4sj4mrvc4vEtO7yEmF9GMn2l8PeHIN_txlVKLO6yzW15ZGW3fiKfbTeOD3ubjU3RsOp"/>
+                <div style="position:absolute;top:10px;right:10px;background:rgba(255,255,255,0.92);backdrop-filter:blur(6px);padding:6px;border-radius:10px;">
+                  <img alt="McDonald's" style="width:32px;height:32px;object-fit:contain;display:block;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMGxR-uyTvi7gOJkDYeRp2-NzRFFZHN6LDepBdoqItHo_rnVz9x4yu2BJvPdC07sSjpMcQDW5zL_voM13erWLhbxOJq3e2maPO7Sp9Kp9TrfZQXcwqyKyoDfoZQ3XDwdY3ERuq52VTZO3eeLgSLjk7w8sJinq7Fq7IfCLsfY9pf-23LEPBvtop5gXjqLLt61UaBFAyr3mjagbZEaRqfctRLvB8wZ8Yp_gwpm4Hh654hWIwJHtxQf3tK8eo0158eesiqDPxd5eu02Hx"/>
+                </div>
+              </div>
+              <div style="padding:14px 16px 16px;display:flex;flex-direction:column;gap:10px;">
+                <div>
+                  <h4 style="font-family:'Manrope',sans-serif;font-weight:800;font-size:16px;color:#1d1c17;margin:0 0 4px;line-height:1.2;">McValue Box</h4>
+                  <p style="font-size:12px;color:#3f4944;margin:0;">2 Medium Meals for the price of 1</p>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;">
+                  <span style="font-family:'Manrope',sans-serif;font-weight:700;font-size:14px;color:#005440;">120 Taw</span>
+                  <button style="background:#fed88a;color:#785d1b;padding:6px 16px;border-radius:9999px;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:800;border:none;cursor:pointer;letter-spacing:0.05em;">REDEEM</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Reel Cinemas deal card -->
+            <div style="min-width:272px;background:#f8f3eb;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 2px 10px rgba(29,28,23,0.06);cursor:pointer;transition:transform 0.2s;" onclick="openPartnerDetail('reelcinemas')" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+              <div style="height:152px;position:relative;">
+                <img style="width:100%;height:100%;object-fit:cover;display:block;" alt="Reel Cinemas" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-DRDJjbzGxE3oJGXPFFoqdXJM54Qvb6cMcaRy_Qr16nNJF-gqXE1Y7751xTMbBSXT6JpWMCWXXekzqf58rUXI9UmSo25lD2DQzDqtxQd2eYukneyE0Ygi-QMSM2T_gDO5OuOFQQbTcUPu-bU4xkl1ftAcoqMch7NLjpdcUSZNXEfS74wrdXVQyM-o3eZGjJ58rN9KCVBWvZYvi4m2XcH_UU8nQlUStAtZ5hdXfau6MlwRnDM4lLy_29VrnxtIkIkdfpJRaeGnod-5"/>
+                <div style="position:absolute;top:10px;right:10px;background:rgba(255,255,255,0.92);backdrop-filter:blur(6px);padding:6px;border-radius:10px;">
+                  <img alt="Reel Cinemas" style="width:32px;height:32px;object-fit:contain;display:block;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-1T77y33s7qzZhtJ3WnRb42e_tBbozBNAJg9Zl3aY7_7r4XeyPNkPOfM6jrOHOgI2sIzCvSGGxeyLmqZpm_8Em5bfPiCPV4ordcze9zXP0TSmoWbjXupxbtG_dNP5lVFNmcDel2SWK9gbtIrqsFJkmGM1kTn76C0vY1bQscF37FpJiR46v9-z8CtCalY9x9pCeGWUFbFuN2wz7AmCnlaAY8pARVQk5CLS-zR5V8o8lT4CMX4_W110mgfbih5albqBz7nHJ6NK5fsH"/>
+                </div>
+              </div>
+              <div style="padding:14px 16px 16px;display:flex;flex-direction:column;gap:10px;">
+                <div>
+                  <h4 style="font-family:'Manrope',sans-serif;font-weight:800;font-size:16px;color:#1d1c17;margin:0 0 4px;line-height:1.2;">Buy 1 Get 1</h4>
+                  <p style="font-size:12px;color:#3f4944;margin:0;">Standard 2D Movie Tickets</p>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;">
+                  <span style="font-family:'Manrope',sans-serif;font-weight:700;font-size:14px;color:#005440;">450 Taw</span>
+                  <button style="background:#fed88a;color:#785d1b;padding:6px 16px;border-radius:9999px;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:800;border:none;cursor:pointer;letter-spacing:0.05em;">REDEEM</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Oda Burger deal card -->
+            <div style="min-width:272px;background:#f8f3eb;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 2px 10px rgba(29,28,23,0.06);cursor:pointer;transition:transform 0.2s;" onclick="openPartnerDetail('odaburger')" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+              <div style="height:152px;position:relative;background:#fff1f1;display:flex;align-items:center;justify-content:center;">
+                <img style="height:120px;object-fit:contain;" alt="Oda Burger" src="Oda Burger.jpg"/>
+                <div style="position:absolute;top:10px;right:10px;background:rgba(255,255,255,0.92);backdrop-filter:blur(6px);padding:6px;border-radius:10px;">
+                  <img alt="Oda Burger" style="width:32px;height:32px;object-fit:contain;display:block;" src="Oda Burger.jpg"/>
+                </div>
+              </div>
+              <div style="padding:14px 16px 16px;display:flex;flex-direction:column;gap:10px;">
+                <div>
+                  <h4 style="font-family:'Manrope',sans-serif;font-weight:800;font-size:16px;color:#1d1c17;margin:0 0 4px;line-height:1.2;">Double Smash Deal</h4>
+                  <p style="font-size:12px;color:#3f4944;margin:0;">2 Double Smash Beef Burgers</p>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;">
+                  <span style="font-family:'Manrope',sans-serif;font-weight:700;font-size:14px;color:#005440;">400 Taw</span>
+                  <button style="background:#fed88a;color:#785d1b;padding:6px 16px;border-radius:9999px;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:800;border:none;cursor:pointer;letter-spacing:0.05em;">REDEEM</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Popular Partners -->
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <h3 style="font-family:'Manrope',sans-serif;font-size:18px;font-weight:800;color:#1d1c17;margin:0;padding:0 2px;">Popular Partners</h3>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;">
+
+            <!-- stc pay -->
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;">
+              <div style="width:64px;height:64px;border-radius:14px;background:#e7e2da;display:flex;align-items:center;justify-content:center;padding:10px;box-sizing:border-box;box-shadow:0 1px 4px rgba(29,28,23,0.08);transition:transform 0.18s;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
+                <img alt="stc pay" style="width:100%;height:100%;object-fit:contain;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXWaUSmaOD0kEwhcE377df59lCT5Yz6CNolUM9GKDngGGvwtkdwFwYNohMtfUQaFiIR10bkdXQo9BaUIF7GTuw8x1N4l5hcm2oxXU5zo9am1pRl29EXUn7P3FZ2WI-5hNzLotk0nKgn1WZkkOf5ePZVdcq8SSdz_X-D2L6U88FYxPXOmIWQDvgvb2lkumjShbzZv38Z7-AFPm-YWwik6ijJ0Gkn4JKoBWn-QCVR5WnZkai1xcB4Fx1yT767A76UO6Y3LQHZUl-mEgD"/>
+              </div>
+              <span style="font-size:9px;font-weight:700;color:#6f7a74;text-align:center;text-transform:uppercase;letter-spacing:0.04em;">stc pay</span>
+            </div>
+
+            <!-- Casapasta -->
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;">
+              <div style="width:64px;height:64px;border-radius:14px;background:#e7e2da;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(29,28,23,0.08);transition:transform 0.18s;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
+                <span class="material-symbols-outlined" style="color:#005440;font-size:28px;">restaurant</span>
+              </div>
+              <span style="font-size:9px;font-weight:700;color:#6f7a74;text-align:center;text-transform:uppercase;letter-spacing:0.04em;">Casapasta</span>
+            </div>
+
+            <!-- Shanghai -->
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;">
+              <div style="width:64px;height:64px;border-radius:14px;background:#e7e2da;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(29,28,23,0.08);transition:transform 0.18s;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
+                <span class="material-symbols-outlined" style="color:#005440;font-size:28px;">deck</span>
+              </div>
+              <span style="font-size:9px;font-weight:700;color:#6f7a74;text-align:center;text-transform:uppercase;letter-spacing:0.04em;">Shanghai</span>
+            </div>
+
+            <!-- Green Spoon -->
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;">
+              <div style="width:64px;height:64px;border-radius:14px;background:#e7e2da;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(29,28,23,0.08);transition:transform 0.18s;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
+                <span class="material-symbols-outlined" style="color:#005440;font-size:28px;">nutrition</span>
+              </div>
+              <span style="font-size:9px;font-weight:700;color:#6f7a74;text-align:center;text-transform:uppercase;letter-spacing:0.04em;">Green Spoon</span>
+            </div>
+
+            <!-- Barn's -->
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;" onclick="openPartnerDetail('barns')">
+              <div style="width:64px;height:64px;border-radius:14px;background:#e7e2da;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(29,28,23,0.08);transition:transform 0.18s;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
+                <span class="material-symbols-outlined" style="color:#005440;font-size:28px;">local_cafe</span>
+              </div>
+              <span style="font-size:9px;font-weight:700;color:#6f7a74;text-align:center;text-transform:uppercase;letter-spacing:0.04em;">Barn's</span>
+            </div>
+
+            <!-- Yum Yum -->
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;">
+              <div style="width:64px;height:64px;border-radius:14px;background:#e7e2da;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(29,28,23,0.08);transition:transform 0.18s;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
+                <span class="material-symbols-outlined" style="color:#005440;font-size:28px;">fastfood</span>
+              </div>
+              <span style="font-size:9px;font-weight:700;color:#6f7a74;text-align:center;text-transform:uppercase;letter-spacing:0.04em;">Yum Yum</span>
+            </div>
+
+            <!-- Lulu -->
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;">
+              <div style="width:64px;height:64px;border-radius:14px;background:#e7e2da;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(29,28,23,0.08);transition:transform 0.18s;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
+                <span class="material-symbols-outlined" style="color:#005440;font-size:28px;">shopping_cart</span>
+              </div>
+              <span style="font-size:9px;font-weight:700;color:#6f7a74;text-align:center;text-transform:uppercase;letter-spacing:0.04em;">Lulu</span>
+            </div>
+
+            <!-- Oda Burger -->
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;" onclick="openPartnerDetail('odaburger')">
+              <div style="width:64px;height:64px;border-radius:14px;background:#fff1f1;display:flex;align-items:center;justify-content:center;padding:6px;box-sizing:border-box;box-shadow:0 1px 4px rgba(29,28,23,0.08);transition:transform 0.18s;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
+                <img alt="Oda Burger" style="width:100%;height:100%;object-fit:contain;" src="Oda Burger.jpg"/>
+              </div>
+              <span style="font-size:9px;font-weight:700;color:#6f7a74;text-align:center;text-transform:uppercase;letter-spacing:0.04em;">Oda Burger</span>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ===== PAGE: PARTNER DETAIL (McDonald's) ===== -->
+    <section id="page-partner-detail" class="page sub-page" style="font-family:'Plus Jakarta Sans',sans-serif;background:#fef9f1;">
+
+      <!-- TopAppBar -->
+      <header style="position:sticky;top:0;width:100%;z-index:50;background:rgba(245,240,232,0.85);backdrop-filter:blur(16px);box-shadow:0 1px 0 rgba(29,28,23,0.06);display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:60px;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <button onclick="goBack()" style="width:38px;height:38px;border-radius:9999px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s;" onmouseover="this.style.background='rgba(15,110,86,0.08)'" onmouseout="this.style.background='none'">
+            <span class="material-symbols-outlined" style="color:#0F6E56;">arrow_back</span>
+          </button>
+          <h1 style="font-family:'Manrope',sans-serif;font-weight:700;font-size:18px;color:#0F6E56;margin:0;letter-spacing:-0.02em;">Partnership</h1>
+        </div>
+        <button style="padding:8px;border-radius:9999px;background:none;border:none;cursor:pointer;">
+          <span class="material-symbols-outlined" style="color:#0F6E56;">share</span>
+        </button>
+      </header>
+
+      <!-- Hero image -->
+      <div style="height:340px;width:100%;position:relative;overflow:hidden;">
+        <img id="pd-hero-img" style="width:100%;height:100%;object-fit:cover;display:block;" alt="Partner hero"/>
+        <div style="position:absolute;inset:0;background:linear-gradient(to top, #fef9f1 0%, transparent 60%);"></div>
+      </div>
+
+      <!-- Scrollable content -->
+      <div style="padding:0 20px 120px;margin-top:-80px;position:relative;z-index:1;display:flex;flex-direction:column;gap:24px;">
+
+        <!-- Brand card -->
+        <div style="background:#ffffff;border-radius:16px;padding:20px;box-shadow:0 2px 16px rgba(29,28,23,0.08);display:flex;flex-direction:column;gap:20px;">
+          <div style="display:flex;align-items:center;gap:16px;">
+            <div id="pd-logo-wrap" style="width:72px;height:72px;background:#fff;border-radius:14px;display:flex;align-items:center;justify-content:center;padding:8px;box-sizing:border-box;box-shadow:0 1px 6px rgba(29,28,23,0.1);flex-shrink:0;border:1px solid rgba(29,28,23,0.06);overflow:hidden;"></div>
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
+                <h2 id="pd-name" style="font-family:'Manrope',sans-serif;font-size:22px;font-weight:800;color:#1d1c17;margin:0;letter-spacing:-0.02em;"></h2>
+                <span class="material-symbols-outlined" style="color:#005440;font-size:20px;font-variation-settings:'FILL' 1;">verified</span>
+              </div>
+              <p id="pd-category" style="font-size:13px;color:#3f4944;margin:0;font-weight:500;"></p>
+            </div>
+          </div>
+          <div style="display:flex;gap:12px;">
+            <div style="flex:1;text-align:center;padding:12px 8px;background:#f2ede5;border-radius:12px;">
+              <p id="pd-rating" style="font-family:'Manrope',sans-serif;font-weight:700;font-size:18px;color:#005440;margin:0;line-height:1;"></p>
+              <p style="font-size:9px;text-transform:uppercase;letter-spacing:0.08em;font-weight:700;color:#6f7a74;margin:4px 0 0;">Rating</p>
+            </div>
+            <div style="flex:1;text-align:center;padding:12px 8px;background:#fed88a;border-radius:12px;">
+              <p id="pd-offers" style="font-family:'Manrope',sans-serif;font-weight:700;font-size:18px;color:#765a18;margin:0;line-height:1;"></p>
+              <p style="font-size:9px;text-transform:uppercase;letter-spacing:0.08em;font-weight:700;color:#785d1b;margin:4px 0 0;opacity:0.7;">Offers</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Civic Commitment -->
+        <div style="background:rgba(0,84,64,0.05);border-radius:14px;padding:18px;border-left:4px solid #005440;display:flex;gap:14px;align-items:flex-start;">
+          <div style="width:44px;height:44px;border-radius:9999px;background:#84d6b9;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <span class="material-symbols-outlined" style="color:#005440;">volunteer_activism</span>
+          </div>
+          <div>
+            <h3 style="font-family:'Manrope',sans-serif;font-size:15px;font-weight:700;color:#005440;margin:0 0 6px;">Civic Commitment</h3>
+            <p id="pd-civic-text" style="font-size:13px;color:#3f4944;line-height:1.6;margin:0;"></p>
+          </div>
+        </div>
+
+        <!-- Available Rewards -->
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <h3 style="font-family:'Manrope',sans-serif;font-size:18px;font-weight:800;color:#1d1c17;margin:0;">Available Rewards</h3>
+            <button style="background:#f2ede5;border:none;cursor:pointer;padding:8px 14px;border-radius:9999px;display:flex;align-items:center;gap:6px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;color:#1d1c17;">
+              <span class="material-symbols-outlined" style="font-size:16px;">tune</span>Filter
+            </button>
+          </div>
+          <div id="pd-rewards-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;"></div>
+        </div>
+
+        <!-- Nearby Branches -->
+        <div style="background:#f2ede5;border-radius:14px;padding:18px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
+          <div style="display:flex;align-items:center;gap:14px;">
+            <div style="width:48px;height:48px;border-radius:9999px;background:#e7e2da;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <span class="material-symbols-outlined" style="color:#005440;">location_on</span>
+            </div>
+            <div>
+              <h4 style="font-family:'Manrope',sans-serif;font-weight:700;font-size:14px;color:#1d1c17;margin:0 0 2px;">Nearby Branches</h4>
+              <p id="pd-branches" style="font-size:12px;color:#3f4944;margin:0;"></p>
+            </div>
+          </div>
+          <button style="background:none;border:none;cursor:pointer;color:#005440;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:13px;text-decoration:underline;text-underline-offset:3px;white-space:nowrap;">View Map</button>
+        </div>
+
       </div>
     </section>
 
@@ -998,111 +1384,105 @@
           </button>
         </div>
 
-        <!-- Stats Cards -->
-        <div class="stats-grid" id="profile-stats">
-          <div class="stat-card" id="stat-hours">
-            <div class="stat-card-icon">
-              <span class="material-icons-round">schedule</span>
+        <!-- Impact Hero / Profile Stats -->
+        <div id="profile-stats">
+          <!-- Impact Hero Card -->
+          <section class="profile-impact-hero">
+            <div class="profile-impact-hero-blobs profile-impact-hero-blob-1"></div>
+            <div class="profile-impact-hero-blobs profile-impact-hero-blob-2"></div>
+            <div style="position:relative;z-index:1;">
+              <p style="font-size:15px;font-weight:600;color:#9aedcf;margin:0 0 4px;letter-spacing:0.01em;" data-i18n="your-impact-story">Your Impact Story</p>
+              <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:28px;">
+                <span id="stat-points-value" style="font-family:'Manrope',sans-serif;font-size:58px;font-weight:800;line-height:1;color:white;letter-spacing:-0.03em;">0</span>
+                <span style="font-size:17px;font-weight:600;color:rgba(255,255,255,0.85);" data-i18n="points-earned">Points Earned</span>
+              </div>
             </div>
-            <span class="stat-card-label" data-i18n="stat-hours-label">Total Hours Given</span>
-            <span class="stat-card-value" id="stat-hours-value">0 hrs</span>
-          </div>
-          <div class="stat-card" id="stat-points">
-            <div class="stat-card-icon icon-gold">
-              <span class="material-icons-round">star</span>
+          </section>
+
+          <!-- Stats Row -->
+          <div class="profile-stats-row">
+            <div class="profile-stats-box primary">
+              <span id="stat-hours-value" style="font-family:'Manrope',sans-serif;font-size:32px;font-weight:800;color:#005440;display:block;line-height:1;">0 hrs</span>
+              <span style="font-size:10px;font-weight:700;color:#6f7a74;text-transform:uppercase;letter-spacing:0.08em;" data-i18n="total-hours-given">Total Hours</span>
             </div>
-            <span class="stat-card-label" data-i18n="stat-points-label">Points Balance</span>
-            <span class="stat-card-value" id="stat-points-value">0</span>
+            <div class="profile-stats-box secondary">
+              <span id="impact-hl-number" style="font-family:'Manrope',sans-serif;font-size:32px;font-weight:800;color:#765a18;display:block;line-height:1;">0</span>
+              <span style="font-size:10px;font-weight:700;color:#785d1b;text-transform:uppercase;letter-spacing:0.08em;" data-i18n="weekly-goal-val">Hours · Goal: 15h</span>
+               <div style="width:100%;height:4px;background:rgba(118,90,24,0.1);border-radius:2px;margin-top:8px;overflow:hidden;">
+                 <div id="impact-hl-bar-fill" style="width:0%;height:100%;background:#765a18;transition:width 0.5s ease;"></div>
+               </div>
+            </div>
           </div>
         </div>
 
-        <!-- Weekly Goal -->
-        <section class="discover-impact-highlight">
-          <div class="impact-hl-text">
-            <p class="impact-hl-label" data-i18n="your-community-impact">Your Community Impact</p>
-            <h3 class="impact-hl-title" data-i18n="weekly-goal-15">Weekly Goal: 15 Hours</h3>
-            <div class="impact-hl-bar-bg">
-              <div class="impact-hl-bar-fill" id="impact-hl-bar-fill" style="width: 0%;"></div>
-            </div>
-          </div>
-          <div class="impact-hl-stats">
-            <div class="impact-hl-number" id="impact-hl-number">0</div>
-            <div class="impact-hl-unit" data-i18n="hours-done">Hours Done</div>
-          </div>
-        </section>
-
-        <!-- Volunteer History -->
+        <!-- Volunteer History Timeline -->
         <section class="section">
-          <div class="section-header">
-            <h2 class="section-title" data-i18n="volunteer-history">Volunteer History</h2>
+          <div class="section-header" style="margin-bottom:24px;">
+            <h2 class="section-title" data-i18n="volunteer-history" style="font-family:'Manrope',sans-serif;font-size:24px;font-weight:800;color:#1d1c17;margin:0 0 6px;letter-spacing:-0.02em;">Your Volunteer Journey</h2>
+            <p style="font-size:13px;color:#6f7a74;font-weight:500;margin:0;">A narrative of the change you've sparked in the world.</p>
           </div>
-          <div class="history-list" id="history-list">
-            <div class="history-card" id="history-1">
-              <div class="history-icon history-icon-green">
-                <span class="material-icons-round">park</span>
+          
+          <div class="history-list journey-timeline" id="history-list">
+             <!-- Item 1: Beach Cleanup -->
+            <div class="journey-reveal">
+              <div class="journey-dot-wrap">
+                <div class="journey-dot" style="background:#005440;"></div>
               </div>
-              <div class="history-info">
-                <h3 class="history-name" data-i18n="hist-tree">Tree Planting — Al Areen</h3>
-                <span class="history-date">Nov 28, 2025</span>
-                <div class="history-stats">
-                  <span class="history-hours"><span class="material-icons-round">schedule</span> 3 hrs</span>
-                  <span class="history-pts"><span class="material-icons-round">paid</span> +300</span>
+              <div class="journey-card light">
+                <div class="journey-card-img-wrap">
+                  <img alt="Beach Cleanup" class="journey-card-img" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0mNDitW8Nyqo02aQhdvOmh0nbShYlrMLrkN988ZC7pZRCt1viw_aBdHc0VgBgBqUEEVhrq7Xc8Yli8eLmwm3KH31DRtf0wRQx8n_jmFf5dhIrw94GnTNUIGXCltFXrnJLqSeEhIlJ2CVp4fXb3OV9l_uv2m7Wt7Rqeujk7_NZ1tvzPUG4bqRCuUrs-Kd0pYFut2skRt-O7p71hJoLDGWyPDGkZUD4OpuiJWFijP78bwzF_i63qWTwkJoSSgA8qdAfS99thoOJmCdK"/>
+                  <div class="journey-card-gradient"></div>
+                </div>
+                <div class="journey-card-content">
+                  <p style="font-size:9px;font-weight:700;color:rgba(0,84,64,0.55);text-transform:uppercase;letter-spacing:0.15em;margin:0 0 6px;">Oct 24</p>
+                  <h3 style="font-family:'Manrope',sans-serif;font-weight:800;font-size:19px;color:#1d1c17;margin:0 0 8px;line-height:1.25;">Making Waves: Beach Cleanup Drive</h3>
+                  <p style="font-size:13px;color:#6f7a74;line-height:1.65;margin:0;">We restored 2km of coastline today. By clearing debris, we're ensuring a safer home for our marine life and earned <span class="journey-points-pill" style="background:rgba(0,84,64,0.08);color:#005440;">+300 points</span> for the cause.</p>
                 </div>
               </div>
             </div>
-            <div class="history-card" id="history-2">
-              <div class="history-icon history-icon-blue">
-                <span class="material-icons-round">water</span>
+
+            <!-- Item 2 -->
+            <div class="journey-reveal">
+              <div class="journey-dot-wrap">
+                <div class="journey-dot" style="background:#005440;"></div>
               </div>
-              <div class="history-info">
-                <h3 class="history-name" data-i18n="hist-beach">Beach Cleanup — Zallaq</h3>
-                <span class="history-date">Nov 15, 2025</span>
-                <div class="history-stats">
-                  <span class="history-hours"><span class="material-icons-round">schedule</span> 2 hrs</span>
-                  <span class="history-pts"><span class="material-icons-round">paid</span> +200</span>
+              <div class="journey-card light">
+                <div class="journey-card-img-wrap">
+                  <img alt="Elderly Care" class="journey-card-img" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjo7uwZPHw2VzK5TbJ1arR0omVye_mSwLjiY7Ua-UuFEykl-1RtcsF87naOhUiZ1Nt4bvqug0BC3nWlUSqQLVkdfDfXfe-5uXOp46tV9SkvE-UleDCiJx0pDEhpHJyntZ_XlnQMzoJsR7zWC6QyJbeezG_zrA4hScsd1pXn6BRj-sAHCIzBGT3TUZ1yVjCMCpzaAHeX2vUb-qkO9M-8ma1q9HptoIQw2u6tIeRrd6SUQEPnGHzXdklOoM5NMsK-n63cPq9Q02-PDmn"/>
+                  <div class="journey-card-gradient"></div>
+                </div>
+                <div class="journey-card-content">
+                  <p style="font-size:9px;font-weight:700;color:rgba(0,84,64,0.55);text-transform:uppercase;letter-spacing:0.15em;margin:0 0 6px;">Oct 18</p>
+                  <h3 style="font-family:'Manrope',sans-serif;font-weight:800;font-size:19px;color:#1d1c17;margin:0 0 8px;line-height:1.25;">Heartfelt Moments: Elderly Home Visit</h3>
+                  <p style="font-size:13px;color:#6f7a74;line-height:1.65;margin:0;">Shared stories and tea with 15 residents today. Seeing those smiles was worth every second, contributing <span class="journey-points-pill" style="background:rgba(0,84,64,0.08);color:#005440;">+450 points</span> to my journey.</p>
                 </div>
               </div>
             </div>
-            <div class="history-card" id="history-3">
-              <div class="history-icon history-icon-rose">
-                <span class="material-icons-round">favorite</span>
+
+            <!-- Item 3: Reward Redeemed (amber, no image) -->
+            <div class="journey-reveal">
+              <div class="journey-dot-wrap">
+                <div class="journey-dot" style="background:#765a18;"></div>
               </div>
-              <div class="history-info">
-                <h3 class="history-name" data-i18n="hist-elderly">Elderly Care Visit</h3>
-                <span class="history-date">Oct 30, 2025</span>
-                <div class="history-stats">
-                  <span class="history-hours"><span class="material-icons-round">schedule</span> 4 hrs</span>
-                  <span class="history-pts"><span class="material-icons-round">paid</span> +400</span>
+              <div class="journey-card amber">
+                <div style="padding:20px 20px 16px;background:rgba(254,216,138,0.25);display:flex;align-items:center;justify-content:space-between;">
+                  <div>
+                    <p style="font-size:9px;font-weight:700;color:rgba(118,90,24,0.55);text-transform:uppercase;letter-spacing:0.15em;margin:0 0 4px;">Oct 21</p>
+                    <h3 style="font-family:'Manrope',sans-serif;font-weight:800;font-size:17px;color:#765a18;margin:0;">A Treat Well Deserved</h3>
+                  </div>
+                  <span class="material-icons-round" style="color:#765a18;font-size:28px;font-variation-settings:'FILL' 1;">redeem</span>
                 </div>
-              </div>
-            </div>
-            <div class="history-card" id="history-4">
-              <div class="history-icon history-icon-amber">
-                <span class="material-icons-round">menu_book</span>
-              </div>
-              <div class="history-info">
-                <h3 class="history-name" data-i18n="hist-literacy">Literacy Workshop</h3>
-                <span class="history-date">Oct 12, 2025</span>
-                <div class="history-stats">
-                  <span class="history-hours"><span class="material-icons-round">schedule</span> 2 hrs</span>
-                  <span class="history-pts"><span class="material-icons-round">paid</span> +200</span>
-                </div>
-              </div>
-            </div>
-            <div class="history-card" id="history-5">
-              <div class="history-icon history-icon-teal">
-                <span class="material-icons-round">local_hospital</span>
-              </div>
-              <div class="history-info">
-                <h3 class="history-name" data-i18n="hist-blood">Blood Donation Drive</h3>
-                <span class="history-date">Sep 20, 2025</span>
-                <div class="history-stats">
-                  <span class="history-hours"><span class="material-icons-round">schedule</span> 1 hr</span>
-                  <span class="history-pts"><span class="material-icons-round">paid</span> +150</span>
+                <div style="padding:16px 20px 20px;">
+                  <p style="font-size:13px;color:#6f7a74;line-height:1.65;margin:0;">Fueling up for the next mission. I redeemed <span class="journey-points-pill" style="background:rgba(118,90,24,0.1);color:#765a18;">600 points</span> for a treat with one of our local community partners.</p>
                 </div>
               </div>
             </div>
           </div>
+          
+          <button style="width:100%;margin-top:20px;padding:18px;border:1px solid rgba(190,201,195,0.4);border-radius:16px;background:none;color:#6f7a74;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.1em;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+            <span class="material-icons-round" style="font-size:16px;">expand_more</span>
+            Expand Your Story
+          </button>
         </section>
 
         <!-- App Preferences & Settings -->
@@ -1389,88 +1769,86 @@
     </div>
 
     <!-- ===== PAGE: REWARD REDEEMED ===== -->
-    <section id="page-reward-redeemed" class="page">
-      <header class="reward-detail-header">
-        <button class="back-btn" aria-label="Go back" onclick="navigateTo('marketplace')">
-          <span class="material-icons-round">close</span>
+    <section id="page-reward-redeemed" class="page" style="font-family:'Plus Jakarta Sans',sans-serif;background:#fef9f1;">
+
+      <!-- Hidden elements still populated by confirmRedemption() JS -->
+      <span id="rr-logo" style="display:none;"></span>
+      <p id="rr-subtitle" style="display:none;"></p>
+      <div id="rr-qr" style="display:none;"></div>
+      <span id="rr-expires-time" style="display:none;"></span>
+
+      <!-- Header -->
+      <header style="position:fixed;top:0;width:100%;z-index:50;background:rgba(245,240,232,0.88);backdrop-filter:blur(16px);display:flex;align-items:center;gap:12px;padding:0 16px;height:64px;border-bottom:1px solid rgba(190,201,195,0.2);">
+        <button onclick="navigateTo('marketplace')" style="width:40px;height:40px;border-radius:9999px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s;" onmouseover="this.style.background='rgba(15,110,86,0.08)'" onmouseout="this.style.background='none'">
+          <span class="material-symbols-outlined" style="color:#0F6E56;">arrow_back</span>
         </button>
-        <h1 class="reward-detail-title" data-i18n="rr-page-title">Reward Redeemed</h1>
+        <h1 style="font-family:'Manrope',sans-serif;font-weight:700;font-size:18px;color:#0F6E56;margin:0;">Redeem Reward</h1>
       </header>
 
-      <main class="reward-detail-main">
-        <!-- Success Header -->
-        <div class="redeemed-success-section">
-          <div class="redeemed-icon-ring">
-            <span class="material-icons-round">check_circle</span>
-            <div class="redeemed-sparkle"></div>
-          </div>
-          <h2 class="redeemed-title">Success!</h2>
-          <p class="redeemed-subtitle" id="rr-subtitle">Your taw points have been converted into pure caffeine joy.</p>
-        </div>
+      <main style="flex:1;padding-top:80px;padding-bottom:120px;padding-left:24px;padding-right:24px;display:flex;flex-direction:column;align-items:center;max-width:480px;margin:0 auto;width:100%;">
 
-        <!-- Reward badge -->
-        <div class="redeemed-reward-badge">
-          <div class="redeemed-badge-logo" id="rr-logo"><!-- JS --></div>
-          <div class="redeemed-badge-info">
-            <span class="redeemed-badge-tag">REWARD EARNED</span>
-            <p class="redeemed-badge-title" id="rr-title">50% off any beverage</p>
-          </div>
-        </div>
+        <!-- Big card -->
+        <div style="width:100%;background:white;border-radius:36px;box-shadow:0 40px 80px -16px rgba(29,28,23,0.14);overflow:hidden;">
 
-        <!-- QR Code Section -->
-        <div class="redeemed-qr-section">
-          <div class="redeemed-qr-code" id="rr-qr">
-            <!-- QR generated by JS -->
-          </div>
-          <div class="redeemed-code-box">
-            <span class="redeemed-code-label" data-i18n="rr-code-label">REDEMPTION CODE</span>
-            <span class="redeemed-code-value" id="rr-code">TAW-COSTA-2024</span>
-            <button class="redeemed-copy-btn" onclick="copyRedemptionCode()" aria-label="Copy code">
-              <span class="material-icons-round" id="rr-copy-icon">content_copy</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Validity Details - Prominent Countdown -->
-        <div class="redeemed-countdown-card">
-          <div class="countdown-timer-row">
-            <div class="countdown-icon-wrap">
-              <span class="material-icons-round">timer</span>
-            </div>
-            <div class="countdown-text-wrap">
-              <span class="countdown-main" data-i18n="rr-valid-duration">Valid for 48 hours</span>
-              <span class="countdown-expires"><span data-i18n="rr-expires-label">Expires:</span> <span id="rr-expires-time">--</span></span>
+          <!-- Hero image -->
+          <div style="position:relative;width:100%;height:240px;overflow:hidden;background:#e7e2da;">
+            <img id="rr-hero-img" alt="Reward" style="width:100%;height:100%;object-fit:cover;display:block;"/>
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.65) 0%,transparent 55%);"></div>
+            <!-- Title over image -->
+            <div style="position:absolute;bottom:20px;left:24px;right:24px;">
+              <h2 id="rr-title" style="font-family:'Manrope',sans-serif;font-weight:800;font-size:26px;color:white;margin:0;line-height:1.2;letter-spacing:-0.02em;">Your Reward</h2>
             </div>
           </div>
-        </div>
 
-        <ul class="redeemed-validity-list">
-          <li>
-            <span class="material-icons-round validity-icon">store</span>
-            <span data-i18n="rr-branches">Available at all Bahrain branches</span>
-          </li>
-        </ul>
+          <!-- Code + instructions -->
+          <div style="padding:28px 24px 32px;display:flex;flex-direction:column;gap:20px;text-align:center;">
 
-        <!-- How to use box -->
-        <div class="redeemed-howto-box">
-          <span class="material-icons-round redeemed-howto-icon">info</span>
-          <div>
-            <p class="redeemed-howto-title" data-i18n="rr-how-to-title">How to use</p>
-            <p class="redeemed-howto-text" id="rr-how-to-use-text">Present this screen to the barista before ordering. The discount applies to any single beverage on the menu.</p>
+            <!-- Dashed code box -->
+            <div style="background:#f8f3eb;padding:20px 28px;border-radius:24px;border:2px dashed #bec9c3;box-shadow:inset 0 2px 6px rgba(29,28,23,0.04);">
+              <p style="font-size:9px;text-transform:uppercase;letter-spacing:0.2em;color:#6f7a74;font-weight:700;margin:0 0 6px;">Redemption Code</p>
+              <span id="rr-code" style="font-family:'Manrope',sans-serif;font-weight:800;font-size:28px;letter-spacing:-0.01em;color:#005440;">TAW-XXX-2026</span>
+            </div>
+
+            <!-- How to use -->
+            <div style="background:#f2ede5;padding:20px;border-radius:20px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;">
+              <div style="width:40px;height:40px;background:rgba(0,84,64,0.1);border-radius:9999px;display:flex;align-items:center;justify-content:center;">
+                <span class="material-symbols-outlined" style="color:#005440;font-size:20px;">coffee</span>
+              </div>
+              <p id="rr-how-to-use-text" style="font-size:13px;line-height:1.65;color:#6f7a74;margin:0;">Present this code to the barista at the counter. Your <strong style="color:#005440;">Taw balance</strong> will update once your treat is served.</p>
+            </div>
+
           </div>
         </div>
 
-        <!-- Spacer for done button -->
-        <div style="height: 6rem;"></div>
-      </main>
+        <!-- Countdown pill -->
+        <div style="margin-top:24px;display:flex;align-items:center;gap:10px;padding:12px 24px;background:rgba(254,216,138,0.22);border:1px solid rgba(254,216,138,0.45);border-radius:9999px;">
+          <span class="material-symbols-outlined" style="color:#765a18;font-size:20px;">schedule</span>
+          <span style="color:#785d1b;font-weight:600;font-size:14px;">Valid for <strong id="rr-countdown" style="font-family:'Manrope',sans-serif;font-weight:800;font-size:15px;">15:00</strong></span>
+        </div>
 
-      <div class="reward-fixed-action">
-        <button class="reward-redeem-btn" onclick="navigateTo('marketplace')">
+        <!-- Done button -->
+        <button onclick="navigateTo('marketplace')" style="width:100%;margin-top:32px;background:#005440;color:white;padding:20px;border-radius:9999px;font-family:'Manrope',sans-serif;font-weight:700;font-size:17px;border:none;cursor:pointer;box-shadow:0 16px 40px rgba(0,84,64,0.28);transition:transform 0.15s,box-shadow 0.15s;" onmousedown="this.style.transform='scale(0.97)';this.style.boxShadow='0 8px 20px rgba(0,84,64,0.2)'" onmouseup="this.style.transform='scale(1)';this.style.boxShadow='0 16px 40px rgba(0,84,64,0.28)'">
           Done
-          <span class="material-icons-round">arrow_forward</span>
         </button>
-      </div>
+
+      </main>
     </section>
+
+    <!-- ===== MARKETPLACE BALANCE BAR (app-level fixed) ===== -->
+    <div id="marketplace-balance-bar" style="display:none;position:fixed;bottom:88px;left:16px;right:16px;z-index:45;pointer-events:none;">
+      <div style="max-width:480px;margin:0 auto;pointer-events:auto;background:#0f6e56;color:white;padding:12px 12px 12px 16px;border-radius:9999px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 8px 28px rgba(0,84,64,0.35);border:1px solid rgba(255,255,255,0.1);">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:42px;height:42px;border-radius:9999px;background:#fed88a;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <span class="material-symbols-outlined" style="color:#765a18;font-variation-settings:'FILL' 1;">wallet</span>
+          </div>
+          <div>
+            <span style="display:block;font-size:11px;color:rgba(255,255,255,0.7);font-weight:600;">Your Balance</span>
+            <span style="font-family:'Manrope',sans-serif;font-weight:800;font-size:18px;line-height:1.1;">2,450 <span style="color:#fed88a;">Taw</span></span>
+          </div>
+        </div>
+        <button style="background:#fed88a;color:#785d1b;height:40px;padding:0 22px;border-radius:9999px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:13px;border:none;cursor:pointer;" onmousedown="this.style.transform='scale(0.96)'" onmouseup="this.style.transform='scale(1)'">Redeem</button>
+      </div>
+    </div>
 
     <!-- ===== BOTTOM NAV BAR ===== -->
     <nav class="bottom-nav" id="bottom-nav" role="navigation" aria-label="Main navigation">
@@ -1482,6 +1860,7 @@
         <span class="material-icons-round">redeem</span>
         <span class="nav-label" data-i18n="nav-rewards">Rewards</span>
       </button>
+
       <button class="nav-item" id="nav-profile" onclick="navigateTo('profile')">
         <span class="material-icons-round">person</span>
         <span class="nav-label" data-i18n="nav-profile">Profile</span>
