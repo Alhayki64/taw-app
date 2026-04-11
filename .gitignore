@@ -2,3 +2,14 @@ node_modules/
 .claude/
 config.js
 .env
+
+# Vite build output
+dist/
+dist-ssr/
+
+# Vitest coverage reports
+coverage/
+
+# Editor / OS
+.DS_Store
+*.local
