@@ -24,6 +24,21 @@ function renderErrorState(container, { retryFn, text } = {}) {
     </div>`;
 }
 
+// ── Validation Schemas (Zod) ──
+const authSchema = window.Zod ? window.Zod.z.object({
+  email: window.Zod.z.string().email("Invalid email address"),
+  password: window.Zod.z.string().min(6, "Password must be at least 6 characters"),
+  name: window.Zod.z.string().optional()
+}) : null;
+
+const profileSchema = window.Zod ? window.Zod.z.object({
+  name: window.Zod.z.string().min(2, "Name must be at least 2 characters").max(50),
+  phone: window.Zod.z.string().max(20, "Phone is too long").optional().or(window.Zod.z.literal('')),
+  bio: window.Zod.z.string().max(300, "Bio is too long").optional().or(window.Zod.z.literal(''))
+}) : null;
+
+const tawCodeSchema = window.Zod ? window.Zod.z.string().regex(/^TAW-\d{4}$/, "Invalid TAW-XXXX code") : null;
+
 // ── Navigation State ──
 const pageMap = {
   'landing':          'page-landing',
@@ -53,7 +68,7 @@ const navMap = {
 const subPages = new Set(['landing', 'auth', 'interests', 'notifications', 'notif-permission', 'edit-profile', 'event-details', 'checkin-success', 'volunteer-map', 'reward-details', 'reward-redeemed', 'partner-detail']);
 
 // Pages that require authentication
-const protectedPages = new Set(['checkin-success', 'profile', 'reward-redeemed']);
+const protectedPages = new Set(['checkin-success', 'profile', 'reward-redeemed', 'notifications', 'edit-profile']);
 
 let currentPage = 'landing';
 let pageHistory = ['landing'];
@@ -66,9 +81,17 @@ function navigateTo(pageName) {
   if (!document.body.dataset.direction) document.body.dataset.direction = 'forward';
 
   // Route guard: redirect to auth if not signed in
-  if (protectedPages.has(pageName) && !authState.session) {
-    navigateTo('auth');
-    return;
+  if (protectedPages.has(pageName)) {
+    if (!authState.session) {
+      navigateTo('auth');
+      return;
+    }
+    const isVerified = authState.user && (authState.user.email_confirmed_at || authState.user.phone_confirmed_at);
+    if (!isVerified) {
+      // Optional: show a toast or message
+      navigateTo('auth');
+      return;
+    }
   }
 
   const oldPageEl = document.getElementById(pageMap[currentPage]);
@@ -573,6 +596,13 @@ async function saveProfileChanges(e) {
   if (saveSpinner) saveSpinner.style.display = '';
 
   try {
+    if (profileSchema) {
+      const parsed = profileSchema.safeParse({ name, phone, bio });
+      if (!parsed.success) {
+        throw new Error(parsed.error.errors[0].message);
+      }
+    }
+
     if (typeof supabaseClient !== 'undefined') {
       const { data, error } = await supabaseClient.auth.updateUser({
         data: { full_name: name, phone, bio }
@@ -693,6 +723,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     onAuthStateChange((event, session) => {
       if (session && session.user) {
         updateUserDisplay();
+      }
+      if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
+        navigateTo('auth');
       }
     });
   }
@@ -1652,7 +1685,15 @@ async function handleAuthSubmit(e) {
   errorEl.style.display = 'none';
 
   try {
+    if (authSchema) {
+      const parsed = authSchema.safeParse({ email, password, name: authMode === 'signup' ? name : undefined });
+      if (!parsed.success) {
+         throw new Error(parsed.error.errors[0].message);
+      }
+    }
+
     if (authMode === 'signup') {
+      if (authSchema && name.trim().length < 2) throw new Error("Name must be at least 2 characters");
       await signUp(email, password, name);
       // After sign-up, go to interests onboarding
       navigateTo('interests');

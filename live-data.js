@@ -1,6 +1,7 @@
 // ====== TAW: LIVE DATA HYDRATION ======
 
-// ── Static Partner Deals (always shown even if Supabase has none) ────────────
+// ── Fallback deals shown only if Supabase returns nothing ────────────────────
+// ODA Burger is now in the database — this is emergency-only fallback
 const STATIC_DEALS = [
   {
     id: 'oda-burger-001',
@@ -20,7 +21,7 @@ const STATIC_DEALS = [
       location: 'Jid-Ali, Bahrain',
       instagram: 'https://www.instagram.com/oda_burger.s',
       delivery: 'Jahez & Talabat',
-      accent: '#C8102E',    // ODA red
+      accent: '#C8102E',
       logoText: '⚔️',
     }
   }
@@ -92,18 +93,17 @@ async function hydrateDashboard(userId) {
 async function hydratePublicData() {
     injectSkeletons();
 
-    // Fetch deals
+    // Fetch deals — DB is the single source of truth (managed via admin panel)
     try {
         if (typeof fetchDeals === 'function') {
             const dbDeals = await fetchDeals();
-            const allDeals = [...STATIC_DEALS, ...dbDeals];
-            populateRewards(allDeals);
+            // Use DB deals if available; fall back to STATIC_DEALS only if DB is empty
+            populateRewards(dbDeals.length > 0 ? dbDeals : STATIC_DEALS);
         } else {
-             populateRewards(STATIC_DEALS);
+            populateRewards(STATIC_DEALS);
         }
     } catch (e) {
         console.error('Failed to fetch deals', e);
-        // Fallback to static deals even on error
         populateRewards(STATIC_DEALS);
     }
 
