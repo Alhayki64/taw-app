@@ -3,7 +3,6 @@ const path = require('path');
 
 // Files at the root that must be copied into dist/ for production
 const filesToCopy = [
-  'app.js',
   'config.js',
   'dynamic-badges.js',
   'fallback-illustrations.js',
@@ -33,5 +32,16 @@ filesToCopy.forEach(file => {
     console.warn(`⚠ Skipped ${file} (not found)`);
   }
 });
+
+// Copy js/ module directory
+const jsSrc = path.join(__dirname, '..', 'js');
+const jsDest = path.join(distDir, 'js');
+if (fs.existsSync(jsSrc)) {
+  if (!fs.existsSync(jsDest)) fs.mkdirSync(jsDest, { recursive: true });
+  fs.readdirSync(jsSrc).forEach(file => {
+    fs.copyFileSync(path.join(jsSrc, file), path.join(jsDest, file));
+    console.log(`✓ Copied js/${file} → dist/js/${file}`);
+  });
+}
 
 console.log('\n✅ Asset copy complete.');

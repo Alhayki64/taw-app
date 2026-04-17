@@ -272,3 +272,16 @@ async function saveUserInterests(interests) {
     if (error) throw error;
   }
 }
+
+// Expose to global scope for non-module scripts (app.js, points.js, etc.)
+window.authState          = authState;
+window.onAuthStateChange  = onAuthStateChange;
+window.signUp             = signUp;
+window.signIn             = signIn;
+window.signOut            = signOut;
+window.getSession         = getSession;
+window.fetchOpportunities = fetchOpportunities;
+window.fetchDeals         = fetchDeals;
+window.fetchUserSessions  = fetchUserSessions;
+window.createCheckIn      = createCheckIn;
+window.saveUserInterests  = saveUserInterests;
