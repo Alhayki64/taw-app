@@ -592,8 +592,8 @@ body {
 
 /* ── PAGES ── */
 .page {
-  position: absolute;
-  inset: 0;
+  position: absolute !important;
+  inset: 0 !important;
   overflow-y: auto;
   overflow-x: hidden;
   padding-bottom: 100px;

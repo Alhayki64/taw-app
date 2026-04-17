@@ -13,3 +13,5 @@ coverage/
 # Editor / OS
 .DS_Store
 *.local
+
+.vercel

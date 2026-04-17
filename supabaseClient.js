@@ -185,7 +185,7 @@ async function fetchOpportunities() {
 async function fetchDeals() {
   const { data, error } = await supabaseClient
     .from('deals')
-    .select('id, title, brand_name, category, points_cost, cost, description, expires_at, usage_limit, terms, image_url, status')
+    .select('id, title, brand_name, category, points_cost, description, expires_at, usage_limit, terms, image_url, status')
     .eq('status', 'active')
     .order('created_at', { ascending: false })
     .range(0, 19);
