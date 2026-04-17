@@ -4,7 +4,7 @@
   "description": "TAW (طوع) — Volunteer Rewards Marketplace",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/copy-assets.js",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
