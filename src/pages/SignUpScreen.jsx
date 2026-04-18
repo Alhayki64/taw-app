@@ -1,18 +1,21 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { RevealLayout } from '../components/RevealLayout'
-import { Button } from '../components/ui/button'
-import { useAuth } from '../contexts/AuthProvider'
-import { useLanguage } from '../contexts/LanguageProvider'
+import { RevealLayout } from '@/components/RevealLayout'
+import { Button } from '@/components/ui/button'
+import { useAuth } from '@/contexts/AuthProvider'
+import { useLanguage } from '@/contexts/LanguageProvider'
+import { signUpSchema } from '@/lib/schemas'
+import { useToast } from '@/contexts/ToastProvider'
 
 export default function SignUpScreen() {
   const navigate = useNavigate()
   const { signUp } = useAuth()
   const { t } = useLanguage()
-  
+  const toast = useToast()
+
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [errorMsg, setErrorMsg] = useState('')
+  const [errors, setErrors] = useState({})
   
   const countries = [
     { code: '+973', id: 'bh', name: 'Bahrain' },
@@ -38,17 +41,23 @@ export default function SignUpScreen() {
   }
 
   const handleSignUp = async () => {
+    setErrors({})
+
+    const result = signUpSchema.safeParse(formData)
+    if (!result.success) {
+      setErrors(result.error.flatten().fieldErrors)
+      return
+    }
+
     setLoading(true)
-    setErrorMsg('')
     try {
-      // Pass the unverified phone number inside user_metadata
       await signUp(formData.email, formData.password, {
         display_name: formData.name,
-        phone: `${selectedCountry.code}${formData.phone}`
+        phone: `${selectedCountry.code}${formData.phone}`,
       })
       navigate('/onboarding/gender')
     } catch (err) {
-      setErrorMsg(err.message)
+      toast.error(err.message)
     } finally {
       setLoading(false)
     }
@@ -77,43 +86,40 @@ export default function SignUpScreen() {
 
         <RevealLayout delay={0.2} className="space-y-4">
           
-          {errorMsg && (
-            <div className="bg-red-50 text-red-600 px-4 py-3 rounded-xl border border-red-100 text-sm font-bold flex items-center gap-2 mb-2">
-              <span className="material-icons-round text-base">error</span>
-              {errorMsg}
-            </div>
-          )}
-
           {/* Full Name */}
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-foreground px-1 uppercase tracking-wider">{t('full_name')}</label>
-            <div className="flex items-center h-14 bg-card text-card-foreground rounded-xl shadow-sm border border-border focus-within:ring-2 focus-within:ring-primary overflow-hidden transition-all px-4">
+            <label htmlFor="name" className="text-xs font-bold text-foreground px-1 uppercase tracking-wider">{t('full_name')}</label>
+            <div className={`flex items-center h-14 bg-card text-card-foreground rounded-xl shadow-sm border overflow-hidden transition-all px-4 focus-within:ring-2 focus-within:ring-primary ${errors.name ? 'border-destructive' : 'border-border'}`}>
               <span className="material-icons-round text-muted-foreground/60 me-3">person</span>
-              <input 
-                type="text" 
+              <input
+                id="name"
+                type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                placeholder="Ali Alsayed" 
+                placeholder="Ali Alsayed"
                 className="w-full h-full outline-none text-base font-medium text-foreground bg-transparent placeholder:text-muted-foreground/50"
               />
             </div>
+            {errors.name && <p className="text-xs text-destructive font-medium px-1">{errors.name[0]}</p>}
           </div>
 
           {/* Email */}
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-foreground px-1 uppercase tracking-wider">{t('email')}</label>
-            <div className="flex items-center h-14 bg-card text-card-foreground rounded-xl shadow-sm border border-border focus-within:ring-2 focus-within:ring-primary overflow-hidden transition-all px-4">
+            <label htmlFor="signup-email" className="text-xs font-bold text-foreground px-1 uppercase tracking-wider">{t('email')}</label>
+            <div className={`flex items-center h-14 bg-card text-card-foreground rounded-xl shadow-sm border overflow-hidden transition-all px-4 focus-within:ring-2 focus-within:ring-primary ${errors.email ? 'border-destructive' : 'border-border'}`}>
               <span className="material-icons-round text-muted-foreground/60 me-3">email</span>
-              <input 
-                type="email" 
+              <input
+                id="signup-email"
+                type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="ali@example.com" 
+                placeholder="ali@example.com"
                 className="w-full h-full outline-none text-base font-medium text-foreground bg-transparent placeholder:text-muted-foreground/50"
               />
             </div>
+            {errors.email && <p className="text-xs text-destructive font-medium px-1">{errors.email[0]}</p>}
           </div>
 
           {/* Mobile Number */}
@@ -169,28 +175,31 @@ export default function SignUpScreen() {
                 />
               </div>
             </div>
+            {errors.phone && <p className="text-xs text-destructive font-medium px-1">{errors.phone[0]}</p>}
           </div>
 
           {/* Password */}
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-foreground px-1 uppercase tracking-wider">{t('password')}</label>
-            <div className="flex items-center h-14 bg-card text-card-foreground rounded-xl shadow-sm border border-border focus-within:ring-2 focus-within:ring-primary overflow-hidden transition-all px-4">
+            <label htmlFor="signup-password" className="text-xs font-bold text-foreground px-1 uppercase tracking-wider">{t('password')}</label>
+            <div className={`flex items-center h-14 bg-card text-card-foreground rounded-xl shadow-sm border overflow-hidden transition-all px-4 focus-within:ring-2 focus-within:ring-primary ${errors.password ? 'border-destructive' : 'border-border'}`}>
               <span className="material-icons-round text-muted-foreground/60 me-3">lock</span>
-              <input 
-                type={showPassword ? "text" : "password"} 
+              <input
+                id="signup-password"
+                type={showPassword ? 'text' : 'password'}
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Create a strong password" 
+                placeholder="Create a strong password"
                 className="w-full h-full outline-none text-base font-medium text-foreground bg-transparent placeholder:text-muted-foreground/50"
               />
-              <button 
+              <button
                 onClick={() => setShowPassword(!showPassword)}
                 className="text-muted-foreground/60 hover:text-foreground transition-colors ms-2"
               >
                 <span className="material-icons-round">{showPassword ? 'visibility_off' : 'visibility'}</span>
               </button>
             </div>
+            {errors.password && <p className="text-xs text-destructive font-medium px-1">{errors.password[0]}</p>}
           </div>
 
         </RevealLayout>

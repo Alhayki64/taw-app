@@ -1,45 +1,32 @@
-import React, { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { motion } from 'framer-motion'
 import { RevealLayout } from '@/components/RevealLayout'
 import SubPageHeader from '@/components/layout/SubPageHeader'
 import { Button } from '@/components/ui/button'
 import { supabase } from '@/lib/supabaseClient'
+import { useEventDetails } from '@/hooks/useEventDetails'
+import { useToast } from '@/contexts/ToastProvider'
 
 export default function EventDetailsScreen() {
   const navigate = useNavigate()
   const { id } = useParams()
-  const [event, setEvent] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const { event, loading, isSignedUp, setIsSignedUp } = useEventDetails(id)
+  const toast = useToast()
   const [isCommitting, setIsCommitting] = useState(false)
-  const [isCommitted, setIsCommitted] = useState(false)
+  const isCommitted = isSignedUp
 
-  useEffect(() => {
-    fetchEvent()
-    checkExistingSignup()
-  }, [id])
-
-  const fetchEvent = async () => {
-    const { data, error } = await supabase
-      .from('opportunities')
-      .select('*')
-      .eq('id', id)
-      .single()
-
-    if (!error && data) setEvent(data)
-    setLoading(false)
-  }
-
-  const checkExistingSignup = async () => {
-    const { data: { session } } = await supabase.auth.getSession()
-    if (!session?.user) return
-    const { data } = await supabase
-      .from('opportunity_signups')
-      .select('id')
-      .eq('opportunity_id', id)
-      .eq('user_id', session.user.id)
-      .single()
-    if (data) setIsCommitted(true)
+  const handleShare = async () => {
+    const shareData = {
+      title: event?.title ?? 'Volunteer Opportunity',
+      text: `Join me at "${event?.title}" — volunteer with Tawwa!`,
+      url: window.location.href,
+    }
+    if (navigator.share) {
+      try { await navigator.share(shareData) } catch { /* user cancelled */ }
+    } else {
+      await navigator.clipboard.writeText(window.location.href)
+      toast.info('Link copied to clipboard!')
+    }
   }
 
   const handleCommit = async () => {
@@ -52,11 +39,11 @@ export default function EventDetailsScreen() {
       .insert({ opportunity_id: id, user_id: session.user.id, status: 'pending' })
 
     if (!error) {
-      setIsCommitted(true)
+      setIsSignedUp(true)
+      toast.success('You\'re signed up! See you there.')
       setTimeout(() => navigate('/checkin-success', { state: { event } }), 800)
     } else {
-      console.error('RSVP error:', error)
-      alert('Could not sign up: ' + error.message)
+      toast.error('Could not sign up: ' + error.message)
     }
     setIsCommitting(false)
   }
@@ -95,7 +82,7 @@ export default function EventDetailsScreen() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background pb-28">
-      <SubPageHeader title="Event Details" ActionIcon="share" />
+      <SubPageHeader title="Event Details" ActionIcon="share" onActionClick={handleShare} />
 
       {/* Hero Image */}
       <RevealLayout className="w-full h-64 relative">

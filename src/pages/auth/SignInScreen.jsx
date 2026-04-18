@@ -1,27 +1,37 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { RevealLayout } from '@/components/RevealLayout'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/contexts/AuthProvider'
 import { useLanguage } from '@/contexts/LanguageProvider'
+import { signInSchema } from '@/lib/schemas'
+import { useToast } from '@/contexts/ToastProvider'
 
 export default function SignInScreen() {
   const navigate = useNavigate()
   const { signIn } = useAuth()
   const { t } = useLanguage()
+  const toast = useToast()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  const [errorMsg, setErrorMsg] = useState('')
+  const [errors, setErrors] = useState({})
 
   const handleSignIn = async () => {
+    setErrors({})
+
+    const result = signInSchema.safeParse({ email, password })
+    if (!result.success) {
+      setErrors(result.error.flatten().fieldErrors)
+      return
+    }
+
     setLoading(true)
-    setErrorMsg('')
     try {
       await signIn(email, password)
-      navigate('/home') // Go to app shell after sign in
+      navigate('/home')
     } catch (err) {
-      setErrorMsg(err.message)
+      toast.error(err.message)
     } finally {
       setLoading(false)
     }
@@ -49,32 +59,28 @@ export default function SignInScreen() {
         </RevealLayout>
 
         <RevealLayout delay={0.2} className="space-y-4">
-          {errorMsg && (
-            <div className="bg-red-50 text-red-600 px-4 py-3 rounded-xl border border-red-100 text-sm font-bold flex items-center gap-2 mb-2">
-              <span className="material-icons-round text-base">error</span>
-              {errorMsg}
-            </div>
-          )}
-
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-foreground px-1 uppercase tracking-wider">{t('email')}</label>
-            <div className="flex items-center h-14 bg-card text-card-foreground rounded-xl shadow-sm border border-border focus-within:ring-2 focus-within:ring-primary overflow-hidden transition-all px-4">
+            <label htmlFor="email" className="text-xs font-bold text-foreground px-1 uppercase tracking-wider">{t('email')}</label>
+            <div className={`flex items-center h-14 bg-card text-card-foreground rounded-xl shadow-sm border overflow-hidden transition-all px-4 focus-within:ring-2 focus-within:ring-primary ${errors.email ? 'border-destructive' : 'border-border'}`}>
               <span className="material-icons-round text-muted-foreground/60 me-3">email</span>
-              <input 
-                type="email" 
+              <input
+                id="email"
+                type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
-                placeholder="ali@example.com" 
+                placeholder="ali@example.com"
                 className="w-full h-full outline-none text-base font-medium text-foreground bg-transparent placeholder:text-muted-foreground/50"
               />
             </div>
+            {errors.email && <p className="text-xs text-destructive font-medium px-1">{errors.email[0]}</p>}
           </div>
-          
+
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-foreground px-1 uppercase tracking-wider">{t('password')}</label>
-            <div className="flex items-center h-14 bg-card text-card-foreground rounded-xl shadow-sm border border-border focus-within:ring-2 focus-within:ring-primary overflow-hidden transition-all px-4">
+            <label htmlFor="password" className="text-xs font-bold text-foreground px-1 uppercase tracking-wider">{t('password')}</label>
+            <div className={`flex items-center h-14 bg-card text-card-foreground rounded-xl shadow-sm border overflow-hidden transition-all px-4 focus-within:ring-2 focus-within:ring-primary ${errors.password ? 'border-destructive' : 'border-border'}`}>
               <span className="material-icons-round text-muted-foreground/60 me-3">lock</span>
-              <input 
+              <input
+                id="password"
                 type="password" 
                 value={password}
                 onChange={e => setPassword(e.target.value)}
@@ -82,10 +88,11 @@ export default function SignInScreen() {
                 className="w-full h-full outline-none text-base font-medium text-foreground bg-transparent placeholder:text-muted-foreground/50"
               />
             </div>
+            {errors.password && <p className="text-xs text-destructive font-medium px-1">{errors.password[0]}</p>}
           </div>
-          
+
           <div className="flex justify-end">
-            <a href="#" className="text-sm font-bold text-primary hover:underline">Forgot Password?</a>
+            <button onClick={() => navigate('/forgot-password')} className="text-sm font-bold text-primary hover:underline">Forgot Password?</button>
           </div>
         </RevealLayout>
 

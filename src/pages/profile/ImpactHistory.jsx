@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { RevealLayout } from '@/components/RevealLayout'
 import SubPageHeader from '@/components/layout/SubPageHeader'
@@ -19,33 +19,34 @@ export default function ImpactHistory() {
 
   const fetchSessions = async (userId) => {
     const { data, error } = await supabase
-      .from('volunteer_sessions')
+      .from('opportunity_signups')
       .select(`
         id,
         status,
+        checked_in,
         checked_in_at,
-        confirmed_at,
-        hours,
-        points_awarded,
-        opportunities ( title, category, location, image_url )
+        created_at,
+        opportunities ( title, category, location, image_url, points, hours )
       `)
       .eq('user_id', userId)
-      .order('checked_in_at', { ascending: false })
+      .order('created_at', { ascending: false })
 
     if (!error && data) setSessions(data)
     setLoading(false)
   }
 
   const statusConfig = {
-    confirmed:  { label: 'Confirmed',  icon: 'check_circle',     color: 'text-green-600',  bg: 'bg-green-50'  },
-    pending:    { label: 'Pending',    icon: 'hourglass_top',     color: 'text-amber-600',  bg: 'bg-amber-50'  },
-    checked_in: { label: 'Checked In', icon: 'login',             color: 'text-blue-600',   bg: 'bg-blue-50'   },
-    cancelled:  { label: 'Cancelled',  icon: 'cancel',            color: 'text-red-500',    bg: 'bg-red-50'    },
-    disputed:   { label: 'Disputed',   icon: 'gavel',             color: 'text-orange-600', bg: 'bg-orange-50' },
+    confirmed:  { label: 'Confirmed',  icon: 'check_circle',  color: 'text-green-600',  bg: 'bg-green-50 dark:bg-green-950'  },
+    pending:    { label: 'Applied',    icon: 'hourglass_top', color: 'text-amber-600',  bg: 'bg-amber-50 dark:bg-amber-950'  },
+    checked_in: { label: 'Checked In', icon: 'login',         color: 'text-blue-600',   bg: 'bg-blue-50 dark:bg-blue-950'   },
+    cancelled:  { label: 'Cancelled',  icon: 'cancel',        color: 'text-red-500',    bg: 'bg-red-50 dark:bg-red-950'    },
   }
 
-  const totalPoints = sessions.reduce((sum, s) => sum + (s.points_awarded || 0), 0)
-  const totalHours  = sessions.reduce((sum, s) => sum + (parseFloat(s.hours) || 0), 0)
+  const totalPoints = sessions.reduce((sum, s) => {
+    if (s.status === 'confirmed' || s.checked_in) return sum + (s.opportunities?.points || 0)
+    return sum
+  }, 0)
+  const totalHours = sessions.reduce((sum, s) => sum + (parseFloat(s.opportunities?.hours) || 0), 0)
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -86,10 +87,8 @@ export default function ImpactHistory() {
         ) : (
           sessions.map((session, idx) => {
             const opp = session.opportunities
-            const status = statusConfig[session.status] || statusConfig.pending
-            const date = session.checked_in_at
-              ? new Date(session.checked_in_at).toLocaleDateString('en-BH', { day: 'numeric', month: 'short', year: 'numeric' })
-              : 'Unknown date'
+            const status = statusConfig[session.status] ?? statusConfig.pending
+            const date = new Date(session.created_at).toLocaleDateString('en-BH', { day: 'numeric', month: 'short', year: 'numeric' })
 
             return (
               <motion.div
@@ -122,17 +121,17 @@ export default function ImpactHistory() {
                       <h4 className="font-extrabold text-foreground text-sm leading-snug line-clamp-1">
                         {opp?.title || 'Volunteer Session'}
                       </h4>
-                      {session.points_awarded > 0 && (
-                        <span className="text-primary font-black text-sm shrink-0">+{session.points_awarded}</span>
+                      {opp?.points > 0 && (
+                        <span className="text-primary font-black text-sm shrink-0">+{opp.points}</span>
                       )}
                     </div>
 
                     <div className="flex items-center gap-2 mt-1">
                       <p className="text-xs text-muted-foreground font-medium">{date}</p>
-                      {session.hours && (
+                      {opp?.hours && (
                         <>
                           <span className="text-muted-foreground/40">·</span>
-                          <p className="text-xs text-muted-foreground font-medium">{session.hours}h</p>
+                          <p className="text-xs text-muted-foreground font-medium">{opp.hours}h</p>
                         </>
                       )}
                     </div>

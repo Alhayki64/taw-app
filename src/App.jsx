@@ -1,7 +1,8 @@
-import React, { Suspense, lazy } from 'react'
+import { Suspense, lazy } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { PageTransition } from './components/RevealLayout'
 import ProtectedRoute from '@/components/ProtectedRoute'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 
 // Layouts
 import MainLayout from '@/components/layout/MainLayout'
@@ -10,6 +11,8 @@ import MainLayout from '@/components/layout/MainLayout'
 const WelcomeScreen = lazy(() => import('./pages/WelcomeScreen'))
 const SignUpScreen = lazy(() => import('./pages/SignUpScreen'))
 const SignInScreen = lazy(() => import('./pages/auth/SignInScreen'))
+const ForgotPasswordScreen = lazy(() => import('./pages/auth/ForgotPasswordScreen'))
+const ResetPasswordScreen = lazy(() => import('./pages/auth/ResetPasswordScreen'))
 
 // Onboarding
 const GenderSelection = lazy(() => import('./pages/GenderSelection'))
@@ -38,23 +41,18 @@ const SuspenseFallback = () => (
   </div>
 )
 
-// Providers
-import { AuthProvider } from '@/contexts/AuthProvider'
-import { LanguageProvider } from '@/contexts/LanguageProvider'
-import { ThemeProvider } from '@/contexts/ThemeProvider'
-
 export default function App() {
   return (
-    <ThemeProvider>
-      <AuthProvider>
-      <LanguageProvider>
-        <BrowserRouter>
-          <Suspense fallback={<SuspenseFallback />}>
-            <Routes>
+    <BrowserRouter>
+      <ErrorBoundary>
+        <Suspense fallback={<SuspenseFallback />}>
+          <Routes>
               {/* Public / Auth */}
               <Route path="/" element={<PageTransition keyName="welcome"><WelcomeScreen /></PageTransition>} />
               <Route path="/signup" element={<PageTransition keyName="signup"><SignUpScreen /></PageTransition>} />
               <Route path="/signin" element={<PageTransition keyName="signin"><SignInScreen /></PageTransition>} />
+              <Route path="/forgot-password" element={<PageTransition keyName="forgotpw"><ForgotPasswordScreen /></PageTransition>} />
+              <Route path="/reset-password" element={<PageTransition keyName="resetpw"><ResetPasswordScreen /></PageTransition>} />
               
               {/* Onboarding Flow */}
               <Route path="/onboarding/gender" element={<PageTransition keyName="gender"><GenderSelection /></PageTransition>} />
@@ -81,9 +79,7 @@ export default function App() {
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Suspense>
-        </BrowserRouter>
-      </LanguageProvider>
-    </AuthProvider>
-    </ThemeProvider>
+        </ErrorBoundary>
+      </BrowserRouter>
   )
 }

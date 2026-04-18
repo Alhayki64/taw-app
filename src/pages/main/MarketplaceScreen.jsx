@@ -1,18 +1,19 @@
-import React, { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { RevealLayout } from '@/components/RevealLayout'
 import { usePoints } from '@/contexts/PointsProvider'
 import { useLanguage } from '@/contexts/LanguageProvider'
-import { supabase } from '@/lib/supabaseClient'
+import { useDeals } from '@/hooks/useDeals'
+import { DealCardSkeleton } from '@/components/ui/Skeleton'
+import { EmptyState } from '@/components/ui/EmptyState'
 
 export default function MarketplaceScreen() {
   const navigate = useNavigate()
   const { points } = usePoints()
   const { t } = useLanguage()
   const [activeFilter, setActiveFilter] = useState('All')
-  const [deals, setDeals] = useState([])
-  const [loading, setLoading] = useState(true)
+  const { deals, loading } = useDeals()
 
   // High-res global brands for premium mockup visuals
   const merchantsList = [
@@ -26,22 +27,6 @@ export default function MarketplaceScreen() {
     { name: "Nando's", domain: 'nandos.com', color: 'text-stone-800' },
     { name: 'Caribou Coffee', domain: 'cariboucoffee.com', color: 'text-blue-700' },
   ]
-
-  useEffect(() => {
-    fetchDeals()
-  }, [])
-
-  const fetchDeals = async () => {
-    setLoading(true)
-    const { data, error } = await supabase
-      .from('deals')
-      .select('id, title, brand_name, description, points_cost, category, image_url, status, expires_at, total_redeemed, max_redemptions, min_tier')
-      .eq('status', 'active')
-      .order('points_cost', { ascending: true })
-
-    if (!error && data) setDeals(data)
-    setLoading(false)
-  }
 
   // Build filter chips dynamically from the fetched categories
   const uniqueCategories = ['All', ...new Set(deals.map(d => d.category).filter(Boolean))]
@@ -99,9 +84,7 @@ export default function MarketplaceScreen() {
       {/* Deal Grid */}
       <div className="flex flex-col gap-5 mt-2">
         {loading ? (
-          Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="w-full h-36 bg-muted rounded-2xl animate-pulse" />
-          ))
+          Array.from({ length: 3 }).map((_, i) => <DealCardSkeleton key={i} />)
         ) : filteredDeals.length > 0 ? (
           filteredDeals.map((deal, i) => {
             const affordable = canAfford(deal.points_cost)
@@ -163,10 +146,11 @@ export default function MarketplaceScreen() {
             )
           })
         ) : (
-          <div className="text-center py-20">
-            <span className="material-icons-round text-5xl text-muted-foreground/20">card_giftcard</span>
-            <p className="text-muted-foreground font-medium mt-3">{t('no_rewards')}</p>
-          </div>
+          <EmptyState
+            icon="card_giftcard"
+            title={t('no_rewards')}
+            subtitle="Check back soon for new deals."
+          />
         )}
       </div>
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { RevealLayout } from '@/components/RevealLayout'
 import { useAuth } from '@/contexts/AuthProvider'
@@ -9,36 +9,22 @@ import { supabase } from '@/lib/supabaseClient'
 
 export default function ProfileScreen() {
   const navigate = useNavigate()
-  const { user, signOut } = useAuth()
+  const { user, profile, signOut } = useAuth()
   const { points } = usePoints()
   const { t, language, toggleLanguage } = useLanguage()
   const { isDarkMode, toggleTheme } = useTheme()
 
-  const [profile, setProfile] = useState(null)
   const [sessionCount, setSessionCount] = useState(0)
 
   useEffect(() => {
-    if (user?.id) {
-      fetchProfile(user.id)
-      fetchSessionCount(user.id)
-    }
+    if (user?.id) fetchSessionCount(user.id)
   }, [user])
-
-  const fetchProfile = async (userId) => {
-    const { data } = await supabase
-      .from('profiles')
-      .select('display_name, avatar_url, gender, language')
-      .eq('id', userId)
-      .single()
-    if (data) setProfile(data)
-  }
 
   const fetchSessionCount = async (userId) => {
     const { count } = await supabase
-      .from('volunteer_sessions')
+      .from('opportunity_signups')
       .select('id', { count: 'exact', head: true })
       .eq('user_id', userId)
-      .eq('status', 'confirmed')
     setSessionCount(count || 0)
   }
 
@@ -61,10 +47,9 @@ export default function ProfileScreen() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background px-6 pt-12 pb-24">
-      {/* Profile Header */}
       <RevealLayout className="flex flex-col items-center justify-center text-center mt-6 mb-10">
         <div className="relative mb-4">
-          <div className="w-28 h-28 bg-primary/10 rounded-full border-4 border-primary/30 shadow-xl flex items-center justify-center text-4xl text-white overflow-hidden">
+          <div className="w-28 h-28 bg-primary/10 rounded-full border-4 border-primary/30 shadow-xl flex items-center justify-center overflow-hidden">
             {avatarUrl ? (
               <img src={avatarUrl} alt={displayName} className="w-full h-full object-cover" />
             ) : (
@@ -73,7 +58,7 @@ export default function ProfileScreen() {
               </div>
             )}
           </div>
-          <button 
+          <button
             onClick={() => navigate('/profile/edit')}
             className="absolute bottom-0.5 end-0.5 w-9 h-9 bg-primary text-primary-foreground shadow-lg border-2 border-background rounded-full flex items-center justify-center hover:scale-110 transition-transform"
           >
@@ -83,7 +68,6 @@ export default function ProfileScreen() {
         <h2 className="text-2xl font-extrabold text-foreground capitalize">{displayName}</h2>
         <p className="text-sm font-medium text-muted-foreground">{user?.email}</p>
 
-        {/* Stats */}
         <div className="flex items-center gap-4 mt-6 w-full">
           <div className="flex-1 bg-card rounded-2xl p-4 shadow-soft border border-border/50 text-center">
             <h4 className="text-2xl font-black text-primary">{points.toLocaleString()}</h4>
@@ -96,7 +80,6 @@ export default function ProfileScreen() {
         </div>
       </RevealLayout>
 
-      {/* Settings List */}
       <RevealLayout delay={0.2} className="flex-1 flex flex-col space-y-2">
         {settingsList.map((item, i) => (
           <button
@@ -115,7 +98,6 @@ export default function ProfileScreen() {
               </div>
               <span className="font-bold text-foreground">{item.label}</span>
             </div>
-            
             {item.toggleValue !== undefined ? (
               <div className={`w-10 h-5 rounded-full relative transition-colors ${item.toggleValue ? 'bg-primary' : 'bg-muted'}`}>
                 <div className={`w-3.5 h-3.5 rounded-full bg-white absolute top-0.5 transition-all ${item.toggleValue ? 'start-6' : 'start-1'}`} />
@@ -127,7 +109,6 @@ export default function ProfileScreen() {
         ))}
       </RevealLayout>
 
-      {/* Sign Out */}
       <RevealLayout delay={0.4} className="mt-8">
         <button
           onClick={handleLogout}
@@ -139,4 +120,3 @@ export default function ProfileScreen() {
     </div>
   )
 }
-

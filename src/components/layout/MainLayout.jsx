@@ -1,4 +1,3 @@
-import React from 'react'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
@@ -24,20 +23,22 @@ export default function MainLayout() {
         </div>
 
         {/* Bottom Navigation Bar */}
-        <nav className="fixed bottom-0 w-full max-w-md bg-card text-card-foreground border-t border-border shadow-[0_-4px_20px_rgba(0,0,0,0.03)] z-50 rounded-t-3xl pb-safe pt-2 px-6">
+        <nav aria-label="Main navigation" className="fixed bottom-0 w-full max-w-md bg-card text-card-foreground border-t border-border shadow-[0_-4px_20px_rgba(0,0,0,0.03)] z-50 rounded-t-3xl pb-safe pt-2 px-6">
           <ul className="flex justify-between items-center h-16">
             {navItems.map((item) => {
               const isActive = location.pathname.startsWith(item.path)
               return (
                 <li key={item.path} className="relative flex-1">
-                  <button 
+                  <button
                     onClick={() => navigate(item.path)}
+                    aria-label={item.label}
+                    aria-current={isActive ? 'page' : undefined}
                     className={cn(
                       "w-full flex flex-col items-center justify-center gap-1 transition-colors duration-200",
                       isActive ? "text-primary" : "text-muted-foreground/60 hover:text-muted-foreground"
                     )}
                   >
-                    <span className="material-icons-round text-2xl">{item.icon}</span>
+                    <span className="material-icons-round text-2xl" aria-hidden="true">{item.icon}</span>
                     <span className="text-[10px] font-bold uppercase tracking-wider">{item.label}</span>
                   </button>
                   {/* Active Indicator Animation */}

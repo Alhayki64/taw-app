@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { RevealLayout } from '../components/RevealLayout'
-import { Button } from '../components/ui/button'
-import { Card } from '../components/ui/card'
-import { cn } from '../lib/utils'
-import { supabase } from '../lib/supabaseClient'
-import { useLanguage } from '../contexts/LanguageProvider'
+import { RevealLayout } from '@/components/RevealLayout'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { cn } from '@/lib/utils'
+import { supabase } from '@/lib/supabaseClient'
+import { useLanguage } from '@/contexts/LanguageProvider'
 
 export default function GenderSelection() {
   const navigate = useNavigate()

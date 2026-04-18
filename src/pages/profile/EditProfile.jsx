@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { RevealLayout } from '@/components/RevealLayout'
 import SubPageHeader from '@/components/layout/SubPageHeader'
@@ -7,7 +7,7 @@ import { supabase } from '@/lib/supabaseClient'
 
 export default function EditProfile() {
   const navigate = useNavigate()
-  const { user } = useAuth()
+  const { user, refreshProfile } = useAuth()
   const fileInputRef = useRef(null)
 
   const [displayName, setDisplayName] = useState('')
@@ -48,6 +48,7 @@ export default function EditProfile() {
     if (err) {
       setError(err.message)
     } else {
+      refreshProfile()
       setSaved(true)
       setTimeout(() => navigate('/profile'), 1000)
     }

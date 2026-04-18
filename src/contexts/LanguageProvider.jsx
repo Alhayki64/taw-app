@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from 'react'
-import { translations } from '../lib/translations'
-import { supabase } from '../lib/supabaseClient'
+import { createContext, useContext, useState, useEffect } from 'react'
+import { translations } from '@/lib/translations'
+import { supabase } from '@/lib/supabaseClient'
 import { useAuth } from './AuthProvider'
 
 const LanguageContext = createContext()

@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from 'react'
+import { createContext, useContext, useState, useEffect, useRef } from 'react'
 import { supabase } from '@/lib/supabaseClient'
+import { fireTierUpConfetti } from '@/lib/confetti'
 
 const PointsContext = createContext()
 
@@ -8,42 +9,74 @@ export const usePoints = () => useContext(PointsContext)
 export const PointsProvider = ({ children }) => {
   const [points, setPoints] = useState(0)
   const [loading, setLoading] = useState(true)
+  const prevTierRef = useRef(null)
+
+  const getTierName = (pts) => {
+    if (pts >= 3000) return 'Platinum'
+    if (pts >= 1500) return 'Gold'
+    if (pts >= 500) return 'Silver'
+    return 'Bronze'
+  }
 
   useEffect(() => {
-    // Fetch points whenever auth state changes
+    let realtimeChannel = null
+
+    const setupUser = async (userId) => {
+      // Initial fetch
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('points')
+        .eq('id', userId)
+        .single()
+      if (!error && data) {
+        const initialPoints = data.points ?? 0
+        setPoints(initialPoints)
+        prevTierRef.current = getTierName(initialPoints)
+      }
+      setLoading(false)
+
+      // Real-time subscription for live points updates
+      realtimeChannel = supabase
+        .channel(`profile-points-${userId}`)
+        .on('postgres_changes', {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'profiles',
+          filter: `id=eq.${userId}`,
+        }, (payload) => {
+          if (payload.new?.points !== undefined) {
+            const newPoints = payload.new.points
+            const newTier = getTierName(newPoints)
+            if (prevTierRef.current && newTier !== prevTierRef.current) {
+              fireTierUpConfetti()
+            }
+            prevTierRef.current = newTier
+            setPoints(newPoints)
+          }
+        })
+        .subscribe()
+    }
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.user) {
-        fetchPoints(session.user.id)
+        setupUser(session.user.id)
       } else {
         setPoints(0)
         setLoading(false)
+        if (realtimeChannel) supabase.removeChannel(realtimeChannel)
       }
     })
 
-    // Also fetch on first mount if session already exists
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        fetchPoints(session.user.id)
-      } else {
-        setLoading(false)
-      }
+      if (session?.user) setupUser(session.user.id)
+      else setLoading(false)
     })
 
-    return () => subscription.unsubscribe()
-  }, [])
-
-  const fetchPoints = async (userId) => {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('points')
-      .eq('id', userId)
-      .single()
-
-    if (!error && data) {
-      setPoints(data.points ?? 0)
+    return () => {
+      subscription.unsubscribe()
+      if (realtimeChannel) supabase.removeChannel(realtimeChannel)
     }
-    setLoading(false)
-  }
+  }, [])
 
   const addPoints = (amount) => setPoints((prev) => prev + amount)
 

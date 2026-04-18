@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { RevealLayout } from '../components/RevealLayout'
-import { Button } from '../components/ui/button'
-import { useAuth } from '../contexts/AuthProvider'
-import { useLanguage } from '../contexts/LanguageProvider'
+import { RevealLayout } from '@/components/RevealLayout'
+import { Button } from '@/components/ui/button'
+import { useAuth } from '@/contexts/AuthProvider'
+import { useLanguage } from '@/contexts/LanguageProvider'
 
 export default function WelcomeScreen() {
   const navigate = useNavigate()

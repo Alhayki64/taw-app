@@ -1,27 +1,27 @@
-import React, { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { RevealLayout } from '@/components/RevealLayout'
-import { BentoGrid, BentoBlock } from '@/components/ui/bento'
 import { ImpactCard } from '@/components/ui/impact-card'
 import { useAuth } from '@/contexts/AuthProvider'
 import { usePoints } from '@/contexts/PointsProvider'
 import { supabase } from '@/lib/supabaseClient'
+import { useOpportunities } from '@/hooks/useOpportunities'
+import { OpportunityCardSkeleton } from '@/components/ui/Skeleton'
+import { EmptyState } from '@/components/ui/EmptyState'
 
 export default function HomeScreen() {
   const navigate = useNavigate()
-  const { user } = useAuth()
+  const { user, profile } = useAuth()
   const { points, getTierInfo } = usePoints()
   const tier = getTierInfo()
 
-  const [opportunities, setOpportunities] = useState([])
-  const [feedLoading, setFeedLoading] = useState(true)
+  const { opportunities, loading: feedLoading } = useOpportunities()
   const [activeCategory, setActiveCategory] = useState('All')
   const [searchQuery, setSearchQuery] = useState('')
   const [notificationsOpen, setNotificationsOpen] = useState(false)
   const [notifications, setNotifications] = useState([])
   const [notifsLoading, setNotifsLoading] = useState(false)
-
 
   const categories = [
     { key: 'All',           label: 'All',         icon: 'apps' },
@@ -30,24 +30,6 @@ export default function HomeScreen() {
     { key: 'Elderly',       label: 'Elderly',     icon: 'elderly' },
     { key: 'Education',     label: 'Education',   icon: 'school' },
   ]
-
-  useEffect(() => {
-    fetchOpportunities()
-  }, [])
-
-  const fetchOpportunities = async () => {
-    setFeedLoading(true)
-    const { data, error } = await supabase
-      .from('opportunities')
-      .select('id, title, description, category, location, points, image_url, is_urgent, date, org_name, time_range, spots, spots_filled')
-      .eq('status', 'active')
-      .order('is_urgent', { ascending: false })
-      .order('created_at', { ascending: false })
-      .limit(20)
-
-    if (!error && data) setOpportunities(data)
-    setFeedLoading(false)
-  }
 
   const fetchNotifications = async () => {
     setNotifsLoading(true)
@@ -106,7 +88,8 @@ export default function HomeScreen() {
   const urgentOpps = opportunities.filter(o => o.is_urgent)
   const displayFeed = finalFeed.length > 0 ? finalFeed : (searchQuery ? [] : opportunities)
 
-  const displayName = user?.user_metadata?.name || user?.email?.split('@')[0] || 'Volunteer'
+  const displayName = profile?.display_name || user?.user_metadata?.name || user?.email?.split('@')[0] || 'Volunteer'
+  const avatarUrl = profile?.avatar_url
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
@@ -114,19 +97,24 @@ export default function HomeScreen() {
       <RevealLayout className="px-6 pt-12 pb-6 bg-primary text-primary-foreground rounded-b-[40px] shadow-lg">
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-              <span className="material-icons-round text-white">person</span>
+            <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm overflow-hidden">
+              {avatarUrl
+                ? <img src={avatarUrl} alt={displayName} className="w-full h-full object-cover" />
+                : <span className="material-icons-round text-white">person</span>
+              }
             </div>
             <div>
               <p className="text-xs font-medium opacity-80 uppercase tracking-widest">Welcome back,</p>
               <h2 className="text-xl font-bold capitalize">{displayName}</h2>
             </div>
           </div>
-          <button 
+          <button
             onClick={() => { setNotificationsOpen(o => !o); if (!notificationsOpen) fetchNotifications() }}
+            aria-label="Notifications"
+            aria-expanded={notificationsOpen}
             className="relative w-10 h-10 rounded-full flex items-center justify-center bg-white/10 hover:bg-white/20 transition-colors"
           >
-            <span className="material-icons-round">notifications</span>
+            <span className="material-icons-round" aria-hidden="true">notifications</span>
             <span className="absolute top-2 right-2 w-2 h-2 bg-red-400 rounded-full border border-primary"></span>
           </button>
         </div>
@@ -315,10 +303,7 @@ export default function HomeScreen() {
         {/* Opportunities Feed */}
         <RevealLayout delay={0.3} className="flex flex-col gap-4">
           {feedLoading ? (
-            // Skeleton loaders
-            Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="w-full h-44 bg-muted rounded-2xl animate-pulse" />
-            ))
+            Array.from({ length: 3 }).map((_, i) => <OpportunityCardSkeleton key={i} />)
           ) : displayFeed.length > 0 ? (
             displayFeed.map((opp, idx) => (
               <motion.div
@@ -331,7 +316,7 @@ export default function HomeScreen() {
               >
                 <div className="w-20 h-20 rounded-xl overflow-hidden shrink-0 bg-muted">
                   {opp.image_url ? (
-                    <img src={opp.image_url} alt={opp.title} className="w-full h-full object-cover" />
+                    <img src={opp.image_url} alt={opp.title} loading="lazy" decoding="async" className="w-full h-full object-cover" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-muted-foreground">
                       <span className="material-icons-round text-3xl">volunteer_activism</span>
@@ -363,10 +348,11 @@ export default function HomeScreen() {
               </motion.div>
             ))
           ) : (
-            <div className="text-center py-16">
-              <span className="material-icons-round text-5xl text-muted-foreground/30">search_off</span>
-              <p className="text-muted-foreground font-medium mt-3">No opportunities found in this category.</p>
-            </div>
+            <EmptyState
+              icon="search_off"
+              title="No opportunities found"
+              subtitle="Try a different category or check back later."
+            />
           )}
         </RevealLayout>
 
