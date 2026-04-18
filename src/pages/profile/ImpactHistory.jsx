@@ -3,12 +3,19 @@ import { motion } from 'framer-motion'
 import { RevealLayout } from '@/components/RevealLayout'
 import SubPageHeader from '@/components/layout/SubPageHeader'
 import { useAuth } from '@/contexts/AuthProvider'
-import { usePoints } from '@/contexts/PointsProvider'
+import { useLanguage } from '@/contexts/LanguageProvider'
 import { supabase } from '@/lib/supabaseClient'
 
 export default function ImpactHistory() {
   const { user } = useAuth()
-  const { points } = usePoints()
+  const { t } = useLanguage()
+
+  const statusConfig = {
+    confirmed:  { label: t('status_confirmed'),  icon: 'check_circle',  color: 'text-green-600',  bg: 'bg-green-50 dark:bg-green-950'  },
+    pending:    { label: t('status_applied'),     icon: 'hourglass_top', color: 'text-amber-600',  bg: 'bg-amber-50 dark:bg-amber-950'  },
+    checked_in: { label: t('status_checked_in'),  icon: 'login',         color: 'text-blue-600',   bg: 'bg-blue-50 dark:bg-blue-950'   },
+    cancelled:  { label: t('status_cancelled'),   icon: 'cancel',        color: 'text-red-500',    bg: 'bg-red-50 dark:bg-red-950'    },
+  }
 
   const [sessions, setSessions] = useState([])
   const [loading, setLoading] = useState(true)
@@ -35,13 +42,6 @@ export default function ImpactHistory() {
     setLoading(false)
   }
 
-  const statusConfig = {
-    confirmed:  { label: 'Confirmed',  icon: 'check_circle',  color: 'text-green-600',  bg: 'bg-green-50 dark:bg-green-950'  },
-    pending:    { label: 'Applied',    icon: 'hourglass_top', color: 'text-amber-600',  bg: 'bg-amber-50 dark:bg-amber-950'  },
-    checked_in: { label: 'Checked In', icon: 'login',         color: 'text-blue-600',   bg: 'bg-blue-50 dark:bg-blue-950'   },
-    cancelled:  { label: 'Cancelled',  icon: 'cancel',        color: 'text-red-500',    bg: 'bg-red-50 dark:bg-red-950'    },
-  }
-
   const totalPoints = sessions.reduce((sum, s) => {
     if (s.status === 'confirmed' || s.checked_in) return sum + (s.opportunities?.points || 0)
     return sum
@@ -50,23 +50,23 @@ export default function ImpactHistory() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <SubPageHeader title="Impact History" />
+      <SubPageHeader title={t('impact_history')} />
 
       {/* Stats Banner */}
       <RevealLayout className="mx-6 mt-6 mb-4 bg-primary text-primary-foreground rounded-3xl p-5 flex justify-around">
         <div className="text-center">
           <p className="text-3xl font-black">{sessions.length}</p>
-          <p className="text-[10px] font-bold uppercase tracking-widest opacity-80 mt-1">Sessions</p>
+          <p className="text-[10px] font-bold uppercase tracking-widest opacity-80 mt-1">{t('stat_sessions')}</p>
         </div>
         <div className="w-px bg-white/20 self-stretch" />
         <div className="text-center">
           <p className="text-3xl font-black">{totalHours.toFixed(1)}</p>
-          <p className="text-[10px] font-bold uppercase tracking-widest opacity-80 mt-1">Hours</p>
+          <p className="text-[10px] font-bold uppercase tracking-widest opacity-80 mt-1">{t('stat_hours')}</p>
         </div>
         <div className="w-px bg-white/20 self-stretch" />
         <div className="text-center">
           <p className="text-3xl font-black">{totalPoints.toLocaleString()}</p>
-          <p className="text-[10px] font-bold uppercase tracking-widest opacity-80 mt-1">Pts Earned</p>
+          <p className="text-[10px] font-bold uppercase tracking-widest opacity-80 mt-1">{t('stat_pts_earned')}</p>
         </div>
       </RevealLayout>
 
@@ -79,9 +79,9 @@ export default function ImpactHistory() {
         ) : sessions.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center py-20 text-center">
             <span className="material-icons-round text-6xl text-muted-foreground/20 mb-4">volunteer_activism</span>
-            <h3 className="font-extrabold text-foreground text-lg mb-1">No sessions yet</h3>
+            <h3 className="font-extrabold text-foreground text-lg mb-1">{t('no_sessions')}</h3>
             <p className="text-muted-foreground text-sm font-medium max-w-xs">
-              Your volunteer history will appear here once you check in to your first opportunity.
+              {t('no_sessions_desc')}
             </p>
           </div>
         ) : (
@@ -119,7 +119,7 @@ export default function ImpactHistory() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-2">
                       <h4 className="font-extrabold text-foreground text-sm leading-snug line-clamp-1">
-                        {opp?.title || 'Volunteer Session'}
+                        {opp?.title || t('volunteer_session')}
                       </h4>
                       {opp?.points > 0 && (
                         <span className="text-primary font-black text-sm shrink-0">+{opp.points}</span>

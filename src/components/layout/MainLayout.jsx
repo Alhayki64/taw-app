@@ -1,15 +1,17 @@
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
+import { useLanguage } from '@/contexts/LanguageProvider'
 
 export default function MainLayout() {
   const navigate = useNavigate()
   const location = useLocation()
-  
+  const { t } = useLanguage()
+
   const navItems = [
-    { path: '/home', icon: 'home', label: 'Home' },
-    { path: '/rewards', icon: 'workspace_premium', label: 'Rewards' },
-    { path: '/profile', icon: 'person', label: 'Profile' },
+    { path: '/home', icon: 'home', label: t('nav_home') },
+    { path: '/rewards', icon: 'workspace_premium', label: t('nav_rewards') },
+    { path: '/profile', icon: 'person', label: t('nav_profile') },
   ]
 
   return (

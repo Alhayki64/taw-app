@@ -3,11 +3,13 @@ import { useNavigate } from 'react-router-dom'
 import { RevealLayout } from '@/components/RevealLayout'
 import SubPageHeader from '@/components/layout/SubPageHeader'
 import { useAuth } from '@/contexts/AuthProvider'
+import { useLanguage } from '@/contexts/LanguageProvider'
 import { supabase } from '@/lib/supabaseClient'
 
 export default function EditProfile() {
   const navigate = useNavigate()
   const { user, refreshProfile } = useAuth()
+  const { t } = useLanguage()
   const fileInputRef = useRef(null)
 
   const [displayName, setDisplayName] = useState('')
@@ -36,7 +38,7 @@ export default function EditProfile() {
   }
 
   const handleSave = async () => {
-    if (!displayName.trim()) { setError('Name cannot be empty.'); return }
+    if (!displayName.trim()) { setError(t('name_empty_error')); return }
     setSaving(true)
     setError('')
 
@@ -60,7 +62,7 @@ export default function EditProfile() {
   const handleFileChange = async (e) => {
     const file = e.target.files?.[0]
     if (!file) return
-    if (file.size > 5 * 1024 * 1024) { setError('Image must be under 5 MB.'); return }
+    if (file.size > 5 * 1024 * 1024) { setError(t('image_size_error')); return }
 
     setUploading(true)
     setError('')
@@ -73,7 +75,7 @@ export default function EditProfile() {
       .upload(path, file, { upsert: true, contentType: file.type })
 
     if (uploadErr) {
-      setError('Upload failed: ' + uploadErr.message)
+      setError(t('upload_failed') + uploadErr.message)
     } else {
       const { data } = supabase.storage.from('avatars').getPublicUrl(path)
       setAvatarUrl(data.publicUrl)
@@ -84,7 +86,7 @@ export default function EditProfile() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <SubPageHeader title="Edit Profile" />
+        <SubPageHeader title={t('edit_profile')} />
         <div className="px-6 pt-8 space-y-4">
           {[1,2,3].map(i => <div key={i} className="h-16 bg-muted rounded-2xl animate-pulse" />)}
         </div>
@@ -94,7 +96,7 @@ export default function EditProfile() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <SubPageHeader title="Edit Profile" />
+      <SubPageHeader title={t('edit_profile')} />
 
       <div className="flex-1 px-6 pt-8 flex flex-col gap-6">
 
@@ -144,7 +146,7 @@ export default function EditProfile() {
             onChange={handleFileChange}
           />
           <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
-            {uploading ? 'Uploading...' : 'Tap to change photo'}
+            {uploading ? t('uploading') : t('upload_photo')}
           </p>
         </RevealLayout>
 
@@ -157,14 +159,14 @@ export default function EditProfile() {
 
         {/* Display Name */}
         <RevealLayout delay={0.1} className="space-y-1.5">
-          <label className="text-xs font-bold text-foreground px-1 uppercase tracking-wider">Display Name</label>
+          <label className="text-xs font-bold text-foreground px-1 uppercase tracking-wider">{t('display_name')}</label>
           <div className="flex items-center h-14 bg-card text-card-foreground rounded-2xl shadow-sm border border-border focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 overflow-hidden transition-all px-4">
             <span className="material-icons-round text-muted-foreground/60 mr-3">badge</span>
             <input
               type="text"
               value={displayName}
               onChange={e => setDisplayName(e.target.value)}
-              placeholder="Your name"
+              placeholder={t('your_name')}
               className="w-full h-full outline-none text-base font-medium text-foreground bg-transparent placeholder:text-muted-foreground/40"
             />
           </div>
@@ -172,7 +174,7 @@ export default function EditProfile() {
 
         {/* Read-only email */}
         <RevealLayout delay={0.2} className="space-y-1.5">
-          <label className="text-xs font-bold text-foreground px-1 uppercase tracking-wider">Email</label>
+          <label className="text-xs font-bold text-foreground px-1 uppercase tracking-wider">{t('email')}</label>
           <div className="flex items-center h-14 bg-muted/50 rounded-2xl border border-border/50 overflow-hidden px-4 opacity-60">
             <span className="material-icons-round text-muted-foreground/60 mr-3">email</span>
             <span className="text-base font-medium text-muted-foreground">{user?.email}</span>
@@ -196,14 +198,14 @@ export default function EditProfile() {
         >
           {saved ? (
             <span className="flex items-center justify-center gap-2">
-              <span className="material-icons-round text-sm">check_circle</span> Saved!
+              <span className="material-icons-round text-sm">check_circle</span> {t('saved')}
             </span>
           ) : saving ? (
             <span className="flex items-center justify-center gap-2">
-              <span className="material-icons-round animate-spin text-sm">sync</span> Saving...
+              <span className="material-icons-round animate-spin text-sm">sync</span> {t('saving')}
             </span>
           ) : (
-            'Save Changes'
+            t('save_changes')
           )}
         </button>
       </div>

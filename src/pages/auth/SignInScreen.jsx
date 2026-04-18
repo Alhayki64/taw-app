@@ -54,7 +54,7 @@ export default function SignInScreen() {
         <RevealLayout delay={0.1} className="space-y-3 mb-10">
           <h1 className="text-3xl font-extrabold text-foreground tracking-tight">{t('welcome_back')}</h1>
           <p className="text-muted-foreground font-medium text-lg leading-relaxed">
-            Sign in to continue making an impact.
+            {t('sign_in_desc')}
           </p>
         </RevealLayout>
 
@@ -84,7 +84,7 @@ export default function SignInScreen() {
                 type="password" 
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                placeholder="Enter password" 
+                placeholder={t('enter_password')}
                 className="w-full h-full outline-none text-base font-medium text-foreground bg-transparent placeholder:text-muted-foreground/50"
               />
             </div>
@@ -92,7 +92,7 @@ export default function SignInScreen() {
           </div>
 
           <div className="flex justify-end">
-            <button onClick={() => navigate('/forgot-password')} className="text-sm font-bold text-primary hover:underline">Forgot Password?</button>
+            <button onClick={() => navigate('/forgot-password')} className="text-sm font-bold text-primary hover:underline">{t('forgot_password_link')}</button>
           </div>
         </RevealLayout>
 

@@ -4,11 +4,13 @@ import { RevealLayout } from '@/components/RevealLayout'
 import { Button } from '@/components/ui/button'
 import { supabase } from '@/lib/supabaseClient'
 import { useToast } from '@/contexts/ToastProvider'
+import { useLanguage } from '@/contexts/LanguageProvider'
 import { forgotPasswordSchema } from '@/lib/schemas'
 
 export default function ForgotPasswordScreen() {
   const navigate = useNavigate()
   const toast = useToast()
+  const { t } = useLanguage()
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [sent, setSent] = useState(false)
@@ -53,26 +55,26 @@ export default function ForgotPasswordScreen() {
             <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-6">
               <span className="material-icons-round text-primary text-4xl">mark_email_read</span>
             </div>
-            <h1 className="text-2xl font-extrabold text-foreground mb-3">Check your email</h1>
+            <h1 className="text-2xl font-extrabold text-foreground mb-3">{t('check_your_email')}</h1>
             <p className="text-muted-foreground font-medium leading-relaxed mb-8">
-              We sent a password reset link to <span className="font-bold text-foreground">{email}</span>
+              {t('reset_link_sent')} <span className="font-bold text-foreground">{email}</span>
             </p>
             <Button className="w-full h-14 text-lg" onClick={() => navigate('/signin')}>
-              Back to Sign In
+              {t('back_to_sign_in')}
             </Button>
           </RevealLayout>
         ) : (
           <>
             <RevealLayout delay={0.1} className="space-y-3 mb-10">
-              <h1 className="text-3xl font-extrabold text-foreground tracking-tight">Forgot password?</h1>
+              <h1 className="text-3xl font-extrabold text-foreground tracking-tight">{t('forgot_password')}</h1>
               <p className="text-muted-foreground font-medium text-lg leading-relaxed">
-                Enter your email and we'll send you a reset link.
+                {t('forgot_password_desc')}
               </p>
             </RevealLayout>
 
             <RevealLayout delay={0.2} className="space-y-4">
               <div className="space-y-1.5">
-                <label htmlFor="forgot-email" className="text-xs font-bold text-foreground px-1 uppercase tracking-wider">Email</label>
+                <label htmlFor="forgot-email" className="text-xs font-bold text-foreground px-1 uppercase tracking-wider">{t('email')}</label>
                 <div className={`flex items-center h-14 bg-card rounded-xl shadow-sm border overflow-hidden transition-all px-4 focus-within:ring-2 focus-within:ring-primary ${errors.email ? 'border-destructive' : 'border-border'}`}>
                   <span className="material-icons-round text-muted-foreground/60 me-3" aria-hidden="true">email</span>
                   <input
@@ -96,7 +98,7 @@ export default function ForgotPasswordScreen() {
                 onClick={handleSend}
                 disabled={!email || loading}
               >
-                {loading ? 'Sending...' : 'Send Reset Link'}
+                {loading ? t('sending') : t('send_reset_link')}
               </Button>
             </RevealLayout>
           </>

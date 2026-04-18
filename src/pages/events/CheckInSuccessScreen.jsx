@@ -4,10 +4,12 @@ import { motion } from 'framer-motion'
 import { RevealLayout } from '@/components/RevealLayout'
 import { Button } from '@/components/ui/button'
 import confetti from 'canvas-confetti'
+import { useLanguage } from '@/contexts/LanguageProvider'
 
 export default function CheckInSuccessScreen() {
   const navigate = useNavigate()
   const location = useLocation()
+  const { t } = useLanguage()
   const event = location.state?.event
 
   useEffect(() => {
@@ -35,7 +37,7 @@ export default function CheckInSuccessScreen() {
           <span className="material-icons-round text-6xl text-primary">check_circle</span>
         </motion.div>
 
-        <h1 className="text-4xl font-extrabold tracking-tight mb-3">You're signed up!</h1>
+        <h1 className="text-4xl font-extrabold tracking-tight mb-3">{t('signed_up')}</h1>
 
         {event?.title && (
           <p className="text-base font-bold opacity-90 mb-1">
@@ -44,9 +46,7 @@ export default function CheckInSuccessScreen() {
         )}
 
         <p className="text-base font-medium opacity-75 max-w-sm mb-10">
-          {event?.title
-            ? "You're committed to this mission. See you there! 🌱"
-            : "Thank you for volunteering. You've officially signed up and are ready to make an impact."}
+          {event?.title ? t('committed_mission') : t('thank_you_volunteering')}
         </p>
 
         {/* Info Cards */}
@@ -55,12 +55,12 @@ export default function CheckInSuccessScreen() {
           <div className="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/20 flex items-center gap-4">
             <span className="material-icons-round text-amber-300 text-3xl">stars</span>
             <div className="text-left">
-              <p className="text-xs font-bold uppercase tracking-wider opacity-75">Points on Completion</p>
+              <p className="text-xs font-bold uppercase tracking-wider opacity-75">{t('points_on_completion')}</p>
               <p className="text-xl font-black">
-                {event?.points ? `+${event.points} pts` : 'Pending'}
+                {event?.points ? `+${event.points} ${t('pts')}` : t('pending')}
               </p>
             </div>
-            <span className="ml-auto text-xs bg-white/10 px-2 py-1 rounded-full font-bold">Pending</span>
+            <span className="ml-auto text-xs bg-white/10 px-2 py-1 rounded-full font-bold">{t('pending')}</span>
           </div>
 
           {/* Date Card */}
@@ -68,7 +68,7 @@ export default function CheckInSuccessScreen() {
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/20 flex items-center gap-4">
               <span className="material-icons-round text-white/80 text-3xl">calendar_month</span>
               <div className="text-left">
-                <p className="text-xs font-bold uppercase tracking-wider opacity-75">Event Date</p>
+                <p className="text-xs font-bold uppercase tracking-wider opacity-75">{t('event_date')}</p>
                 <p className="text-base font-bold">
                   {new Date(event?.event_date || event?.date).toLocaleDateString('en-BH', { weekday: 'long', month: 'short', day: 'numeric' })}
                 </p>
@@ -81,7 +81,7 @@ export default function CheckInSuccessScreen() {
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/20 flex items-center gap-4">
               <span className="material-icons-round text-white/80 text-3xl">location_on</span>
               <div className="text-left">
-                <p className="text-xs font-bold uppercase tracking-wider opacity-75">Location</p>
+                <p className="text-xs font-bold uppercase tracking-wider opacity-75">{t('location')}</p>
                 <p className="text-base font-bold">{event.location}</p>
               </div>
             </div>
@@ -94,13 +94,13 @@ export default function CheckInSuccessScreen() {
           className="w-full h-14 text-lg bg-white text-primary hover:bg-gray-100 shadow-lift font-bold" 
           onClick={() => navigate('/home')}
         >
-          Back to Home
+          {t('back_home')}
         </Button>
-        <button 
+        <button
           onClick={() => navigate('/profile/history')}
           className="w-full h-12 text-sm font-bold text-white/70 hover:text-white transition-colors"
         >
-          View My Impact History →
+          {t('view_impact_history')} →
         </button>
       </RevealLayout>
     </div>
