@@ -7,12 +7,16 @@ import { useLanguage } from '@/contexts/LanguageProvider'
 import { useDeals } from '@/hooks/useDeals'
 import { DealCardSkeleton } from '@/components/ui/Skeleton'
 import { EmptyState } from '@/components/ui/EmptyState'
+import { useAuth } from '@/contexts/AuthProvider'
+import { AuthModal } from '@/components/ui/AuthModal'
 
 export default function MarketplaceScreen() {
   const navigate = useNavigate()
   const { points } = usePoints()
   const { t } = useLanguage()
+  const { user } = useAuth()
   const [activeFilter, setActiveFilter] = useState('All')
+  const [showAuthModal, setShowAuthModal] = useState(false)
   const { deals, loading } = useDeals()
 
   // High-res global brands for premium mockup visuals
@@ -50,7 +54,7 @@ export default function MarketplaceScreen() {
         </div>
         <div className="bg-card text-card-foreground px-3 py-2 rounded-xl shadow-sm border border-border flex flex-col items-center justify-center min-w-[56px]">
           <span className="text-primary font-black text-lg leading-none">{points}</span>
-          <span className="text-[9px] uppercase font-bold text-muted-foreground tracking-widest">PTS</span>
+          <span className="text-[9px] uppercase font-bold text-muted-foreground tracking-widest">{t('pts')}</span>
         </div>
       </RevealLayout>
 
@@ -94,7 +98,10 @@ export default function MarketplaceScreen() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.06 }}
-                onClick={() => navigate(`/rewards/${deal.id}`)}
+                onClick={() => {
+                  if (!user) { setShowAuthModal(true); return }
+                  navigate(`/rewards/${deal.id}`)
+                }}
                 className={`cursor-pointer bg-card rounded-3xl overflow-hidden border shadow-soft transition-all active:scale-[0.99] hover:shadow-lift ${
                   affordable ? 'border-border/50' : 'border-border/30 opacity-75'
                 }`}
@@ -105,7 +112,7 @@ export default function MarketplaceScreen() {
                     <img src={deal.image_url} alt={deal.brand_name} className="w-full h-full object-cover origin-center transition-transform duration-500 hover:scale-105" />
                   ) : (
                     <span className="text-4xl font-black text-muted-foreground/20 uppercase tracking-widest">
-                      {deal.brand_name?.[0] || '?'}
+                      {t(deal.brand_name)?.[0] || '?'}
                     </span>
                   )}
                   {deal.category && (
@@ -118,10 +125,10 @@ export default function MarketplaceScreen() {
                 </div>
 
                 <div className="p-5">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-primary mb-1">{deal.brand_name}</p>
-                  <h4 className="font-extrabold text-foreground text-lg leading-tight">{deal.title}</h4>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-primary mb-1">{t(deal.brand_name)}</p>
+                  <h4 className="font-extrabold text-foreground text-lg leading-tight">{t(deal.title)}</h4>
                   {deal.description && (
-                    <p className="text-sm font-medium text-muted-foreground mt-1.5 line-clamp-2">{deal.description}</p>
+                    <p className="text-sm font-medium text-muted-foreground mt-1.5 line-clamp-2">{t(deal.description)}</p>
                   )}
 
                   <div className="flex items-center gap-2 mt-4 pt-4 border-t border-dashed border-border/60">
@@ -129,7 +136,7 @@ export default function MarketplaceScreen() {
                       <span className="material-icons-round text-amber-500 text-sm">stars</span>
                     </div>
                     <span className={`font-black text-lg ${affordable ? 'text-primary' : 'text-muted-foreground'}`}>
-                      {deal.points_cost.toLocaleString()} <span className="text-[10px] uppercase font-bold tracking-widest opacity-80">pts</span>
+                      {deal.points_cost.toLocaleString()} <span className="text-[10px] uppercase font-bold tracking-widest opacity-80">{t('pts')}</span>
                     </span>
                   </div>
                 </div>
@@ -149,7 +156,7 @@ export default function MarketplaceScreen() {
           <EmptyState
             icon="card_giftcard"
             title={t('no_rewards')}
-            subtitle="Check back soon for new deals."
+            subtitle={t('check_back_deals')}
           />
         )}
       </div>
@@ -192,6 +199,7 @@ export default function MarketplaceScreen() {
           ))}
         </div>
       </div>
+      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
     </div>
   )
 }

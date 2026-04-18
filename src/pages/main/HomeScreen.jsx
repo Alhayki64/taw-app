@@ -9,11 +9,14 @@ import { supabase } from '@/lib/supabaseClient'
 import { useOpportunities } from '@/hooks/useOpportunities'
 import { OpportunityCardSkeleton } from '@/components/ui/Skeleton'
 import { EmptyState } from '@/components/ui/EmptyState'
+import { AuthModal } from '@/components/ui/AuthModal'
+import { useLanguage } from '@/contexts/LanguageProvider'
 
 export default function HomeScreen() {
   const navigate = useNavigate()
   const { user, profile } = useAuth()
   const { points, getTierInfo } = usePoints()
+  const { t } = useLanguage()
   const tier = getTierInfo()
 
   const { opportunities, loading: feedLoading } = useOpportunities()
@@ -22,13 +25,14 @@ export default function HomeScreen() {
   const [notificationsOpen, setNotificationsOpen] = useState(false)
   const [notifications, setNotifications] = useState([])
   const [notifsLoading, setNotifsLoading] = useState(false)
+  const [showAuthModal, setShowAuthModal] = useState(false)
 
   const categories = [
-    { key: 'All',           label: 'All',         icon: 'apps' },
-    { key: 'Environment',   label: 'Environment', icon: 'park' },
-    { key: 'Community',     label: 'Community',   icon: 'people' },
-    { key: 'Elderly',       label: 'Elderly',     icon: 'elderly' },
-    { key: 'Education',     label: 'Education',   icon: 'school' },
+    { key: 'All',           label: t('cat_all'),         icon: 'apps' },
+    { key: 'Environment',   label: t('cat_environment'), icon: 'park' },
+    { key: 'Community',     label: t('cat_community'),   icon: 'people' },
+    { key: 'Elderly',       label: t('cat_elderly'),     icon: 'elderly' },
+    { key: 'Education',     label: t('cat_education'),   icon: 'school' },
   ]
 
   const fetchNotifications = async () => {
@@ -88,7 +92,7 @@ export default function HomeScreen() {
   const urgentOpps = opportunities.filter(o => o.is_urgent)
   const displayFeed = finalFeed.length > 0 ? finalFeed : (searchQuery ? [] : opportunities)
 
-  const displayName = profile?.display_name || user?.user_metadata?.name || user?.email?.split('@')[0] || 'Volunteer'
+  const displayName = profile?.display_name || user?.user_metadata?.name || user?.email?.split('@')[0] || 'Guest'
   const avatarUrl = profile?.avatar_url
 
   return (
@@ -104,12 +108,16 @@ export default function HomeScreen() {
               }
             </div>
             <div>
-              <p className="text-xs font-medium opacity-80 uppercase tracking-widest">Welcome back,</p>
+              <p className="text-xs font-medium opacity-80 uppercase tracking-widest">{t('welcome_back_text')}</p>
               <h2 className="text-xl font-bold capitalize">{displayName}</h2>
             </div>
           </div>
           <button
-            onClick={() => { setNotificationsOpen(o => !o); if (!notificationsOpen) fetchNotifications() }}
+            onClick={() => { 
+              if (!user) { setShowAuthModal(true); return; }
+              setNotificationsOpen(o => !o); 
+              if (!notificationsOpen) fetchNotifications() 
+            }}
             aria-label="Notifications"
             aria-expanded={notificationsOpen}
             className="relative w-10 h-10 rounded-full flex items-center justify-center bg-white/10 hover:bg-white/20 transition-colors"
@@ -127,11 +135,11 @@ export default function HomeScreen() {
           {/* Top Row: Title & Tier Pill */}
           <div className="flex justify-between items-start mb-1">
             <span className="text-[#a4caba] font-extrabold tracking-widest text-[10px] uppercase">
-              Tawwa Points
+              {t('tawwa_points')}
             </span>
             <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full ${tier.bg} shadow-sm`}>
               <span className="material-icons-round text-[12px] leading-none">{tier.icon}</span>
-              <span className="text-[10px] font-bold leading-none pe-0.5">{tier.name} Tier</span>
+              <span className="text-[10px] font-bold leading-none pe-0.5">{tier.name} {t('tier')}</span>
             </div>
           </div>
 
@@ -140,18 +148,18 @@ export default function HomeScreen() {
             <span className="text-white font-black text-4xl tracking-tight leading-none drop-shadow-sm">
               {points.toLocaleString()}
             </span>
-            <span className="text-[#a4caba] font-bold text-base drop-shadow-sm relative top-0.5">pts</span>
+            <span className="text-[#a4caba] font-bold text-base drop-shadow-sm relative top-0.5">{t('pts')}</span>
           </div>
 
           {/* Progress Section */}
           <div className="space-y-1.5 relative z-10">
             <div className="flex justify-between items-end">
               <span className="text-[#e2f1eb] font-medium text-[11px]">
-                {tier.name === 'Platinum' ? 'Max Level Reached' : `Progress to ${tier.nextTier}`}
+                {!user ? t('sign_up_points') : (tier.name === 'Platinum' ? t('max_level') : `${t('progress_to')} ${tier.nextTier}`)}
               </span>
-              {tier.ptsNeeded > 0 && (
+              {(tier.ptsNeeded > 0 && user) && (
                 <span className="text-[#a4caba] font-medium text-[10px]">
-                  {tier.ptsNeeded.toLocaleString()} pts to next level
+                  {tier.ptsNeeded.toLocaleString()} {t('pts_next_level')}
                 </span>
               )}
             </div>
@@ -186,8 +194,8 @@ export default function HomeScreen() {
             {/* Header */}
             <div className="flex items-center justify-between px-6 pt-14 pb-4 border-b border-border">
               <div>
-                <h2 className="text-xl font-extrabold text-foreground">Notifications</h2>
-                <p className="text-xs text-muted-foreground font-medium">{notifications.length} updates</p>
+                <h2 className="text-xl font-extrabold text-foreground">{t('notifications')}</h2>
+                <p className="text-xs text-muted-foreground font-medium">{notifications.length} {t('updates')}</p>
               </div>
               <button 
                 onClick={() => setNotificationsOpen(false)}
@@ -206,7 +214,7 @@ export default function HomeScreen() {
               ) : notifications.length === 0 ? (
                 <div className="py-12 text-center">
                   <span className="material-icons-round text-4xl text-muted-foreground/30">notifications_off</span>
-                  <p className="text-muted-foreground font-medium mt-3 text-sm">No notifications yet</p>
+                  <p className="text-muted-foreground font-medium mt-3 text-sm">{t('no_notifications')}</p>
                 </div>
               ) : (
                 notifications.map((n, i) => (
@@ -235,7 +243,7 @@ export default function HomeScreen() {
             <span className="material-icons-round text-muted-foreground group-focus-within:text-primary transition-colors me-2">search</span>
             <input 
               type="text" 
-              placeholder="Search events, organizations..." 
+              placeholder={t('search_placeholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full h-full outline-none text-base font-medium text-foreground bg-transparent placeholder:text-muted-foreground/60"
@@ -254,9 +262,9 @@ export default function HomeScreen() {
             <div className="flex justify-between items-end mb-3">
               <h3 className="text-xl font-extrabold text-foreground flex items-center gap-2">
                 <span className="material-icons-round text-red-500 text-lg">warning_amber</span>
-                Urgent Needs
+                {t('urgent_needs')}
               </h3>
-              <button className="text-xs font-bold text-primary hover:underline">See All</button>
+              <button className="text-xs font-bold text-primary hover:underline">{t('see_all')}</button>
             </div>
             <div className="flex gap-4 overflow-x-auto pb-2 hide-scrollbar snap-x">
               {urgentOpps.map((opp, idx) => (
@@ -266,9 +274,9 @@ export default function HomeScreen() {
                   onClick={() => navigate(`/event/${opp.id}`)}
                 >
                   <ImpactCard
-                    title={opp.title}
-                    location={opp.location}
-                    category={opp.category}
+                    title={t(opp.title)}
+                    location={t(opp.location)}
+                    category={t(opp.category)}
                     points={opp.points}
                     imageUrl={opp.image_url || `https://images.unsplash.com/photo-1618477461853-cf6ed80fabe9?auto=format&fit=crop&q=80&w=600`}
                     delay={0.1 * idx}
@@ -281,7 +289,7 @@ export default function HomeScreen() {
 
         {/* Category Filter */}
         <RevealLayout delay={0.2}>
-          <h3 className="text-xl font-extrabold text-foreground mb-3">Discover</h3>
+          <h3 className="text-xl font-extrabold text-foreground mb-3">{t('discover')}</h3>
           <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-2">
             {categories.map(cat => (
               <button
@@ -327,22 +335,22 @@ export default function HomeScreen() {
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       {opp.is_urgent && (
-                        <span className="text-[9px] font-black uppercase tracking-widest text-red-500 bg-red-50 px-2 py-0.5 rounded-sm mb-1 inline-block">Urgent</span>
+                        <span className="text-[9px] font-black uppercase tracking-widest text-red-500 bg-red-50 px-2 py-0.5 rounded-sm mb-1 inline-block">{t('urgent')}</span>
                       )}
-                      <h4 className="font-extrabold text-foreground text-sm leading-snug">{opp.title}</h4>
+                      <h4 className="font-extrabold text-foreground text-sm leading-snug">{t(opp.title)}</h4>
                       <p className="text-xs font-medium text-muted-foreground mt-0.5 flex items-center gap-1">
                         <span className="material-icons-round text-xs">location_on</span>
-                        {opp.location || 'Bahrain'}
+                        {t(opp.location) || t('bahrain')}
                       </p>
                     </div>
                     <div className="flex flex-col items-end shrink-0">
                       <span className="text-primary font-black text-sm">+{opp.points}</span>
-                      <span className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider">pts</span>
+                      <span className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider">{t('pts')}</span>
                     </div>
                   </div>
                   <div className="mt-2 flex items-center gap-3 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-                    {opp.org_name && <span>{opp.org_name}</span>}
-                    {opp.time_range && <span>·  {opp.time_range}</span>}
+                    {opp.org_name && <span>{t(opp.org_name)}</span>}
+                    {opp.time_range && <span dir="ltr" className="inline-block text-left">·  {opp.time_range}</span>}
                   </div>
                 </div>
               </motion.div>
@@ -350,13 +358,14 @@ export default function HomeScreen() {
           ) : (
             <EmptyState
               icon="search_off"
-              title="No opportunities found"
-              subtitle="Try a different category or check back later."
+              title={t('no_opps')}
+              subtitle={t('try_diff_cat')}
             />
           )}
         </RevealLayout>
 
       </div>
+      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
     </div>
   )
 }

@@ -6,19 +6,25 @@ import { Button } from '@/components/ui/button'
 import { supabase } from '@/lib/supabaseClient'
 import { useEventDetails } from '@/hooks/useEventDetails'
 import { useToast } from '@/contexts/ToastProvider'
+import { useAuth } from '@/contexts/AuthProvider'
+import { AuthModal } from '@/components/ui/AuthModal'
+import { useLanguage } from '@/contexts/LanguageProvider'
 
 export default function EventDetailsScreen() {
   const navigate = useNavigate()
   const { id } = useParams()
   const { event, loading, isSignedUp, setIsSignedUp } = useEventDetails(id)
   const toast = useToast()
+  const { user } = useAuth()
+  const { t } = useLanguage()
   const [isCommitting, setIsCommitting] = useState(false)
+  const [showAuthModal, setShowAuthModal] = useState(false)
   const isCommitted = isSignedUp
 
   const handleShare = async () => {
     const shareData = {
       title: event?.title ?? 'Volunteer Opportunity',
-      text: `Join me at "${event?.title}" — volunteer with Tawwa!`,
+      text: `Join me at "${t(event?.title)}" — volunteer with Tawwa!`,
       url: window.location.href,
     }
     if (navigator.share) {
@@ -30,6 +36,11 @@ export default function EventDetailsScreen() {
   }
 
   const handleCommit = async () => {
+    if (!user) {
+      setShowAuthModal(true)
+      return
+    }
+    
     setIsCommitting(true)
     const { data: { session } } = await supabase.auth.getSession()
     if (!session?.user) { navigate('/signin'); return }
@@ -51,7 +62,7 @@ export default function EventDetailsScreen() {
   if (loading) {
     return (
       <div className="flex flex-col min-h-screen bg-background">
-        <SubPageHeader title="Loading..." />
+        <SubPageHeader title={t('loading')} />
         <div className="w-full h-64 bg-muted animate-pulse" />
         <div className="px-6 pt-6 space-y-4">
           <div className="h-8 bg-muted rounded-xl animate-pulse" />
@@ -66,8 +77,8 @@ export default function EventDetailsScreen() {
     return (
       <div className="flex flex-col min-h-screen bg-background items-center justify-center p-6 text-center">
         <span className="material-icons-round text-5xl text-muted-foreground/30">event_busy</span>
-        <p className="text-muted-foreground font-medium mt-4">This opportunity is no longer available.</p>
-        <button onClick={() => navigate('/home')} className="mt-6 text-primary font-bold">Back to Home</button>
+        <p className="text-muted-foreground font-medium mt-4">{t('event_unavailable')}</p>
+        <button onClick={() => navigate('/home')} className="mt-6 text-primary font-bold">{t('back_home')}</button>
       </div>
     )
   }
@@ -78,11 +89,11 @@ export default function EventDetailsScreen() {
     ? new Date(event.event_date).toLocaleDateString('en-BH', { weekday: 'long', month: 'short', day: 'numeric' })
     : event.date
       ? new Date(event.date).toLocaleDateString('en-BH', { weekday: 'long', month: 'short', day: 'numeric' })
-      : 'Date TBD'
+      : t('date_tbd')
 
   return (
     <div className="flex flex-col min-h-screen bg-background pb-28">
-      <SubPageHeader title="Event Details" ActionIcon="share" onActionClick={handleShare} />
+      <SubPageHeader title={t('event_details')} ActionIcon="share" onActionClick={handleShare} />
 
       {/* Hero Image */}
       <RevealLayout className="w-full h-64 relative">
@@ -91,7 +102,7 @@ export default function EventDetailsScreen() {
         <div className="absolute bottom-4 left-4 right-4">
           {event.is_urgent && (
             <span className="text-[10px] font-bold uppercase tracking-widest bg-red-500/90 text-white backdrop-blur-sm px-2 py-1 rounded-sm mb-2 inline-block">
-              Urgent
+              {t('urgent')}
             </span>
           )}
           {event.category && !event.is_urgent && (
@@ -99,7 +110,7 @@ export default function EventDetailsScreen() {
               {event.category}
             </span>
           )}
-          <h1 className="text-2xl font-extrabold text-white leading-tight drop-shadow-md">{event.title}</h1>
+          <h1 className="text-2xl font-extrabold text-white leading-tight drop-shadow-md">{t(event.title)}</h1>
         </div>
       </RevealLayout>
 
@@ -113,7 +124,7 @@ export default function EventDetailsScreen() {
             </div>
             <div>
               <h4 className="font-bold text-foreground text-sm">{formattedDate}</h4>
-              <p className="text-xs font-medium text-muted-foreground">{event.time_range || 'Time TBD'}</p>
+              <p dir="ltr" className="text-xs font-medium text-muted-foreground text-left">{event.time_range || t('time_tbd')}</p>
             </div>
           </div>
           <div className="flex-1 p-4 bg-card rounded-2xl shadow-sm border border-border flex items-center gap-3">
@@ -121,8 +132,8 @@ export default function EventDetailsScreen() {
               <span className="material-icons-round">location_on</span>
             </div>
             <div>
-              <h4 className="font-bold text-foreground text-sm">{event.location || 'Bahrain'}</h4>
-              <p className="text-xs font-medium text-muted-foreground">Check-in on site</p>
+              <h4 className="font-bold text-foreground text-sm">{t(event.location) || t('bahrain')}</h4>
+              <p className="text-xs font-medium text-muted-foreground">{t('check_in_site')}</p>
             </div>
           </div>
         </RevealLayout>
@@ -132,8 +143,8 @@ export default function EventDetailsScreen() {
           <RevealLayout delay={0.15} className="flex items-center gap-3 p-4 bg-amber-500/10 rounded-2xl border border-amber-500/20">
             <span className="material-icons-round text-amber-500 text-2xl">stars</span>
             <div>
-              <p className="text-xs font-bold uppercase tracking-widest text-amber-500">Points Reward</p>
-              <p className="font-extrabold text-foreground text-lg">+{event.points} Tawwa Points</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-amber-500">{t('points_reward')}</p>
+              <p className="font-extrabold text-foreground text-lg">+{event.points} {t('tawwa_points')}</p>
             </div>
           </RevealLayout>
         )}
@@ -141,8 +152,8 @@ export default function EventDetailsScreen() {
         {/* Description */}
         {event.description && (
           <RevealLayout delay={0.2}>
-            <h3 className="text-lg font-bold text-foreground mb-2">About The Mission</h3>
-            <p className="text-sm font-medium text-muted-foreground leading-relaxed">{event.description}</p>
+            <h3 className="text-lg font-bold text-foreground mb-2">{t('about_mission')}</h3>
+            <p className="text-sm font-medium text-muted-foreground leading-relaxed">{t(event.description)}</p>
           </RevealLayout>
         )}
 
@@ -157,9 +168,9 @@ export default function EventDetailsScreen() {
               )}
             </div>
             <div>
-              <p className="text-[10px] uppercase font-bold text-primary tracking-widest">Organizer</p>
-              <h4 className="font-bold text-foreground text-sm">{event.org_name}</h4>
-              {event.org_type && <p className="text-xs font-medium text-muted-foreground">{event.org_type}</p>}
+              <p className="text-[10px] uppercase font-bold text-primary tracking-widest">{t('organizer')}</p>
+              <h4 className="font-bold text-foreground text-sm">{t(event.org_name)}</h4>
+              {event.org_type && <p className="text-xs font-medium text-muted-foreground">{t(event.org_type)}</p>}
             </div>
           </RevealLayout>
         )}
@@ -169,8 +180,8 @@ export default function EventDetailsScreen() {
           <RevealLayout delay={0.35} className="flex items-center gap-3 p-4 bg-card rounded-2xl border border-border shadow-sm">
             <span className="material-icons-round text-muted-foreground">group</span>
             <div>
-              <p className="font-bold text-foreground text-sm">{event.spots - (event.spots_filled || 0)} spots remaining</p>
-              <p className="text-xs text-muted-foreground font-medium">{event.spots_filled || 0} of {event.spots} volunteers signed up</p>
+              <p className="font-bold text-foreground text-sm">{event.spots - (event.spots_filled || 0)} {t('spots_remaining')}</p>
+              <p className="text-xs text-muted-foreground font-medium">{event.spots_filled || 0} {t('of')} {event.spots} {t('volunteers_signed_up')}</p>
             </div>
           </RevealLayout>
         )}
@@ -186,17 +197,19 @@ export default function EventDetailsScreen() {
         >
           {isCommitted ? (
             <span className="flex items-center gap-2">
-              <span className="material-icons-round text-sm">check_circle</span> You're Signed Up!
+              <span className="material-icons-round text-sm">check_circle</span> {t('signed_up')}
             </span>
           ) : isCommitting ? (
             <span className="flex items-center gap-2">
-              <span className="material-icons-round animate-spin text-sm">sync</span> Committing...
+              <span className="material-icons-round animate-spin text-sm">sync</span> {t('committing')}
             </span>
           ) : (
-            'Commit to Volunteer'
+            t('commit_volunteer')
           )}
         </Button>
       </div>
+
+      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
     </div>
   )
 }

@@ -36,6 +36,60 @@ export default function ProfileScreen() {
   const displayName = profile?.display_name || user?.user_metadata?.name || user?.email?.split('@')[0] || 'Volunteer'
   const avatarUrl = profile?.avatar_url
 
+  if (!user) {
+    return (
+      <div className="flex flex-col min-h-screen bg-background px-6 pt-32 pb-24 text-center items-center">
+        <RevealLayout className="flex flex-col items-center w-full max-w-sm mx-auto">
+          <div className="w-28 h-28 bg-primary/10 rounded-full flex items-center justify-center mb-6 border-4 border-primary/20">
+            <span className="material-icons-round text-primary text-5xl">lock_outline</span>
+          </div>
+          <h2 className="text-2xl font-extrabold text-foreground mb-3">{t('join_tawwa')}</h2>
+          <p className="text-muted-foreground font-medium mb-10 leading-relaxed">
+            {t('guest_profile_desc')}
+          </p>
+          <button
+            onClick={() => navigate('/signup')}
+            className="w-full bg-primary text-primary-foreground font-bold h-14 rounded-xl shadow-lg shadow-primary/20 hover:opacity-90 transition-opacity mb-4"
+          >
+            {t('sign_up_btn')}
+          </button>
+          <button
+            onClick={() => navigate('/signin')}
+            className="w-full bg-card text-foreground border border-border font-bold h-14 rounded-xl hover:bg-muted transition-colors"
+          >
+            {t('log_in')}
+          </button>
+
+          <div className="w-full h-px bg-border/50 my-8"></div>
+          
+          <button
+            onClick={toggleTheme}
+            className="flex items-center justify-between w-full h-14 bg-card border border-border/50 rounded-calc px-5 hover:bg-muted transition-colors mb-2 rounded-2xl"
+          >
+            <div className="flex items-center gap-4">
+              <span className="material-icons-round text-sm text-primary">dark_mode</span>
+              <span className="font-bold text-foreground">{t('dark_mode')}</span>
+            </div>
+            <div className={`w-10 h-5 rounded-full relative transition-colors ${isDarkMode ? 'bg-primary' : 'bg-muted'}`}>
+              <div className={`w-3.5 h-3.5 rounded-full bg-white absolute top-0.5 transition-all ${isDarkMode ? 'start-6' : 'start-1'}`} />
+            </div>
+          </button>
+
+          <button
+            onClick={toggleLanguage}
+            className="flex items-center justify-between w-full h-14 bg-card border border-border/50 rounded-2xl px-5 hover:bg-muted transition-colors"
+          >
+            <div className="flex items-center gap-4">
+              <span className="material-icons-round text-sm text-primary">language</span>
+              <span className="font-bold text-foreground">{t('switch_language')}</span>
+            </div>
+            <span className="text-muted-foreground font-bold text-xs bg-muted px-2 py-1 rounded-md">{language === 'en' ? 'عربي' : 'EN'}</span>
+          </button>
+        </RevealLayout>
+      </div>
+    )
+  }
+
   const settingsList = [
     { icon: 'edit',         label: t('edit_profile'),      path: '/profile/edit' },
     { icon: 'history',      label: t('impact_history'),    path: '/profile/history' },

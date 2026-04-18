@@ -8,7 +8,7 @@ import { ErrorBoundary } from '@/components/ErrorBoundary'
 import MainLayout from '@/components/layout/MainLayout'
 
 // Lazy loaded screens
-const WelcomeScreen = lazy(() => import('./pages/WelcomeScreen'))
+const WalkthroughScreen = lazy(() => import('./pages/WalkthroughScreen'))
 const SignUpScreen = lazy(() => import('./pages/SignUpScreen'))
 const SignInScreen = lazy(() => import('./pages/auth/SignInScreen'))
 const ForgotPasswordScreen = lazy(() => import('./pages/auth/ForgotPasswordScreen'))
@@ -48,7 +48,7 @@ export default function App() {
         <Suspense fallback={<SuspenseFallback />}>
           <Routes>
               {/* Public / Auth */}
-              <Route path="/" element={<PageTransition keyName="welcome"><WelcomeScreen /></PageTransition>} />
+              <Route path="/" element={<PageTransition keyName="walkthrough"><WalkthroughScreen /></PageTransition>} />
               <Route path="/signup" element={<PageTransition keyName="signup"><SignUpScreen /></PageTransition>} />
               <Route path="/signin" element={<PageTransition keyName="signin"><SignInScreen /></PageTransition>} />
               <Route path="/forgot-password" element={<PageTransition keyName="forgotpw"><ForgotPasswordScreen /></PageTransition>} />
@@ -60,15 +60,15 @@ export default function App() {
               <Route path="/onboarding/interests" element={<PageTransition keyName="inter"><InterestsSelection /></PageTransition>} />
               <Route path="/onboarding/notifications" element={<PageTransition keyName="notif"><NotificationPermission /></PageTransition>} />
 
-              {/* Main App (Protected / Shell) */}
-              <Route element={<ProtectedRoute><MainLayout /></ProtectedRoute>}>
+              {/* Main App (Public / Shell) */}
+              <Route element={<MainLayout />}>
                 <Route path="/home" element={<PageTransition keyName="home"><HomeScreen /></PageTransition>} />
                 <Route path="/rewards" element={<PageTransition keyName="rewards"><MarketplaceScreen /></PageTransition>} />
                 <Route path="/profile" element={<PageTransition keyName="profile"><ProfileScreen /></PageTransition>} />
               </Route>
 
               {/* Deep Details (Fullscreen, No Bottom Nav) */}
-              <Route path="/event/:id" element={<ProtectedRoute><PageTransition keyName="edetail"><EventDetailsScreen /></PageTransition></ProtectedRoute>} />
+              <Route path="/event/:id" element={<PageTransition keyName="edetail"><EventDetailsScreen /></PageTransition>} />
               <Route path="/checkin-success" element={<ProtectedRoute><PageTransition keyName="success"><CheckInSuccessScreen /></PageTransition></ProtectedRoute>} />
               <Route path="/rewards/:id" element={<ProtectedRoute><PageTransition keyName="rdetail"><RewardRedemptionFlow /></PageTransition></ProtectedRoute>} />
 
