@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 36 60% 97%; /* #fef9f1 */
+    --foreground: 53 11% 11%; /* #1d1c17 */
+
+    --card: 36 60% 97%;
+    --card-foreground: 53 11% 11%;
+
+    --popover: 36 60% 97%;
+    --popover-foreground: 53 11% 11%;
+
+    --primary: 164 100% 16%; /* #005440 */
+    --primary-foreground: 0 0% 100%; /* #ffffff */
+
+    --secondary: 42 66% 28%; /* #765a18 */
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 36 10% 88%; /* #e7e2da */
+    --muted-foreground: 153 8% 26%; /* #3f4944 */
+
+    --accent: 42 98% 77%; /* #fed88a */
+    --accent-foreground: 43 63% 29%; /* #785d1b */
+
+    --destructive: 0 74% 42%; /* #ba1a1a */
+    --destructive-foreground: 0 0% 100%; /* #ffffff */
+
+    --border: 153 8% 78%; /* #bec9c3 */
+    --input: 153 8% 78%;
+    --ring: 164 100% 16%;
+
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 53 11% 11%;
+    --foreground: 36 60% 97%;
+
+    --card: 53 11% 11%;
+    --card-foreground: 36 60% 97%;
+
+    --popover: 53 11% 11%;
+    --popover-foreground: 36 60% 97%;
+
+    --primary: 159 74% 68%; /* #84d6b9 */
+    --primary-foreground: 164 100% 16%;
+
+    --secondary: 42 66% 68%;
+    --secondary-foreground: 42 66% 18%;
+
+    --muted: 153 8% 26%;
+    --muted-foreground: 36 10% 88%;
+
+    --accent: 43 63% 29%;
+    --accent-foreground: 42 98% 77%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 0 63% 91%;
+
+    --border: 153 8% 36%;
+    --input: 153 8% 36%;
+    --ring: 159 74% 68%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  [dir="rtl"] body {
+    font-family: 'Tajawal', sans-serif;
+    letter-spacing: 0;
+  }
+}
+
+/* Custom Utilities for Premium Micro-Interactions */
+@layer utilities {
+  .clip-bottom-rounded {
+    clip-path: ellipse(150% 100% at 50% 0%);
+  }
+  
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* No visible scrollbar for certain dynamic elements */
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "Tawwa (طوّع)",
+  "short_name": "Tawwa",
+  "description": "Bahrain's premier volunteer impact network.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d3527",
+  "theme_color": "#0d3527",
+  "icons": [
+    {
+      "src": "/taw-logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/taw-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

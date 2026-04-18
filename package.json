@@ -1,23 +1,36 @@
 {
-  "name": "taw-volunteer-app",
+  "name": "tawwa-volunteer-app",
   "version": "1.0.0",
-  "description": "TAW (طوع) — Volunteer Rewards Marketplace",
+  "description": "Tawwa (طوّع) — Volunteer Rewards Marketplace",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node scripts/copy-assets.js",
+    "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.49.4",
+    "@supabase/supabase-js": "^2.103.3",
+    "canvas-confetti": "^1.9.4",
+    "clsx": "^2.1.0",
+    "framer-motion": "^11.0.8",
+    "lucide-react": "^0.368.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.22.3",
+    "tailwind-merge": "^2.2.2",
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
     "@vitest/coverage-v8": "^3.1.2",
+    "autoprefixer": "^10.4.19",
     "jsdom": "^26.1.0",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.1",
     "vite": "^6.3.1",
+    "vite-plugin-pwa": "^1.2.0",
     "vitest": "^3.1.2"
   }
 }

@@ -1,5 +1,5 @@
 /**
- * @fileoverview TAW — Centralized error handling utilities (ES Module)
+ * @fileoverview Tawwa — Centralized error handling utilities (ES Module)
  *
  * A thin wrapper around async operations that provides:
  *   1. Consistent try/catch with user-friendly error mapping
@@ -33,7 +33,7 @@ const ERROR_MAP = {
 // ── Error type ────────────────────────────────────────────────────────────────
 
 /**
- * @typedef {Object} TawError
+ * @typedef {Object} TawwaError
  * @property {boolean} ok      - Always false.
  * @property {string}  message - User-facing message.
  * @property {unknown} raw     - Original error payload.
@@ -44,7 +44,7 @@ const ERROR_MAP = {
  * @template T
  * @property {boolean}       ok    - true on success.
  * @property {T|null}        data  - The resolved data (null on failure).
- * @property {TawError|null} error - Structured error (null on success).
+ * @property {TawwaError|null} error - Structured error (null on success).
  */
 
 // ── Core helpers ──────────────────────────────────────────────────────────────
@@ -90,7 +90,7 @@ export async function safeAsync(fn, { onError } = {}) {
   } catch (err) {
     const message = mapError(err)
     if (typeof onError === 'function') onError(message)
-    console.error('[TAW Error]', err)
+    console.error('[Tawwa Error]', err)
     return { ok: false, data: null, error: { ok: false, message, raw: err } }
   }
 }

@@ -1,5 +1,5 @@
 /**
- * @fileoverview TAW — Pure points calculation logic (ES Module)
+ * @fileoverview Tawwa — Pure points calculation logic (ES Module)
  *
  * All functions here are pure (no network, no DOM) so they can be
  * unit-tested with Vitest. The legacy points.js continues to serve

@@ -1,5 +1,5 @@
 /**
- * @fileoverview TAW — Pure i18n logic (ES Module)
+ * @fileoverview Tawwa — Pure i18n logic (ES Module)
  *
  * This module contains ONLY pure functions extracted from i18n.js
  * so they can be unit-tested with Vitest without a DOM or browser globals.
@@ -16,7 +16,7 @@ export const translations = {
     'landing-headline':   'Volunteer. Earn. Impact.',
     'landing-cta':        'Join the Cause',
     'greeting':           'Hello, Guest!',
-    'points-label':       'Taw Points',
+    'points-label':       'Tawwa Points',
     'error-fallback-title': 'Something went wrong',
     'toast-dismiss':      'Dismiss',
     'btn-cancel':         'Cancel',
@@ -33,7 +33,7 @@ export const translations = {
     'landing-headline':   'تطوّع. اكسب. أثِّر.',
     'landing-cta':        'انضم للقضية',
     'greeting':           'أهلاً، ضيف!',
-    'points-label':       'نقاط طوع',
+    'points-label':       'نقاط طوّع',
     'error-fallback-title': 'حدث خطأ ما',
     'toast-dismiss':      'إغلاق',
     'btn-cancel':         'إلغاء',
