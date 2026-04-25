@@ -200,6 +200,12 @@ export const translations = {
     sign_in_desc: "Sign in to continue making an impact.",
     enter_password: "Enter password",
 
+    // Sign Up legal
+    name_placeholder: "Ali Alsayed",
+    signup_legal_prefix: "By continuing, you agree to Tawwa's",
+    terms: "Terms",
+    and_conjunction: "and",
+
     // Dummy Mock Data
     "Buy 2 Meals, Get 1 Sandwich FREE": "Buy 2 Meals, Get 1 Sandwich FREE",
     "Legendary flavors meet legendary giving. Redeem your Taw Points at ODA Burger in Jid-Ali for a free ODA sandwich": "Legendary flavors meet legendary giving. Redeem your Taw Points at ODA Burger in Jid-Ali for a free ODA sandwich",
@@ -414,6 +420,12 @@ export const translations = {
     // Sign In extras
     sign_in_desc: "سجل دخولك لمواصلة إحداث التأثير.",
     enter_password: "أدخل كلمة المرور",
+
+    // Sign Up legal
+    name_placeholder: "علي السيد",
+    signup_legal_prefix: "بالمتابعة، أنت توافق على",
+    terms: "الشروط",
+    and_conjunction: "و",
 
     // Dummy Mock Data
     "Buy 2 Meals, Get 1 Sandwich FREE": "اشتري وجبتين، واحصل على ساندويتش مجاناً",

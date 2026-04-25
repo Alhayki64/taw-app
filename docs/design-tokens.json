@@ -1,0 +1,45 @@
+{
+  "light": {
+    "background":    { "hsl": "36 60% 97%",   "hex": "#fef9f1" },
+    "foreground":    { "hsl": "53 11% 11%",   "hex": "#1d1c17" },
+    "card":          { "hsl": "36 60% 97%",   "hex": "#fef9f1" },
+    "primary":       { "hsl": "164 100% 16%", "hex": "#005440" },
+    "primaryFg":     { "hsl": "0 0% 100%",    "hex": "#ffffff" },
+    "secondary":     { "hsl": "42 66% 28%",   "hex": "#765a18" },
+    "secondaryFg":   { "hsl": "0 0% 100%",    "hex": "#ffffff" },
+    "muted":         { "hsl": "36 10% 88%",   "hex": "#e7e2da" },
+    "mutedFg":       { "hsl": "153 8% 26%",   "hex": "#3f4944" },
+    "accent":        { "hsl": "42 98% 77%",   "hex": "#fed88a" },
+    "accentFg":      { "hsl": "43 63% 29%",   "hex": "#785d1b" },
+    "destructive":   { "hsl": "0 74% 42%",    "hex": "#ba1a1a" },
+    "destructiveFg": { "hsl": "0 0% 100%",    "hex": "#ffffff" },
+    "border":        { "hsl": "153 8% 78%",   "hex": "#bec9c3" },
+    "radius":        "0.75rem"
+  },
+  "dark": {
+    "background":    { "hsl": "53 11% 11%",   "hex": "#1d1c17" },
+    "foreground":    { "hsl": "36 60% 97%",   "hex": "#fef9f1" },
+    "card":          { "hsl": "53 11% 11%",   "hex": "#1d1c17" },
+    "primary":       { "hsl": "159 74% 68%",  "hex": "#84d6b9" },
+    "primaryFg":     { "hsl": "164 100% 16%", "hex": "#005440" },
+    "secondary":     { "hsl": "42 66% 68%",   "hex": "#d4a95a" },
+    "secondaryFg":   { "hsl": "42 66% 18%",   "hex": "#4d3c10" },
+    "muted":         { "hsl": "153 8% 26%",   "hex": "#3f4944" },
+    "mutedFg":       { "hsl": "36 10% 88%",   "hex": "#e7e2da" },
+    "accent":        { "hsl": "43 63% 29%",   "hex": "#785d1b" },
+    "accentFg":      { "hsl": "42 98% 77%",   "hex": "#fed88a" },
+    "destructive":   { "hsl": "0 63% 31%",    "hex": "#6e1111" },
+    "destructiveFg": { "hsl": "0 63% 91%",    "hex": "#f5c0c0" },
+    "border":        { "hsl": "153 8% 36%",   "hex": "#566260" }
+  },
+  "tiers": {
+    "bronze":   { "min": 0,    "max": 499,  "color": "#cd7f32" },
+    "silver":   { "min": 500,  "max": 1499, "color": "#a8a9ad" },
+    "gold":     { "min": 1500, "max": 2999, "color": "#ffd700" },
+    "platinum": { "min": 3000, "max": null, "color": "#e5e4e2" }
+  },
+  "fonts": {
+    "ltr": "Outfit",
+    "rtl": "Tajawal"
+  }
+}

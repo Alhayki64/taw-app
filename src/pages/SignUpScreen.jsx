@@ -97,7 +97,7 @@ export default function SignUpScreen() {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                placeholder="Ali Alsayed"
+                placeholder={t('name_placeholder')}
                 className="w-full h-full outline-none text-base font-medium text-foreground bg-transparent placeholder:text-muted-foreground/50"
               />
             </div>
@@ -216,9 +216,9 @@ export default function SignUpScreen() {
             {loading ? t('signing_up') : t('sign_up_btn')}
           </Button>
           <p className="text-xs text-center text-muted-foreground mt-4 leading-relaxed px-4">
-            By continuing, you agree to Tawwa's{' '}
-            <span className="text-primary font-semibold underline underline-offset-2">Terms</span> and{' '}
-            <span className="text-primary font-semibold underline underline-offset-2">Privacy Policy</span>.
+            {t('signup_legal_prefix')}{' '}
+            <span className="text-primary font-semibold underline underline-offset-2">{t('terms')}</span> {t('and_conjunction')}{' '}
+            <span className="text-primary font-semibold underline underline-offset-2">{t('privacy_policy')}</span>.
           </p>
         </RevealLayout>
       </div>
