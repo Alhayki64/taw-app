@@ -189,7 +189,7 @@ export default function EventDetailsScreen() {
       </div>
 
       {/* Sticky Commit CTA */}
-      <div className="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-6 bg-gradient-to-t from-background via-background to-transparent z-50">
+      <div className="fixed bottom-0 left-0 right-0 max-w-5xl mx-auto p-6 bg-gradient-to-t from-background via-background to-transparent z-50">
         <Button
           className="w-full h-14 text-base font-bold shadow-lift transition-all duration-300"
           onClick={handleCommit}

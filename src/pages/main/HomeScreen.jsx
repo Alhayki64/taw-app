@@ -190,7 +190,7 @@ export default function HomeScreen() {
             onClick={() => setNotificationsOpen(false)}
           />
           {/* Panel */}
-          <div className="fixed top-0 left-0 right-0 max-w-md mx-auto z-50 bg-card border-b border-border shadow-2xl rounded-b-[32px] overflow-hidden">
+          <div className="fixed top-0 left-0 right-0 max-w-5xl mx-auto z-50 bg-card border-b border-border shadow-2xl rounded-b-[32px] overflow-hidden">
             {/* Header */}
             <div className="flex items-center justify-between px-6 pt-14 pb-4 border-b border-border">
               <div>

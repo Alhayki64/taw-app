@@ -17,7 +17,7 @@ export default function MainLayout() {
   return (
     <div className="min-h-screen bg-background flex flex-col items-center">
       {/* Scrollable Container */}
-      <div className="w-full max-w-md bg-background min-h-screen relative flex flex-col pb-20 shadow-xl overflow-x-hidden">
+      <div className="w-full max-w-5xl bg-background min-h-screen relative flex flex-col pb-20 shadow-xl overflow-x-hidden">
         
         {/* Child Screen Content */}
         <div className="flex-1 overflow-y-auto hide-scrollbar">
@@ -25,7 +25,7 @@ export default function MainLayout() {
         </div>
 
         {/* Bottom Navigation Bar */}
-        <nav aria-label="Main navigation" className="fixed bottom-0 w-full max-w-md bg-card text-card-foreground border-t border-border shadow-[0_-4px_20px_rgba(0,0,0,0.03)] z-50 rounded-t-3xl pb-safe pt-2 px-6">
+        <nav aria-label="Main navigation" className="fixed bottom-0 w-full max-w-5xl bg-card text-card-foreground border-t border-border shadow-[0_-4px_20px_rgba(0,0,0,0.03)] z-50 rounded-t-3xl pb-safe pt-2 px-6">
           <ul className="flex justify-between items-center h-16">
             {navItems.map((item) => {
               const isActive = location.pathname.startsWith(item.path)
