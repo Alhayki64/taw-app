@@ -181,13 +181,22 @@ export default function WalkthroughScreen() {
                     {t('start_journey')}
                   </Button>
                   
-                  <Button 
-                    variant="ghost"
-                    className="w-full text-base h-12 text-muted-foreground hover:text-foreground" 
-                    onClick={() => navigate('/home')}
-                  >
-                    {t('explore_guest')}
-                  </Button>
+                  <div className="flex gap-4 w-full">
+                    <Button 
+                      variant="outline" 
+                      className="flex-1 h-12 text-base border-primary/20 hover:bg-primary/5"
+                      onClick={prevSlide}
+                    >
+                      {t('back')}
+                    </Button>
+                    <Button 
+                      variant="ghost"
+                      className="flex-1 text-base h-12 text-muted-foreground hover:text-foreground" 
+                      onClick={() => navigate('/home')}
+                    >
+                      {t('explore_guest')}
+                    </Button>
+                  </div>
 
                   <div className="text-center pt-1">
                     <p className="text-sm text-foreground font-medium">

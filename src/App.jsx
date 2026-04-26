@@ -1,4 +1,4 @@
-import { Suspense, lazy } from 'react'
+import { Suspense, lazy, useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { PageTransition } from './components/RevealLayout'
 import ProtectedRoute from '@/components/ProtectedRoute'
@@ -42,7 +42,15 @@ const SuspenseFallback = () => (
 )
 
 export default function App() {
-  return (
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth > 768)
+
+  useEffect(() => {
+    const handleResize = () => setIsDesktop(window.innerWidth > 768)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  const appContent = (
     <BrowserRouter>
       <ErrorBoundary>
         <Suspense fallback={<SuspenseFallback />}>
@@ -81,5 +89,47 @@ export default function App() {
           </Suspense>
         </ErrorBoundary>
       </BrowserRouter>
+  )
+
+  if (!isDesktop) {
+    return appContent
+  }
+
+  return (
+    <div className="min-h-screen bg-[#2D5A3D] flex items-center justify-center p-8 gap-16 relative overflow-hidden font-sans">
+      {/* Background Decorative Gradients */}
+      <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-white/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-black/20 rounded-full blur-[120px] pointer-events-none" />
+
+      {/* Left Side: Branding */}
+      <div className="hidden md:flex flex-col flex-1 max-w-lg text-[#F5F2EC] z-10">
+        <div className="mb-8 flex items-center gap-4">
+          <img src="/taw-logo.png" alt="Tawwa Logo" className="w-16 h-16 object-contain drop-shadow-md" />
+          <h1 className="text-5xl font-bold tracking-tight">Tawwa</h1>
+        </div>
+        
+        <div className="mb-6">
+          <h2 
+            className="text-6xl font-black mb-3 text-[#D4AF37] drop-shadow-md" 
+            dir="rtl" 
+            style={{ fontFamily: 'Tajawal, "Noto Kufi Arabic", sans-serif' }}
+          >
+            لوطني أعطي
+          </h2>
+          <p className="text-3xl font-semibold opacity-95 tracking-wide">
+            Volunteer. Earn. Give Back.
+          </p>
+        </div>
+        
+        <p className="text-xl opacity-90 leading-relaxed font-light">
+          Tawwa connects volunteers with opportunities across Bahrain. Earn points, unlock rewards, and make an impact in your community.
+        </p>
+      </div>
+
+      {/* Right Side: Device Mockup */}
+      <div className="w-[390px] h-[844px] max-h-[90vh] bg-background rounded-[36px] shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-[8px] border-black overflow-hidden relative z-10 flex flex-col shrink-0">
+        {appContent}
+      </div>
+    </div>
   )
 }
