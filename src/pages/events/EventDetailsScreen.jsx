@@ -9,6 +9,9 @@ import { useToast } from '@/contexts/ToastProvider'
 import { useAuth } from '@/contexts/AuthProvider'
 import { AuthModal } from '@/components/ui/AuthModal'
 import { useLanguage } from '@/contexts/LanguageProvider'
+import { useDemo } from '@/contexts/DemoContext'
+import { usePoints } from '@/contexts/PointsProvider'
+import { mapError } from '@/lib/errors'
 
 export default function EventDetailsScreen() {
   const navigate = useNavigate()
@@ -17,13 +20,15 @@ export default function EventDetailsScreen() {
   const toast = useToast()
   const { user } = useAuth()
   const { t } = useLanguage()
+  const { isDemoMode } = useDemo()
+  const { addPoints } = usePoints()
   const [isCommitting, setIsCommitting] = useState(false)
   const [showAuthModal, setShowAuthModal] = useState(false)
   const isCommitted = isSignedUp
 
   const handleShare = async () => {
     const shareData = {
-      title: event?.title ?? 'Volunteer Opportunity',
+      title: event?.title ?? t('volunteer_opportunity'),
       text: `Join me at "${t(event?.title)}" — volunteer with Tawwa!`,
       url: window.location.href,
     }
@@ -31,32 +36,60 @@ export default function EventDetailsScreen() {
       try { await navigator.share(shareData) } catch { /* user cancelled */ }
     } else {
       await navigator.clipboard.writeText(window.location.href)
-      toast.info('Link copied to clipboard!')
+      toast.info(t('link_copied'))
     }
   }
 
+  const isFull = event?.spots > 0 && (event?.spots_filled ?? 0) >= event?.spots
+
   const handleCommit = async () => {
-    if (!user) {
-      setShowAuthModal(true)
-      return
-    }
-    
+    if (!user) { setShowAuthModal(true); return }
+    if (isFull) { toast.error(t('event_full')); return }
     setIsCommitting(true)
-    const { data: { session } } = await supabase.auth.getSession()
-    if (!session?.user) { navigate('/signin'); return }
 
-    const { error } = await supabase
-      .from('opportunity_signups')
-      .insert({ opportunity_id: id, user_id: session.user.id, status: 'pending' })
+    const { data, error } = await supabase.rpc('signup_for_opportunity', {
+      p_opportunity_id: parseInt(id),
+    })
 
-    if (!error) {
-      setIsSignedUp(true)
-      toast.success('You\'re signed up! See you there.')
-      setTimeout(() => navigate('/checkin-success', { state: { event } }), 800)
+    if (error) {
+      toast.error(mapError(error.message))
+    } else if (data?.error) {
+      const msg = data.error
+      if (msg === 'Already signed up') {
+        setIsSignedUp(true)
+        toast.success(t('already_signed_up'))
+      } else if (msg === 'Event is full') {
+        toast.error(t('event_full'))
+      } else {
+        toast.error(mapError(msg))
+      }
     } else {
-      toast.error('Could not sign up: ' + error.message)
+      setIsSignedUp(true)
+      if (isDemoMode && event?.points) {
+        const { data: { session } } = await supabase.auth.getSession()
+        if (session?.user) {
+          await supabase.from('opportunity_signups')
+            .update({ status: 'confirmed', checked_in: true })
+            .eq('opportunity_id', id)
+            .eq('user_id', session.user.id)
+          await addPoints(event.points)
+        }
+      }
+      toast.success(t('now_signed_up'))
+      setTimeout(() => navigate('/checkin-success', { state: { event } }), 800)
     }
     setIsCommitting(false)
+  }
+
+  const handleDemoCheckIn = async () => {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.user) return
+    await supabase.from('opportunity_signups')
+      .update({ status: 'confirmed', checked_in: true })
+      .eq('opportunity_id', id)
+      .eq('user_id', session.user.id)
+    if (event?.points) await addPoints(event.points)
+    navigate('/checkin-success', { state: { event } })
   }
 
   if (loading) {
@@ -190,23 +223,39 @@ export default function EventDetailsScreen() {
 
       {/* Sticky Commit CTA */}
       <div className="fixed bottom-0 left-0 right-0 max-w-5xl mx-auto p-6 bg-gradient-to-t from-background via-background to-transparent z-50">
-        <Button
-          className="w-full h-14 text-base font-bold shadow-lift transition-all duration-300"
-          onClick={handleCommit}
-          disabled={isCommitting || isCommitted}
-        >
-          {isCommitted ? (
-            <span className="flex items-center gap-2">
-              <span className="material-icons-round text-sm">check_circle</span> {t('signed_up')}
-            </span>
-          ) : isCommitting ? (
-            <span className="flex items-center gap-2">
-              <span className="material-icons-round animate-spin text-sm">sync</span> {t('committing')}
-            </span>
-          ) : (
-            t('commit_volunteer')
+        <div className="space-y-3">
+          <Button
+            className="w-full h-14 text-base font-bold shadow-lift transition-all duration-300"
+            onClick={handleCommit}
+            disabled={isCommitting || isCommitted || isFull}
+          >
+            {isCommitted ? (
+              <span className="flex items-center gap-2">
+                <span className="material-icons-round text-sm">check_circle</span> {t('signed_up')}
+              </span>
+            ) : isCommitting ? (
+              <span className="flex items-center gap-2">
+                <span className="material-icons-round animate-spin text-sm">sync</span> {t('committing')}
+              </span>
+            ) : isFull ? (
+              <span className="flex items-center gap-2">
+                <span className="material-icons-round text-sm">group_off</span> {t('event_full_btn')}
+              </span>
+            ) : (
+              t('commit_volunteer')
+            )}
+          </Button>
+          {isDemoMode && isCommitted && (
+            <Button
+              variant="outline"
+              className="w-full h-14 text-base font-bold border-primary/30"
+              onClick={handleDemoCheckIn}
+            >
+              <span className="material-icons-round text-sm me-2">login</span>
+              {t('check_in_now')}
+            </Button>
           )}
-        </Button>
+        </div>
       </div>
 
       <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />

@@ -7,14 +7,16 @@ const PointsContext = createContext()
 export const usePoints = () => useContext(PointsContext)
 
 export const PointsProvider = ({ children }) => {
-  const [points, setPoints] = useState(0)
-  const [loading, setLoading] = useState(true)
-  const prevTierRef = useRef(null)
+  const [points, setPoints]                   = useState(0)
+  const [lifetimePoints, setLifetimePoints]   = useState(0)
+  const [loading, setLoading]                 = useState(true)
+  const prevTierRef                           = useRef(null)
 
+  // Tier thresholds aligned with the DB `tiers` table (min_lifetime_points)
   const getTierName = (pts) => {
-    if (pts >= 3000) return 'Platinum'
+    if (pts >= 4000) return 'Platinum'
     if (pts >= 1500) return 'Gold'
-    if (pts >= 500) return 'Silver'
+    if (pts >= 500)  return 'Silver'
     return 'Bronze'
   }
 
@@ -22,20 +24,21 @@ export const PointsProvider = ({ children }) => {
     let realtimeChannel = null
 
     const setupUser = async (userId) => {
-      // Initial fetch
       const { data, error } = await supabase
         .from('profiles')
-        .select('points')
+        .select('points, lifetime_points')
         .eq('id', userId)
         .single()
+
       if (!error && data) {
-        const initialPoints = data.points ?? 0
-        setPoints(initialPoints)
-        prevTierRef.current = getTierName(initialPoints)
+        const initPoints   = data.points          ?? 0
+        const initLifetime = data.lifetime_points ?? 0
+        setPoints(initPoints)
+        setLifetimePoints(initLifetime)
+        prevTierRef.current = getTierName(initLifetime)
       }
       setLoading(false)
 
-      // Real-time subscription for live points updates
       realtimeChannel = supabase
         .channel(`profile-points-${userId}`)
         .on('postgres_changes', {
@@ -45,13 +48,16 @@ export const PointsProvider = ({ children }) => {
           filter: `id=eq.${userId}`,
         }, (payload) => {
           if (payload.new?.points !== undefined) {
-            const newPoints = payload.new.points
-            const newTier = getTierName(newPoints)
+            setPoints(payload.new.points)
+          }
+          if (payload.new?.lifetime_points !== undefined) {
+            const newLifetime = payload.new.lifetime_points
+            const newTier     = getTierName(newLifetime)
             if (prevTierRef.current && newTier !== prevTierRef.current) {
               fireTierUpConfetti()
             }
             prevTierRef.current = newTier
-            setPoints(newPoints)
+            setLifetimePoints(newLifetime)
           }
         })
         .subscribe()
@@ -62,6 +68,7 @@ export const PointsProvider = ({ children }) => {
         setupUser(session.user.id)
       } else {
         setPoints(0)
+        setLifetimePoints(0)
         setLoading(false)
         if (realtimeChannel) supabase.removeChannel(realtimeChannel)
       }
@@ -78,14 +85,26 @@ export const PointsProvider = ({ children }) => {
     }
   }, [])
 
-  const addPoints = (amount) => setPoints((prev) => prev + amount)
+  // Earning points: increments BOTH spendable balance and lifetime total
+  const addPoints = async (amount) => {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.user) return
+    await supabase
+      .from('profiles')
+      .update({
+        points:          points + amount,
+        lifetime_points: lifetimePoints + amount,
+      })
+      .eq('id', session.user.id)
+    // Real-time subscription handles state + tier-up animation
+  }
 
+  // Spending points: decrements spendable balance only — lifetime total never changes
   const deductPoints = async (amount) => {
     if (points < amount) return false
     const { data: { session } } = await supabase.auth.getSession()
     if (!session?.user) return false
 
-    // Optimistic update
     setPoints((prev) => prev - amount)
 
     const { error } = await supabase
@@ -94,68 +113,60 @@ export const PointsProvider = ({ children }) => {
       .eq('id', session.user.id)
 
     if (error) {
-      // Rollback on failure
       setPoints((prev) => prev + amount)
       return false
     }
     return true
   }
 
+  // Tier is calculated from lifetime_points so spending never demotes a user
   const getTierInfo = () => {
-    if (points >= 3000) {
-      return { 
-        name: 'Platinum', 
-        icon: 'diamond', 
-        color: 'text-slate-200', 
+    if (lifetimePoints >= 4000) {
+      return {
+        name: 'Platinum',
+        icon: 'diamond',
+        color: 'text-slate-200',
         bg: 'bg-slate-200 text-slate-800',
-        progress: 100, 
+        progress: 100,
         nextTier: 'Max Tier',
-        ptsNeeded: 0
+        ptsNeeded: 0,
       }
     }
-    if (points >= 1500) {
-      const needed = 3000 - points;
-      const progress = ((points - 1500) / 1500) * 100;
-      return { 
-        name: 'Gold', 
-        icon: 'stars', 
-        color: 'text-amber-300', 
+    if (lifetimePoints >= 1500) {
+      return {
+        name: 'Gold',
+        icon: 'stars',
+        color: 'text-amber-300',
         bg: 'bg-[#f0d49d] text-amber-900',
-        progress, 
+        progress: ((lifetimePoints - 1500) / 2500) * 100,
         nextTier: 'Platinum',
-        ptsNeeded: needed
+        ptsNeeded: 4000 - lifetimePoints,
       }
     }
-    if (points >= 500) {
-      const needed = 1500 - points;
-      const progress = ((points - 500) / 1000) * 100;
-      return { 
-        name: 'Silver', 
-        icon: 'stars', 
-        color: 'text-slate-300', 
+    if (lifetimePoints >= 500) {
+      return {
+        name: 'Silver',
+        icon: 'stars',
+        color: 'text-slate-300',
         bg: 'bg-slate-300 text-slate-800',
-        progress, 
+        progress: ((lifetimePoints - 500) / 1000) * 100,
         nextTier: 'Gold',
-        ptsNeeded: needed
+        ptsNeeded: 1500 - lifetimePoints,
       }
     }
-    
-    // Beginner / Bronze (< 500)
-    const needed = 500 - points;
-    const progress = (points / 500) * 100;
-    return { 
-      name: 'Bronze',  
-      icon: 'stars', 
-      color: 'text-amber-700', 
+    return {
+      name: 'Bronze',
+      icon: 'stars',
+      color: 'text-amber-700',
       bg: 'bg-amber-600/30 text-amber-100',
-      progress, 
+      progress: (lifetimePoints / 500) * 100,
       nextTier: 'Silver',
-      ptsNeeded: needed
+      ptsNeeded: 500 - lifetimePoints,
     }
   }
 
   return (
-    <PointsContext.Provider value={{ points, loading, addPoints, deductPoints, getTierInfo }}>
+    <PointsContext.Provider value={{ points, lifetimePoints, loading, addPoints, deductPoints, getTierInfo }}>
       {children}
     </PointsContext.Provider>
   )

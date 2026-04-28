@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthProvider'
 import { useLanguage } from '@/contexts/LanguageProvider'
 import { signInSchema } from '@/lib/schemas'
 import { useToast } from '@/contexts/ToastProvider'
+import { mapError } from '@/lib/errors'
 
 export default function SignInScreen() {
   const navigate = useNavigate()
@@ -31,7 +32,7 @@ export default function SignInScreen() {
       await signIn(email, password)
       navigate('/home')
     } catch (err) {
-      toast.error(err.message)
+      toast.error(mapError(err.message))
     } finally {
       setLoading(false)
     }

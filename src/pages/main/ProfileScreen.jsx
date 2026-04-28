@@ -6,6 +6,8 @@ import { usePoints } from '@/contexts/PointsProvider'
 import { useLanguage } from '@/contexts/LanguageProvider'
 import { useTheme } from '@/contexts/ThemeProvider'
 import { supabase } from '@/lib/supabaseClient'
+import { useDownloadCV } from '@/hooks/useDownloadCV'
+import { useTutorial } from '@/contexts/TutorialContext'
 
 export default function ProfileScreen() {
   const navigate = useNavigate()
@@ -13,19 +15,66 @@ export default function ProfileScreen() {
   const { points } = usePoints()
   const { t, language, toggleLanguage } = useLanguage()
   const { isDarkMode, toggleTheme } = useTheme()
+  const { resetTutorial } = useTutorial()
+
+  const { getTierInfo } = usePoints()
+  const tier = getTierInfo()
+
+  const downloadCV = useDownloadCV()
 
   const [sessionCount, setSessionCount] = useState(0)
+  const [redeemedCount, setRedeemedCount] = useState(0)
+  const [confirmedCount, setConfirmedCount] = useState(0)
+  const [cvExports, setCvExports] = useState([])
+  const [cvLoading, setCvLoading] = useState(false)
+  const [cvError, setCvError] = useState(null)
+  const [revokingId, setRevokingId] = useState(null)
 
   useEffect(() => {
-    if (user?.id) fetchSessionCount(user.id)
+    if (user?.id) fetchStats(user.id)
   }, [user])
 
-  const fetchSessionCount = async (userId) => {
-    const { count } = await supabase
-      .from('opportunity_signups')
-      .select('id', { count: 'exact', head: true })
-      .eq('user_id', userId)
-    setSessionCount(count || 0)
+  const fetchStats = async (userId) => {
+    const [sessions, redeemed, confirmed, exports_] = await Promise.all([
+      supabase.from('opportunity_signups').select('id', { count: 'exact', head: true }).eq('user_id', userId),
+      supabase.from('redemptions').select('id', { count: 'exact', head: true }).eq('user_id', userId),
+      supabase.from('opportunity_signups').select('id', { count: 'exact', head: true })
+        .eq('user_id', userId).or('status.eq.confirmed,checked_in.eq.true'),
+      supabase.from('cv_exports').select('id, verification_token, generated_at, is_revoked, total_sessions, tier_at_export')
+        .eq('user_id', userId).order('generated_at', { ascending: false }),
+    ])
+    setSessionCount(sessions.count || 0)
+    setRedeemedCount(redeemed.count || 0)
+    setConfirmedCount(confirmed.count || 0)
+    setCvExports(exports_.data || [])
+  }
+
+  const handleDownloadCV = async () => {
+    setCvLoading(true)
+    setCvError(null)
+    try {
+      await downloadCV()
+      // Refresh exports list after successful generation
+      if (user?.id) {
+        const { data } = await supabase
+          .from('cv_exports')
+          .select('id, verification_token, generated_at, is_revoked, total_sessions, tier_at_export')
+          .eq('user_id', user.id)
+          .order('generated_at', { ascending: false })
+        setCvExports(data || [])
+      }
+    } catch (err) {
+      setCvError(err.message || 'Failed to generate CV')
+    } finally {
+      setCvLoading(false)
+    }
+  }
+
+  const handleRevokeCV = async (exportId) => {
+    setRevokingId(exportId)
+    await supabase.from('cv_exports').update({ is_revoked: true }).eq('id', exportId)
+    setCvExports(prev => prev.map(e => e.id === exportId ? { ...e, is_revoked: true } : e))
+    setRevokingId(null)
   }
 
   const handleLogout = async () => {
@@ -91,12 +140,13 @@ export default function ProfileScreen() {
   }
 
   const settingsList = [
-    { icon: 'edit',         label: t('edit_profile'),      path: '/profile/edit' },
-    { icon: 'history',      label: t('impact_history'),    path: '/profile/history' },
-    { icon: 'dark_mode',    label: t('dark_mode'),         action: toggleTheme, toggleValue: isDarkMode },
-    { icon: 'language',     label: t('switch_language'),   action: toggleLanguage },
-    { icon: 'help_outline', label: t('help_support'),      path: null },
-    { icon: 'privacy_tip',  label: t('privacy_policy'),    path: null },
+    { icon: 'edit',              label: t('edit_profile'),    path: '/profile/edit' },
+    { icon: 'history',           label: 'My Activity',        path: '/profile/history' },
+    { icon: 'dark_mode',         label: t('dark_mode'),       action: toggleTheme, toggleValue: isDarkMode },
+    { icon: 'language',          label: t('switch_language'), action: toggleLanguage },
+    { icon: 'tour',              label: 'Replay App Tour',    action: () => { resetTutorial(); navigate('/home') } },
+    { icon: 'help_outline',      label: t('help_support'),    path: null },
+    { icon: 'privacy_tip',       label: t('privacy_policy'),  path: null },
   ]
 
   return (
@@ -122,15 +172,101 @@ export default function ProfileScreen() {
         <h2 className="text-2xl font-extrabold text-foreground capitalize">{displayName}</h2>
         <p className="text-sm font-medium text-muted-foreground">{user?.email}</p>
 
-        <div className="flex items-center gap-4 mt-6 w-full">
-          <div className="flex-1 bg-card rounded-2xl p-4 shadow-soft border border-border/50 text-center">
-            <h4 className="text-2xl font-black text-primary">{points.toLocaleString()}</h4>
-            <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest mt-1">{t('available_points')}</p>
+        {/* Tier badge */}
+        <div id="tutorial-profile-tier" className={`inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 rounded-full text-xs font-bold ${tier.bg}`}>
+          <span className="material-icons-round text-sm">{tier.icon}</span>
+          {tier.name} Volunteer
+        </div>
+
+        <div className="grid grid-cols-3 gap-3 mt-6 w-full">
+          <div className="bg-card rounded-2xl p-3 shadow-soft border border-border/50 text-center">
+            <h4 className="text-xl font-black text-primary">{points.toLocaleString()}</h4>
+            <p className="text-[9px] uppercase font-bold text-muted-foreground tracking-widest mt-1">{t('available_points')}</p>
           </div>
-          <div className="flex-1 bg-card rounded-2xl p-4 shadow-soft border border-border/50 text-center">
-            <h4 className="text-2xl font-black text-primary">{sessionCount}</h4>
-            <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest mt-1">{t('sessions_done')}</p>
+          <div className="bg-card rounded-2xl p-3 shadow-soft border border-border/50 text-center">
+            <h4 className="text-xl font-black text-primary">{sessionCount}</h4>
+            <p className="text-[9px] uppercase font-bold text-muted-foreground tracking-widest mt-1">{t('sessions_done')}</p>
           </div>
+          <div className="bg-card rounded-2xl p-3 shadow-soft border border-border/50 text-center">
+            <h4 className="text-xl font-black text-primary">{redeemedCount}</h4>
+            <p className="text-[9px] uppercase font-bold text-muted-foreground tracking-widest mt-1">Redeemed</p>
+          </div>
+        </div>
+      </RevealLayout>
+
+      {/* ── Volunteer CV ── */}
+      <RevealLayout delay={0.15} className="mb-4">
+        <div id="tutorial-cv-card" className="bg-card border border-border/50 rounded-2xl p-4 shadow-sm">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+              <span className="material-icons-round text-sm text-primary">workspace_premium</span>
+            </div>
+            <div>
+              <p className="font-bold text-foreground text-sm">My Volunteer CV</p>
+              <p className="text-[10px] text-muted-foreground font-medium">
+                {confirmedCount > 0
+                  ? `${confirmedCount} confirmed session${confirmedCount !== 1 ? 's' : ''} · tamper-evident PDF`
+                  : 'Complete a volunteer session to unlock'}
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={handleDownloadCV}
+            disabled={cvLoading || confirmedCount === 0}
+            className="w-full h-11 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all
+              bg-[#2D5A3D] text-white hover:bg-[#245030] active:scale-[0.98]
+              disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            {cvLoading ? (
+              <>
+                <span className="material-icons-round text-sm animate-spin">sync</span>
+                Generating…
+              </>
+            ) : (
+              <>
+                <span className="material-icons-round text-sm">download</span>
+                Download Verified CV
+              </>
+            )}
+          </button>
+
+          {cvError && (
+            <p className="text-xs text-destructive font-medium mt-2 text-center">{cvError}</p>
+          )}
+
+          {/* Past exports */}
+          {cvExports.length > 0 && (
+            <div className="mt-3 space-y-1.5">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Past Exports</p>
+              {cvExports.map(exp => (
+                <div key={exp.id} className={`flex items-center justify-between px-3 py-2 rounded-xl border text-xs
+                  ${exp.is_revoked ? 'bg-muted/30 border-border/30 opacity-60' : 'bg-muted/20 border-border/50'}`}>
+                  <div>
+                    <span className="font-semibold text-foreground">
+                      {new Date(exp.generated_at).toLocaleDateString('en-BH', { month: 'short', day: 'numeric', year: 'numeric' })}
+                    </span>
+                    <span className="text-muted-foreground ml-2">
+                      {exp.total_sessions} sessions · {exp.tier_at_export}
+                    </span>
+                    {exp.is_revoked && (
+                      <span className="ml-2 text-destructive font-bold">· Revoked</span>
+                    )}
+                  </div>
+                  {!exp.is_revoked && (
+                    <button
+                      onClick={() => handleRevokeCV(exp.id)}
+                      disabled={revokingId === exp.id}
+                      className="text-destructive/70 hover:text-destructive font-bold transition-colors ml-3"
+                      title="Revoke this CV"
+                    >
+                      {revokingId === exp.id ? '…' : 'Revoke'}
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </RevealLayout>
 

@@ -9,6 +9,7 @@ import { AuthProvider } from './contexts/AuthProvider'
 import { PointsProvider } from './contexts/PointsProvider'
 import { LanguageProvider } from './contexts/LanguageProvider'
 import { ToastProvider } from './contexts/ToastProvider'
+import { DemoProvider } from './contexts/DemoContext'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import './index.css'
 
@@ -21,7 +22,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             <PointsProvider>
               <LanguageProvider>
                 <ToastProvider>
-                  <App />
+                  <DemoProvider>
+                    <App />
+                  </DemoProvider>
                 </ToastProvider>
               </LanguageProvider>
             </PointsProvider>

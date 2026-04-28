@@ -17,7 +17,7 @@ export default function MarketplaceScreen() {
   const { user } = useAuth()
   const [activeFilter, setActiveFilter] = useState('All')
   const [showAuthModal, setShowAuthModal] = useState(false)
-  const { deals, loading } = useDeals()
+  const { deals, loading, error: dealsError, refetch: refetchDeals } = useDeals()
 
   // High-res global brands for premium mockup visuals
   const merchantsList = [
@@ -48,7 +48,7 @@ export default function MarketplaceScreen() {
     <div className="flex flex-col min-h-screen bg-secondary/5 px-6 pt-12 pb-24">
       {/* Header */}
       <RevealLayout className="flex items-center justify-between mb-8">
-        <div>
+        <div id="tutorial-rewards-header">
           <h1 className="text-3xl font-extrabold text-foreground tracking-tight mb-1">{t('rewards_title')}</h1>
           <p className="text-muted-foreground font-medium text-sm">{t('rewards_subtitle')}</p>
         </div>
@@ -89,6 +89,13 @@ export default function MarketplaceScreen() {
       <div className="flex flex-col gap-5 mt-2">
         {loading ? (
           Array.from({ length: 3 }).map((_, i) => <DealCardSkeleton key={i} />)
+        ) : dealsError ? (
+          <EmptyState
+            icon="wifi_off"
+            title={t('load_error_rewards')}
+            subtitle={t('connection_error')}
+            action={<button onClick={refetchDeals} className="mt-3 px-5 py-2 rounded-xl bg-primary text-primary-foreground text-sm font-bold">{t('retry')}</button>}
+          />
         ) : filteredDeals.length > 0 ? (
           filteredDeals.map((deal, i) => {
             const affordable = canAfford(deal.points_cost)

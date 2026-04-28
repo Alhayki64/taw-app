@@ -5,11 +5,19 @@ import { supabase } from '@/lib/supabaseClient'
 async function fetchEvent(id) {
   const { data, error } = await supabase
     .from('opportunities')
-    .select('*')
+    .select('*, organisations(name, logo_url)')
     .eq('id', id)
     .single()
   if (error) throw error
-  return data
+  if (!data) return null
+  return {
+    ...data,
+    category: data.cause_category,
+    points:   data.points_per_session,
+    date:     data.event_date,
+    org_name: data.organisations?.name,
+    org_logo: data.organisations?.logo_url,
+  }
 }
 
 export function useEventDetails(id) {

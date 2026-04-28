@@ -206,6 +206,29 @@ export const translations = {
     terms: "Terms",
     and_conjunction: "and",
 
+    // Notifications
+    notif_welcome_title: "Welcome to Tawwa! 🌱",
+    notif_welcome_body: "Start your volunteering journey and earn points for making an impact.",
+    notif_session_confirmed: "✅ Session Confirmed: {title}",
+    notif_rsvp_pending: "📋 RSVP Pending: {title}",
+    notif_confirmed_body: "+{pts} points have been added to your account.",
+    notif_pending_body: "Your spot is reserved. Points will be awarded after session confirmation.",
+    pts_earned_total: "{pts} pts earned total",
+
+    // Error & action strings
+    load_error_opps: "Couldn't load opportunities",
+    load_error_rewards: "Couldn't load rewards",
+    connection_error: "Check your connection and try again.",
+    retry: "Retry",
+    link_copied: "Link copied to clipboard!",
+    already_signed_up: "You're already signed up! See you there.",
+    now_signed_up: "You're signed up! See you there.",
+    event_full: "This event is full.",
+    event_full_btn: "Event is Full",
+    check_in_now: "Check In Now",
+    demo_email_error: "Demo account created — check demo@tawwa.app for a confirmation email, then try again.",
+    volunteer_opportunity: "Volunteer Opportunity",
+
     // Dummy Mock Data
     "Buy 2 Meals, Get 1 Sandwich FREE": "Buy 2 Meals, Get 1 Sandwich FREE",
     "Legendary flavors meet legendary giving. Redeem your Taw Points at ODA Burger in Jid-Ali for a free ODA sandwich": "Legendary flavors meet legendary giving. Redeem your Taw Points at ODA Burger in Jid-Ali for a free ODA sandwich",
@@ -426,6 +449,29 @@ export const translations = {
     signup_legal_prefix: "بالمتابعة، أنت توافق على",
     terms: "الشروط",
     and_conjunction: "و",
+
+    // Notifications
+    notif_welcome_title: "مرحباً بك في طوّع! 🌱",
+    notif_welcome_body: "ابدأ رحلة التطوع واكسب نقاطاً لإحداث فارق.",
+    notif_session_confirmed: "✅ تم تأكيد الجلسة: {title}",
+    notif_rsvp_pending: "📋 الحجز قيد الانتظار: {title}",
+    notif_confirmed_body: "تمت إضافة +{pts} نقطة إلى حسابك.",
+    notif_pending_body: "تم حجز مقعدك. ستُضاف النقاط بعد تأكيد الجلسة.",
+    pts_earned_total: "{pts} نقطة مكتسبة إجمالاً",
+
+    // Error & action strings
+    load_error_opps: "تعذّر تحميل الفرص",
+    load_error_rewards: "تعذّر تحميل المكافآت",
+    connection_error: "تحقق من الاتصال وحاول مجدداً.",
+    retry: "إعادة المحاولة",
+    link_copied: "تم نسخ الرابط!",
+    already_signed_up: "أنت مسجل مسبقاً! نراك هناك.",
+    now_signed_up: "تم تسجيلك! نراك هناك.",
+    event_full: "اكتملت الطاقة الاستيعابية لهذا الحدث.",
+    event_full_btn: "اكتمل الحدث",
+    check_in_now: "تسجيل الحضور الآن",
+    demo_email_error: "تم إنشاء الحساب التجريبي — تحقق من demo@tawwa.app لتأكيد البريد الإلكتروني، ثم أعد المحاولة.",
+    volunteer_opportunity: "فرصة تطوعية",
 
     // Dummy Mock Data
     "Buy 2 Meals, Get 1 Sandwich FREE": "اشتري وجبتين، واحصل على ساندويتش مجاناً",

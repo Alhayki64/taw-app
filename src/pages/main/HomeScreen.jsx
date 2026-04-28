@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { RevealLayout } from '@/components/RevealLayout'
@@ -11,15 +11,38 @@ import { OpportunityCardSkeleton } from '@/components/ui/Skeleton'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { AuthModal } from '@/components/ui/AuthModal'
 import { useLanguage } from '@/contexts/LanguageProvider'
+import { useTutorial } from '@/contexts/TutorialContext'
+import { getTutorialSteps } from '@/config/tutorialSteps'
 
 export default function HomeScreen() {
   const navigate = useNavigate()
   const { user, profile } = useAuth()
-  const { points, getTierInfo } = usePoints()
-  const { t } = useLanguage()
+  const { points, lifetimePoints, getTierInfo } = usePoints()
+  const { t, language } = useLanguage()
   const tier = getTierInfo()
+  const { startTutorial, hasCompletedTutorial, isTutorialReady } = useTutorial()
 
-  const { opportunities, loading: feedLoading } = useOpportunities()
+  useEffect(() => {
+    const previewParams =
+      import.meta.env.DEV && typeof window !== 'undefined'
+        ? new URLSearchParams(window.location.search)
+        : null
+    const shouldForcePreview = previewParams?.get('tutorialPreview') === '1'
+    const previewStepParam = Number(previewParams?.get('tutorialStep'))
+    const previewStepIndex = Number.isFinite(previewStepParam) ? previewStepParam - 1 : 0
+
+    if (!isTutorialReady || (!shouldForcePreview && hasCompletedTutorial)) return undefined
+
+    const timer = setTimeout(() => {
+      startTutorial(getTutorialSteps({ isAr: language === 'ar' }), {
+        initialStepIndex: shouldForcePreview ? previewStepIndex : 0,
+      })
+    }, 800)
+
+    return () => clearTimeout(timer)
+  }, [hasCompletedTutorial, isTutorialReady, startTutorial, language])
+
+  const { opportunities, loading: feedLoading, error: feedError, refetch: refetchFeed } = useOpportunities()
   const [activeCategory, setActiveCategory] = useState('All')
   const [searchQuery, setSearchQuery] = useState('')
   const [notificationsOpen, setNotificationsOpen] = useState(false)
@@ -55,23 +78,27 @@ export default function HomeScreen() {
         icon: 'volunteer_activism',
         iconColor: 'text-primary',
         iconBg: 'bg-primary/10',
-        title: 'Welcome to Tawwa! 🌱',
-        body: 'Start your volunteering journey and earn points for making an impact.',
+        title: t('notif_welcome_title'),
+        body: t('notif_welcome_body'),
         time: 'Today',
       },
-      ...(data || []).map(s => ({
-        id: s.id,
-        icon: s.status === 'confirmed' ? 'check_circle' : 'hourglass_top',
-        iconColor: s.status === 'confirmed' ? 'text-green-500' : 'text-amber-500',
-        iconBg: s.status === 'confirmed' ? 'bg-green-500/10' : 'bg-amber-500/10',
-        title: s.status === 'confirmed' 
-          ? `✅ Session Confirmed: ${s.opportunities?.title || 'Event'}`
-          : `📋 RSVP Pending: ${s.opportunities?.title || 'Event'}`,
-        body: s.status === 'confirmed'
-          ? `+${s.opportunities?.points || 0} points have been added to your account.`
-          : 'Your spot is reserved. Points will be awarded after session confirmation.',
-        time: new Date(s.created_at).toLocaleDateString('en-BH', { month: 'short', day: 'numeric' }),
-      }))
+      ...(data || []).map(s => {
+        const title = s.opportunities?.title || 'Event'
+        const pts = s.opportunities?.points || 0
+        return {
+          id: s.id,
+          icon: s.status === 'confirmed' ? 'check_circle' : 'hourglass_top',
+          iconColor: s.status === 'confirmed' ? 'text-green-500' : 'text-amber-500',
+          iconBg: s.status === 'confirmed' ? 'bg-green-500/10' : 'bg-amber-500/10',
+          title: s.status === 'confirmed'
+            ? t('notif_session_confirmed').replace('{title}', title)
+            : t('notif_rsvp_pending').replace('{title}', title),
+          body: s.status === 'confirmed'
+            ? t('notif_confirmed_body').replace('{pts}', pts)
+            : t('notif_pending_body'),
+          time: new Date(s.created_at).toLocaleDateString('en-BH', { month: 'short', day: 'numeric' }),
+        }
+      })
     ]
     setNotifications(items)
     setNotifsLoading(false)
@@ -129,6 +156,7 @@ export default function HomeScreen() {
 
         {/* Gamified Premium Status Card */}
         <motion.div 
+          id="tutorial-impact"
           whileHover={{ scale: 1.01 }}
           className="mt-4 bg-[#315646] rounded-[24px] p-4 shadow-xl relative overflow-hidden"
         >
@@ -166,13 +194,18 @@ export default function HomeScreen() {
 
             {/* Progress Bar */}
             <div className="w-full h-2.5 bg-black/20 rounded-full overflow-hidden shadow-inner">
-              <motion.div 
+              <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${tier.progress}%` }}
                 transition={{ duration: 1, ease: 'easeOut' }}
                 className={`h-full rounded-full ${tier.name === 'Bronze' ? 'bg-amber-500' : tier.name === 'Silver' ? 'bg-slate-300' : 'bg-[#f0d49d]'}`}
               />
             </div>
+            {user && lifetimePoints > 0 && (
+              <p className="text-[10px] text-[#a4caba]/70 font-medium text-right">
+                {t('pts_earned_total').replace('{pts}', lifetimePoints.toLocaleString())}
+              </p>
+            )}
           </div>
           
           {/* Subtle decoration overlay */}
@@ -239,7 +272,7 @@ export default function HomeScreen() {
 
         {/* Global Search Bar */}
         <RevealLayout delay={0.05}>
-          <div className="flex items-center h-14 bg-card text-card-foreground rounded-2xl shadow-sm border border-border focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 overflow-hidden transition-all px-4 group">
+          <div id="tutorial-search" className="flex items-center h-14 bg-card text-card-foreground rounded-2xl shadow-sm border border-border focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 overflow-hidden transition-all px-4 group">
             <span className="material-icons-round text-muted-foreground group-focus-within:text-primary transition-colors me-2">search</span>
             <input 
               type="text" 
@@ -309,13 +342,28 @@ export default function HomeScreen() {
         </RevealLayout>
 
         {/* Opportunities Feed */}
-        <RevealLayout delay={0.3} className="flex flex-col gap-4">
+        <div className="w-full">
+          <RevealLayout delay={0.3} className="flex flex-col gap-4">
           {feedLoading ? (
-            Array.from({ length: 3 }).map((_, i) => <OpportunityCardSkeleton key={i} />)
+            Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} id={i === 0 ? 'tutorial-feed' : undefined}>
+                <OpportunityCardSkeleton />
+              </div>
+            ))
+          ) : feedError ? (
+            <div id="tutorial-feed">
+              <EmptyState
+                icon="wifi_off"
+                title={t('load_error_opps')}
+                subtitle={t('connection_error')}
+                action={<button onClick={refetchFeed} className="mt-3 px-5 py-2 rounded-xl bg-primary text-primary-foreground text-sm font-bold">{t('retry')}</button>}
+              />
+            </div>
           ) : displayFeed.length > 0 ? (
             displayFeed.map((opp, idx) => (
               <motion.div
                 key={opp.id}
+                id={idx === 0 ? 'tutorial-feed' : undefined}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.05 }}
@@ -356,13 +404,16 @@ export default function HomeScreen() {
               </motion.div>
             ))
           ) : (
-            <EmptyState
-              icon="search_off"
-              title={t('no_opps')}
-              subtitle={t('try_diff_cat')}
-            />
+            <div id="tutorial-feed">
+              <EmptyState
+                icon="search_off"
+                title={t('no_opps')}
+                subtitle={t('try_diff_cat')}
+              />
+            </div>
           )}
-        </RevealLayout>
+          </RevealLayout>
+        </div>
 
       </div>
       <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />

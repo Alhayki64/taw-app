@@ -5,13 +5,16 @@ import { RevealLayout } from '@/components/RevealLayout'
 import SubPageHeader from '@/components/layout/SubPageHeader'
 import { usePoints } from '@/contexts/PointsProvider'
 import { useLanguage } from '@/contexts/LanguageProvider'
+import { useToast } from '@/contexts/ToastProvider'
 import { supabase } from '@/lib/supabaseClient'
+import { mapError } from '@/lib/errors'
 
 export default function RewardRedemptionFlow() {
   const navigate = useNavigate()
   const { id } = useParams()
   const { points, deductPoints } = usePoints()
   const { t } = useLanguage()
+  const toast = useToast()
 
   const [deal, setDeal] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -34,31 +37,23 @@ export default function RewardRedemptionFlow() {
   }
 
   const handleRedeem = async () => {
-    if (!deal || points < deal.points_cost) return
+    if (!deal || points < deal.points_cost || redeeming) return
     setRedeeming(true)
 
-    const { data: { session } } = await supabase.auth.getSession()
-    if (!session?.user) { navigate('/signin'); return }
+    const { data, error } = await supabase.rpc('redeem_deal', { p_deal_id: deal.id })
 
-    // Generate a unique code
-    const code = `TAW-${Math.random().toString(36).slice(2, 6).toUpperCase()}-${Date.now().toString(36).toUpperCase()}`
-    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() // 7 days
-
-    const { error } = await supabase
-      .from('redemptions')
-      .insert({
-        user_id: session.user.id,
-        deal_id: deal.id,
-        points_spent: deal.points_cost,
-        points_used: deal.points_cost,
-        code,
-        expires_at: expiresAt,
-        status: 'completed',
-      })
-
-    if (!error) {
-      await deductPoints(deal.points_cost)
-      setRedemptionCode(code)
+    if (error) {
+      toast.error(mapError(error.message))
+    } else if (data?.error) {
+      const msg = data.error
+      if (msg === 'Already redeemed') toast.info("You've already redeemed this deal.")
+      else if (msg === 'Insufficient points') toast.error(`You need ${(deal.points_cost - points).toLocaleString()} more points.`)
+      else if (msg === 'Deal has expired') toast.error('This deal has expired.')
+      else if (msg === 'Deal is fully redeemed') toast.error('This deal is fully redeemed.')
+      else toast.error(mapError(msg))
+    } else {
+      // RPC handled both insert and deduction atomically — realtime sub updates points UI
+      setRedemptionCode(data.code)
     }
     setRedeeming(false)
   }

@@ -4,11 +4,17 @@ import { supabase } from '@/lib/supabaseClient'
 async function fetchDeals() {
   const { data, error } = await supabase
     .from('deals')
-    .select('id, title, brand_name, description, points_cost, category, image_url, status, expires_at, total_redeemed, max_redemptions, min_tier')
+    .select('id, title, category, description, points_cost, image_url, status, expiry_date, redemption_count, usage_limit, businesses(name)')
     .eq('status', 'active')
     .order('points_cost', { ascending: true })
   if (error) throw error
-  return data
+  return (data || []).map(d => ({
+    ...d,
+    brand_name:      d.businesses?.name,
+    expires_at:      d.expiry_date,
+    total_redeemed:  d.redemption_count,
+    max_redemptions: d.usage_limit,
+  }))
 }
 
 export function useDeals() {
