@@ -9,11 +9,33 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.png', 'apple-touch-icon.png'],
       workbox: {
+        // Force the new SW to take control immediately — no "waiting" phase
+        skipWaiting: true,
+        clientsClaim: true,
         cleanupOutdatedCaches: true,
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+
+        // Do NOT precache html — index.html must always be fetched fresh so
+        // new deployments are picked up without stale-cache white screens.
+        // Navigation falls back to index.html via navigateFallback below.
+        globPatterns: ['**/*.{js,css,ico,png,svg,woff,woff2}'],
         globIgnores: ['**/mascot/**'],
         maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
+
+        // SPA fallback: any navigate request that isn't an API call serves index.html
+        navigateFallback: '/index.html',
+        navigateFallbackDenylist: [/^\/api\//],
+
         runtimeCaching: [
+          {
+            // Navigation requests — always fetch index.html fresh from network
+            urlPattern: ({ request }) => request.mode === 'navigate',
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'pages',
+              networkTimeoutSeconds: 5,
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
           {
             // Supabase API — network-first, fall back to cache
             urlPattern: /^https:\/\/.*\.supabase\.co\/.*/i,
